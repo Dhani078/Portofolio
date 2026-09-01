@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { MessageSquare, ArrowUp, Sparkles, Send } from 'lucide-react';
 
 export default function FloatingDock() {
-  const whatsapp = '+6282251972512';
+  const whatsapp = '+6282148564979';
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });

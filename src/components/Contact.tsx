@@ -10,7 +10,7 @@ export default function Contact() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
   const email = 'muhammadrizkiramadhanicc@gmail.com';
-  const whatsapp = '+6282251972512';
+  const whatsapp = '+6282148564979';
 
   const handleCopy = () => {
     navigator.clipboard.writeText(email);
