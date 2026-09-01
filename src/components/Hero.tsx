@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedCounter from '@/components/ui/AnimatedCounter';
 import { 
@@ -17,11 +18,21 @@ import {
   Zap, 
   Activity, 
   User,
+  Box,
   ExternalLink 
 } from 'lucide-react';
 
+const LanyardCard = dynamic(() => import('@/components/LanyardCard'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[480px] rounded-2xl bg-[#09090b] border border-white/10 flex items-center justify-center font-mono text-xs text-zinc-500">
+      INITIALIZING 3D PHYSICS ENGINE...
+    </div>
+  ),
+});
+
 export default function Hero() {
-  const [activeTab, setActiveTab] = useState<'profile' | 'simulator' | 'code'>('profile');
+  const [activeTab, setActiveTab] = useState<'lanyard' | 'profile' | 'code'>('lanyard');
   const [demoOrderActive, setDemoOrderActive] = useState(false);
 
   const handleScrollToSection = (id: string) => {
@@ -140,7 +151,8 @@ export default function Hero() {
               {/* Segmented Control Tabs */}
               <div className="flex items-center gap-1 bg-[#121215] p-1 rounded-xl border border-white/10">
                 {[
-                  { id: 'profile', label: 'Profile', icon: User },
+                  { id: 'lanyard', label: '3D Lanyard', icon: Box },
+                  { id: 'profile', label: 'Portrait', icon: User },
                   { id: 'code', label: 'Contract', icon: Code2 },
                 ].map((tab) => {
                   const Icon = tab.icon;
@@ -164,8 +176,25 @@ export default function Hero() {
             </div>
 
             {/* Tab Viewport */}
-            <div className="min-h-[380px] relative z-10 flex flex-col justify-center">
+            <div className="min-h-[440px] relative z-10 flex flex-col justify-center">
               <AnimatePresence mode="wait">
+                {/* Tab 0: Interactive 3D Physics Lanyard Card */}
+                {activeTab === 'lanyard' && (
+                  <motion.div
+                    key="lanyard"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="relative w-full rounded-2xl overflow-hidden border border-white/10 bg-[#050507] shadow-2xl flex flex-col items-center justify-center"
+                  >
+                    <div className="absolute top-3 left-3 z-20 px-2.5 py-1 rounded-md bg-black/60 border border-white/20 text-[10px] font-mono text-zinc-300 backdrop-blur-md flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+                      <span>DRAG & THROW 3D CARD</span>
+                    </div>
+                    <LanyardCard />
+                  </motion.div>
+                )}
                 {/* Tab 1: Authentic Portrait Photo (mrr.jpg) */}
                 {activeTab === 'profile' && (
                   <motion.div
