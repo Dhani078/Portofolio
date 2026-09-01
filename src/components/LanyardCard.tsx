@@ -151,7 +151,6 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: BandProps) {
 
   return (
     <>
-      {/* Group position [3, 4, 0] matches exactly the top-right hanging placement */}
       <group position={[3, 4, 0]}>
         {/* Fixed Anchor at top right */}
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
@@ -216,7 +215,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: BandProps) {
         </RigidBody>
       </group>
 
-      {/* Dynamic Lanyard Ribbon MeshLine - Crisp texture resolution */}
+      {/* Dynamic Lanyard Ribbon MeshLine */}
       <mesh ref={band}>
         {/* @ts-ignore */}
         <meshLineGeometry />
@@ -252,11 +251,15 @@ export default function LanyardCard() {
       className="responsive-wrapper"
       style={{
         position: 'absolute',
-        inset: 0,
-        width: '100%',
+        top: 0,
+        bottom: 0,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '100vw',
         height: '100%',
         pointerEvents: 'none',
         zIndex: 20,
+        overflow: 'visible',
       }}
     >
       <React.Suspense fallback={null}>
