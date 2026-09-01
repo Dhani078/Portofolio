@@ -197,7 +197,7 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
         
         if (data.repos) {
           const mapped = data.repos.map((repo: any, index: number) => ({
-            index: `0${index + 1}`,
+            index: `GH-0${index + 1}`,
             title: repo.name,
             category: 'GITHUB OSS',
             year: new Date(repo.updated_at).getFullYear(),
@@ -239,7 +239,7 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
 
     return { 
       ...p, 
-      index: p.index || `0${i + 1}`,
+      index: p.index || (i < defaultProjects.length ? `0${i + 1}` : `GH-${i}`),
       year: p.year || (i === 2 ? 2026 : 2025),
       title,
       summary: summary || defaultProjects[i]?.summary || 'Aplikasi web modern skala produksi.',
@@ -308,9 +308,9 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
 
       {/* Projects Grid: 3D Gyroscope Tilt Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredProjects.map((project) => (
+        {filteredProjects.map((project, idx) => (
           <TiltCard
-            key={project.index}
+            key={project.id || project.index || `proj-${idx}`}
             project={project}
             onSelect={() => setSelectedProject(project)}
           />

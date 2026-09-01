@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { Menu, X, ArrowUpRight, Sparkles, Terminal } from 'lucide-react';
 
 function GithubIcon({ className = "w-4 h-4" }: { className?: string }) {
@@ -95,8 +96,15 @@ export default function Nav() {
           }}
           className="flex items-center gap-3 group cursor-pointer"
         >
-          <div className="w-8 h-8 rounded-xl bg-white text-black font-extrabold font-mono text-sm flex items-center justify-center shadow-lg shadow-white/10 group-hover:scale-105 transition-transform">
-            M
+          <div className="relative w-8 h-8 rounded-xl bg-black border border-white/20 overflow-hidden flex items-center justify-center shadow-lg shadow-white/10 group-hover:scale-105 transition-transform p-1">
+            <Image
+              src="/logo.png"
+              alt="MRR Logo"
+              width={32}
+              height={32}
+              priority
+              className="object-contain"
+            />
           </div>
           <div className="flex flex-col">
             <span className="text-sm font-bold font-mono tracking-tight text-white group-hover:text-zinc-300 transition-colors">
@@ -137,7 +145,7 @@ export default function Nav() {
         {/* Action Button: High-Contrast Pure White Pill */}
         <div className="flex items-center gap-3">
           <a
-            href="https://github.com"
+            href="https://github.com/Dhani078"
             target="_blank"
             rel="noopener noreferrer"
             className="w-9 h-9 rounded-xl bg-[#121215] border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white hover:border-white/40 hover:bg-[#1A1A1E] transition-all hidden sm:flex cursor-pointer shadow-sm"

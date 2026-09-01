@@ -107,7 +107,7 @@ export default function RootLayout({
       </head>
       <body
         suppressHydrationWarning
-        className="relative bg-[#080A0F] text-[#F8FAFC] min-h-screen antialiased selection:bg-sky-400 selection:text-black font-sans"
+        className="relative bg-[#000000] text-[#FFFFFF] min-h-screen antialiased selection:bg-white selection:text-black font-sans [&_svg]:suppressHydrationWarning"
       >
         {children}
       </body>
