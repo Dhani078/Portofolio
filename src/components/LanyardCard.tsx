@@ -68,7 +68,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: BandProps) {
   const [dragged, setDragged] = useState<THREE.Vector3 | false>(false);
   const [hovered, setHovered] = useState(false);
 
-  // Rope joints for flexible string physics
+  // Rope joints for string physics
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
   useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
   useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
@@ -109,7 +109,6 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: BandProps) {
       j3.current &&
       card.current
     ) {
-      // Lerp segment physics for smooth fluid ribbon motion
       [j1, j2].forEach((ref) => {
         if (!(ref.current as any).lerped) {
           (ref.current as any).lerped = new THREE.Vector3().copy(
@@ -134,7 +133,6 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: BandProps) {
 
       band.current?.geometry?.setPoints(curve.getPoints(32));
 
-      // Natural tilt damping
       ang.copy(card.current.angvel());
       rot.copy(card.current.rotation());
       card.current.setAngvel(
@@ -145,12 +143,17 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: BandProps) {
   });
 
   curve.curveType = 'chordal';
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.wrapS = texture.wrapT = 1000;
+  texture.anisotropy = 16;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
 
   return (
     <>
-      <group position={[0, 4, 0]}>
-        {/* Fixed Anchor */}
+      {/* Group position [3, 4, 0] matches exactly the top-right hanging placement */}
+      <group position={[3, 4, 0]}>
+        {/* Fixed Anchor at top right */}
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
 
         {/* Chain Joints */}
@@ -213,14 +216,14 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: BandProps) {
         </RigidBody>
       </group>
 
-      {/* Dynamic Lanyard Ribbon MeshLine */}
+      {/* Dynamic Lanyard Ribbon MeshLine - Crisp texture resolution */}
       <mesh ref={band}>
         {/* @ts-ignore */}
         <meshLineGeometry />
         {/* @ts-ignore */}
         <meshLineMaterial
           transparent
-          opacity={0.95}
+          opacity={1.0}
           color="white"
           depthTest={false}
           resolution={[width, height]}
@@ -235,15 +238,40 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: BandProps) {
 }
 
 export default function LanyardCard() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
-    <div className="w-full h-[520px] lg:h-[620px] relative select-none">
+    <div
+      className="responsive-wrapper"
+      style={{
+        position: 'absolute',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        pointerEvents: 'none',
+        zIndex: 20,
+      }}
+    >
       <Canvas
         camera={{ position: [0, 0, 13], fov: 25 }}
-        gl={{ alpha: true, antialias: true }}
+        gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
+        style={{
+          background: 'transparent',
+          width: '100%',
+          height: '100%',
+          pointerEvents: isMobile ? 'none' : 'auto',
+        }}
       >
         <ambientLight intensity={Math.PI} />
         <Physics interpolate gravity={[0, -40, 0]} timeStep={1 / 60}>
-          <Band />
+          {!isMobile && <Band />}
         </Physics>
         <Environment blur={0.75}>
           <Lightformer
