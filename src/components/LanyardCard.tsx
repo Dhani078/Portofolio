@@ -26,11 +26,12 @@ useGLTF.preload('/assets/kartu.glb');
 useTexture.preload('/assets/bandd.png');
 
 interface BandProps {
+  isMobile?: boolean;
   maxSpeed?: number;
   minSpeed?: number;
 }
 
-function Band({ maxSpeed = 50, minSpeed = 10 }: BandProps) {
+function Band({ isMobile = false, maxSpeed = 50, minSpeed = 10 }: BandProps) {
   const band = useRef<any>(null!);
   const fixed = useRef<RapierRigidBody>(null!);
   const j1 = useRef<RapierRigidBody>(null!);
@@ -149,10 +150,14 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: BandProps) {
   texture.magFilter = THREE.LinearFilter;
   texture.generateMipmaps = false;
 
+  // Adaptive positioning: on mobile hang slightly center-right, on desktop hang top-right [3, 4, 0]
+  const anchorPos: [number, number, number] = isMobile ? [1.2, 4.2, 0] : [3, 4, 0];
+  const cardScale = isMobile ? 1.7 : 2.25;
+
   return (
     <>
-      <group position={[3, 4, 0]}>
-        {/* Fixed Anchor at top right */}
+      <group position={anchorPos}>
+        {/* Fixed Anchor */}
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
 
         {/* Chain Joints */}
@@ -175,7 +180,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: BandProps) {
         >
           <CuboidCollider args={[0.8, 1.125, 0.01]} />
           <group
-            scale={2.25}
+            scale={cardScale}
             position={[0, -1.2, -0.05]}
             onPointerOver={() => setHovered(true)}
             onPointerOut={() => setHovered(false)}
@@ -229,7 +234,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }: BandProps) {
           useMap={true}
           map={texture}
           repeat={[-4, 1]}
-          lineWidth={1}
+          lineWidth={isMobile ? 0.75 : 1.0}
         />
       </mesh>
     </>
@@ -240,7 +245,7 @@ export default function LanyardCard() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -264,18 +269,18 @@ export default function LanyardCard() {
     >
       <React.Suspense fallback={null}>
         <Canvas
-          camera={{ position: [0, 0, 13], fov: 25 }}
+          camera={{ position: [0, 0, isMobile ? 15 : 13], fov: 25 }}
           gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
           style={{
             background: 'transparent',
             width: '100%',
             height: '100%',
-            pointerEvents: isMobile ? 'none' : 'auto',
+            pointerEvents: 'auto',
           }}
         >
           <ambientLight intensity={Math.PI} />
           <Physics interpolate gravity={[0, -40, 0]} timeStep={1 / 60}>
-            {!isMobile && <Band />}
+            <Band isMobile={isMobile} />
           </Physics>
           <Environment blur={0.75}>
             <Lightformer
