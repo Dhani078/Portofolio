@@ -144,11 +144,12 @@ function Band({ isMobile = false, maxSpeed = 50, minSpeed = 10 }: BandProps) {
   });
 
   curve.curveType = 'chordal';
-  texture.wrapS = texture.wrapT = 1000;
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
   texture.anisotropy = 16;
   texture.minFilter = THREE.LinearFilter;
   texture.magFilter = THREE.LinearFilter;
-  texture.generateMipmaps = false;
+  texture.generateMipmaps = true;
+  texture.needsUpdate = true;
 
   // Adaptive positioning: on mobile hang slightly center-right, on desktop hang top-right [3, 4, 0]
   const anchorPos: [number, number, number] = isMobile ? [1.2, 4.2, 0] : [3, 4, 0];
