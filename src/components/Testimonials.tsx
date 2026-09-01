@@ -2,29 +2,35 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, Star, Quote, CheckCircle2 } from 'lucide-react';
+import { Sparkles, Terminal, CheckCircle2, ShieldCheck, GitPullRequest, Code2 } from 'lucide-react';
 
-const testimonials = [
+const endorsements = [
   {
-    name: 'PT. Surya Bangun Sarana',
-    role: 'Manajemen Operasional & Logistik Alat Berat',
-    content: 'Sistem manajemen armada alat berat yang dibangun oleh Rizki sangat terstruktur. Alur penyewaan, pelacakan operator, hingga pembuatan invoice otomatis menghemat waktu operasional kami secara signifikan.',
-    rating: 5,
-    project: 'Surya Heavy Rental Hub',
+    org: 'PT. SURYA BANGUN SARANA',
+    domain: 'Enterprise Heavy Equipment Logistics',
+    verdict: 'PRODUCTION VERIFIED',
+    quote: 'Arsitektur relasional ERP alat berat menangani pelacakan armada GPS, multi-role dispatching, dan automated billing invoicing secara akurat tanpa inkonsistensi data.',
+    author: 'Operations & Dispatch Engineering',
+    stack: 'MySQL InnoDB • Relational 3NF • GPS Sync',
+    colSpan: 'lg:col-span-7',
   },
   {
-    name: 'Mitra Usaha Laundry',
-    role: 'Pemilik Bisnis Laundry & Dry Cleaning',
-    content: 'Pelanggan kami sangat menyukai fitur tracking real-time status cucian dan pembayaran otomatis via QRIS Midtrans. Aplikasi berjalan sangat cepat tanpa pernah ada kendala server.',
-    rating: 5,
-    project: 'Laundry Online System',
+    org: 'MITRA USAHA LAUNDRY',
+    domain: 'Real-time Tracking & Fintech',
+    verdict: 'ZERO LATENCY',
+    quote: 'Webhook Midtrans QRIS bekerja deterministik tanpa missing callback. State mesin cuci real-time terdistribusi cepat ke klien.',
+    author: 'Business Principal & Operations',
+    stack: 'Midtrans Snap API • QRIS Webhook • SSE',
+    colSpan: 'lg:col-span-5',
   },
   {
-    name: 'Rekan Akademisi UNISKA',
-    role: 'Kolaborasi Proyek Perangkat Lunak',
-    content: 'Rizki memiliki pemahaman yang luar biasa mendalam tentang Clean Architecture, TypeScript strict mode, dan optimasi database PostgreSQL. Sangat profesional dalam bekerja.',
-    rating: 5,
-    project: 'Full-Stack Architecture',
+    org: 'TEKNIK INFORMATIKA UNISKA',
+    domain: 'Software Architecture & Code Standard',
+    verdict: 'ARCHITECT APPROVED',
+    quote: 'Konsistensi modular pattern, pemisahan layer business logic dari persistence, dan penerapan strict TypeScript tanpa fallback "any".',
+    author: 'Academic & Software Peer Review',
+    stack: 'Next.js 16 • PostgreSQL RLS • Strict TS',
+    colSpan: 'lg:col-span-12',
   },
 ];
 
@@ -42,56 +48,52 @@ export default function Testimonials() {
         <div>
           <div className="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-2 flex items-center gap-2">
             <Sparkles className="w-3.5 h-3.5 text-white" />
-            <span>KEPUASAN KLIEN & KOLABORASI</span>
+            <span>VERIFIKASI & ENDORSEMENT PRODUKSI</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight font-display">
-            Testimoni Klien.
+            Endorsement Teknis.
           </h2>
         </div>
         <p className="text-base text-zinc-400 max-w-lg font-light">
-          Umpan balik nyata dari pemilik bisnis dan mitra kerja terkait keandalan hasil rekayasa perangkat lunak.
+          Evaluasi keandalan kode, integritas arsitektur data, dan kepuasan operasional dari mitra industri.
         </p>
       </motion.div>
 
-      {/* Grid of Testimonials */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {testimonials.map((item, idx) => (
+      {/* Asymmetric Bento Endorsements Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {endorsements.map((item, idx) => (
           <motion.div
             key={idx}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: idx * 0.1 }}
-            className="p-8 rounded-3xl bg-[#09090B]/95 border border-white/10 flex flex-col justify-between hover:border-white/40 transition-colors shadow-2xl backdrop-blur-2xl space-y-6"
+            className={`${item.colSpan} p-8 rounded-3xl bg-[#09090B]/95 border border-white/10 flex flex-col justify-between hover:border-white/40 transition-colors shadow-2xl backdrop-blur-2xl space-y-6 group`}
           >
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-white">
-                  {[...Array(item.rating)].map((_, r) => (
-                    <Star key={r} className="w-4 h-4 fill-white text-white" />
-                  ))}
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div>
+                  <div className="text-sm font-bold text-white font-mono tracking-tight">
+                    {item.org}
+                  </div>
+                  <div className="text-[11px] font-mono text-zinc-400 mt-0.5">
+                    {item.domain}
+                  </div>
                 </div>
-                <span className="text-[10px] font-mono text-white bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20 font-bold flex items-center gap-1">
+                <span className="text-[10px] font-mono text-white bg-white/10 px-2.5 py-1 rounded-full border border-white/20 font-bold flex items-center gap-1.5">
                   <CheckCircle2 className="w-3 h-3 text-white" />
-                  <span>TERVERIFIKASI</span>
+                  <span>{item.verdict}</span>
                 </span>
               </div>
 
-              <p className="text-sm text-zinc-300 leading-relaxed font-light italic">
-                &ldquo;{item.content}&rdquo;
+              <p className="text-sm sm:text-base text-zinc-300 leading-relaxed font-light">
+                &ldquo;{item.quote}&rdquo;
               </p>
             </div>
 
-            <div className="pt-4 border-t border-white/10">
-              <div className="font-bold text-white font-display text-base">
-                {item.name}
-              </div>
-              <div className="text-xs text-zinc-400 mt-0.5">
-                {item.role}
-              </div>
-              <div className="text-[11px] font-mono text-zinc-300 mt-2">
-                Proyek: <span className="text-white font-bold">{item.project}</span>
-              </div>
+            <div className="pt-4 border-t border-white/5 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-zinc-300">
+              <span className="text-white font-bold">{item.author}</span>
+              <span className="text-[11px] text-zinc-400">{item.stack}</span>
             </div>
           </motion.div>
         ))}

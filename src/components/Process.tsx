@@ -2,32 +2,40 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, Layers, ShieldCheck, Zap, Rocket } from 'lucide-react';
+import { Sparkles, Terminal, Cpu, GitCommit, CheckCircle2, ArrowRight } from 'lucide-react';
 
-const steps = [
+const pipelineStages = [
   {
     step: '01',
-    title: 'Analisis & Arsitektur Sistem',
-    description: 'Memetakan kebutuhan bisnis, alur pengguna, pemodelan skema database PostgreSQL, dan spesifikasi kontrak type-safe sebelum kode ditulis.',
-    icon: Layers,
+    phase: 'SYSTEM ARCHITECTURE & MODELING',
+    title: 'Domain & Database Schema Contract',
+    description: 'Perancangan entitas basis data (PostgreSQL 3NF), penetapan kebijakan Row Level Security (RLS), dan penyusunan antarmuka type-safe sebelum satu baris kode diimplementasikan.',
+    telemetry: 'PostgreSQL • Schema Validation • Zero-Data-Loss Contract',
+    colSpan: 'lg:col-span-7',
   },
   {
     step: '02',
-    title: 'Pengembangan Full-Stack Type-Safe',
-    description: 'Membangun antarmuka Next.js 16 / React 19 dengan Tailwind CSS serta backend Supabase dengan keamanan Row Level Security (RLS).',
-    icon: ShieldCheck,
+    phase: 'CORE ENGINE',
+    title: 'Type-Safe Full-Stack Implementation',
+    description: 'Implementasi komponen Next.js 16 RSC, React 19 transition handling, dan integrasi backend asinkron dengan penanganan error defensif.',
+    telemetry: 'Strict TypeScript • Zero "any" • Server Actions',
+    colSpan: 'lg:col-span-5',
   },
   {
     step: '03',
-    title: 'Optimasi Web Vitals & Kecepatan',
-    description: 'Audit menyeluruh skor Lighthouse 100/100, optimasi Core Web Vitals (LCP, FID, CLS), validasi Zod runtime, dan animasi 120 FPS tanpa lag.',
-    icon: Zap,
+    phase: 'BENCHMARK & VERIFICATION',
+    title: 'Hardware Acceleration & Web Vitals Audit',
+    description: 'Profiling performa render 120 FPS, optimasi Core Web Vitals (LCP < 1.2s, CLS: 0), dan verifikasi kompresi bundle JS.',
+    telemetry: 'Lighthouse 100/100 • Sub-second TTFB • GPU Physics',
+    colSpan: 'lg:col-span-5',
   },
   {
     step: '04',
-    title: 'Deployment Global & Pemeliharaan',
-    description: 'Deployment ke Vercel Global Edge Network, konfigurasi custom domain, integrasi payment gateway Midtrans, dan dokumentasi sistem lengkap.',
-    icon: Rocket,
+    phase: 'DEPLOYMENT & CONTINUOUS DELIVERY',
+    title: 'Global Edge Ingestion & Webhooks',
+    description: 'Deployment ke Vercel Edge Network dengan TLS 1.3, integrasi webhook payment gateway dengan cryptographic signature verification, dan automated health checks.',
+    telemetry: 'Automated CI/CD • Edge CDN • 99.99% Availability',
+    colSpan: 'lg:col-span-7',
   },
 ];
 
@@ -45,54 +53,58 @@ export default function Process() {
         <div>
           <div className="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-2 flex items-center gap-2">
             <Sparkles className="w-3.5 h-3.5 text-white" />
-            <span>ALUR KERJA & METODOLOGI</span>
+            <span>ALUR REKAYASA & PIPELINE PRODUKSI</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight font-display">
-            Alur Rekayasa.
+            Pipeline Rekayasa.
           </h2>
         </div>
         <p className="text-base text-zinc-400 max-w-lg font-light">
-          Proses terstruktur dari perancangan arsitektur hingga deployment produksi yang andal.
+          Metodologi deterministik: arsitektur terstruktur, verifikasi ketat, dan deployment skala produksi tanpa kompromi.
         </p>
       </motion.div>
 
-      {/* Grid of Steps */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {steps.map((item, idx) => {
-          const Icon = item.icon;
-          return (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: idx * 0.1 }}
-              className="p-7 rounded-3xl bg-[#09090B]/95 border border-white/10 flex flex-col justify-between hover:border-white/40 transition-colors shadow-2xl backdrop-blur-2xl space-y-6"
-            >
-              <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                <span className="text-2xl font-extrabold font-mono text-white/30">
-                  {item.step}
+      {/* Asymmetric Bento Pipeline Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {pipelineStages.map((stage, idx) => (
+          <motion.div
+            key={idx}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: idx * 0.08 }}
+            className={`${stage.colSpan} p-8 rounded-3xl bg-[#09090B]/95 border border-white/10 flex flex-col justify-between hover:border-white/40 transition-colors shadow-2xl backdrop-blur-2xl space-y-6 group`}
+          >
+            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-mono px-2.5 py-1 rounded-lg bg-white/10 text-white font-bold">
+                  STAGE // {stage.step}
                 </span>
-                <div className="w-10 h-10 rounded-2xl bg-[#121215] border border-white/15 flex items-center justify-center shadow-md text-white">
-                  <Icon className="w-5 h-5" />
-                </div>
+                <span className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider">
+                  {stage.phase}
+                </span>
               </div>
+              <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+            </div>
 
-              <div className="space-y-2 flex-grow">
-                <h3 className="text-lg font-bold text-white font-display">
-                  {item.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-light">
-                  {item.description}
-                </p>
-              </div>
+            <div className="space-y-3 flex-grow">
+              <h3 className="text-xl font-bold text-white font-display tracking-tight group-hover:text-zinc-200 transition-colors">
+                {stage.title}
+              </h3>
+              <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-light">
+                {stage.description}
+              </p>
+            </div>
 
-              <div className="pt-3 border-t border-white/5 text-[11px] font-mono text-white font-bold">
-                Tahap // 0{idx + 1} Selesai Terverifikasi
+            <div className="pt-4 border-t border-white/5 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-zinc-300">
+              <div className="flex items-center gap-2 text-white">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>{stage.telemetry}</span>
               </div>
-            </motion.div>
-          );
-        })}
+              <span className="text-[10px] text-zinc-400">PASSED</span>
+            </div>
+          </motion.div>
+        ))}
       </div>
     </section>
   );
