@@ -9,7 +9,7 @@ export default function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
-  const email = 'muhammadrizkiramadhanicc@gmail.com';
+  const email = 'dhanisepeda@gmail.com';
   const whatsapp = '+6282148564979';
 
   const handleCopy = () => {
