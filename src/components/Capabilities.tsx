@@ -30,29 +30,36 @@ interface CapabilitiesProps {
 }
 
 const defaultSkills: SkillNode[] = [
-  // FRONTEND
-  { category: 'Frontend', name: 'Next.js 16 (App Router)', level: 'Expert', depth: 'Server Actions, RSC, Turbopack, Streaming SSR' },
-  { category: 'Frontend', name: 'React 19', level: 'Expert', depth: 'Server Components, useActionState, Transitions' },
-  { category: 'Frontend', name: 'TypeScript (Strict)', level: 'Expert', depth: 'Strict Mode, Generics, Discriminated Unions' },
-  { category: 'Frontend', name: 'Tailwind CSS', level: 'Expert', depth: 'Design Systems, Custom Tokens, Responsive Layouts' },
-  { category: 'Frontend', name: 'Framer Motion', level: 'Advanced', depth: '120fps GPU Transitions, Spring Physics, Layout Animations' },
+  // FRONTEND & MOBILE
+  { category: 'Frontend & Mobile', name: 'Next.js 16 & React 19', level: 'Expert', depth: 'Server Components (RSC), Streaming SSR, Server Actions, Turbopack Engine' },
+  { category: 'Frontend & Mobile', name: 'TypeScript (Strict)', level: 'Expert', depth: 'Strict Typing, Generics, Discriminated Unions, Type Narrowing & Inference' },
+  { category: 'Frontend & Mobile', name: 'React Native & Expo v54', level: 'Expert', depth: 'Cross-Platform Native Apps, Hardware-Accelerated Skia, FlashList Performance' },
+  { category: 'Frontend & Mobile', name: 'Tailwind CSS & Design Systems', level: 'Expert', depth: 'Token-Based Design Architecture, Monochromatic Systems, Fluid Layouts' },
+  { category: 'Frontend & Mobile', name: 'Framer Motion Physics', level: 'Advanced', depth: '120fps GPU Transitions, Spring Dynamics, Layout Projection, Gesture Handling' },
 
   // BACKEND & DATABASE
-  { category: 'Backend & DB', name: 'Supabase & PostgreSQL', level: 'Expert', depth: 'RLS Security Policies, Triggers, Realtime Subscriptions' },
-  { category: 'Backend & DB', name: 'Node.js REST APIs', level: 'Advanced', depth: 'Zod Runtime Validation, Edge Handlers, Webhooks' },
-  { category: 'Backend & DB', name: 'Database Architecture', level: 'Advanced', depth: 'Relational Modeling, Indexing, Foreign Key Integrity' },
+  { category: 'Backend & DB', name: 'Supabase & PostgreSQL', level: 'Expert', depth: 'Row-Level Security (RLS), Relational Data Modeling, Foreign Key Cascades, Realtime Channels' },
+  { category: 'Backend & DB', name: 'FastAPI & Python Async', level: 'Advanced', depth: 'Asynchronous REST APIs (asyncio), SQLAlchemy ORM, Pydantic Schema Validation' },
+  { category: 'Backend & DB', name: 'MySQL & Enterprise Schemas', level: 'Advanced', depth: 'Schema Normalization (3NF), ACID Transactions, Indexing & Query Optimization' },
+  { category: 'Backend & DB', name: 'Node.js REST & Edge Handlers', level: 'Advanced', depth: 'Edge Route Handlers, Zod Runtime Validation, Webhook Ingestion Pipelines' },
 
-  // TOOLS & DEVOPS
-  { category: 'Tools & DevOps', name: 'Git & GitHub Workflows', level: 'Expert', depth: 'Branching Strategy, CI/CD Actions, Release Tags' },
-  { category: 'Tools & DevOps', name: 'Vercel Edge Platform', level: 'Expert', depth: 'Global CDN Routing, Serverless Functions, Analytics' },
-  { category: 'Tools & DevOps', name: 'Midtrans Payment Gateway', level: 'Advanced', depth: 'Snap API, Webhook Verification, QRIS & Virtual Accounts' },
+  // AI & MEDIA PIPELINE
+  { category: 'AI & Media', name: 'Multimodal AI Integration', level: 'Expert', depth: 'Structured JSON Outputs, Multimodal Vision Prompting, Google Gemini API' },
+  { category: 'AI & Media', name: 'Computer Vision & Audio', level: 'Advanced', depth: 'OpenCV Video Manipulation, Faster-Whisper Automated Transcription, Frame Extraction' },
+  { category: 'AI & Media', name: 'Media Automation Pipeline', level: 'Advanced', depth: 'Headless Video Clipping, Audio Spectrum Analysis, Dynamic Subtitle Synthesis' },
+
+  // DEVOPS & SYSTEMS
+  { category: 'DevOps & Systems', name: 'Git & GitHub Engineering', level: 'Expert', depth: 'Trunk-Based Development, Multi-Stage CI/CD Workflows, Semantic Versioning' },
+  { category: 'DevOps & Systems', name: 'PWA & Offline Architecture', level: 'Expert', depth: 'Service Worker Lifecycle, Cache Storage API, Optimistic State Synchronization' },
+  { category: 'DevOps & Systems', name: 'Payment & API Security', level: 'Advanced', depth: 'Midtrans Snap / QRIS Webhooks, Signature Verification, Token Authentication' },
 ];
 
 const categoryTabs = [
   { id: 'ALL', label: 'SEMUA KEAHLIAN' },
-  { id: 'Frontend', label: 'FRONTEND ARCHITECTURE' },
+  { id: 'Frontend & Mobile', label: 'FRONTEND & MOBILE' },
   { id: 'Backend & DB', label: 'BACKEND & DATABASE' },
-  { id: 'Tools & DevOps', label: 'TOOLS & DEVOPS' },
+  { id: 'AI & Media', label: 'AI & MEDIA PIPELINE' },
+  { id: 'DevOps & Systems', label: 'DEVOPS & SISTEM' },
 ];
 
 export default function Capabilities({ skillNodes }: CapabilitiesProps) {
