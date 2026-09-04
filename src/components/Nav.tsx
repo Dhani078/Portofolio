@@ -99,7 +99,7 @@ export default function Nav() {
           <div className="relative w-8 h-8 rounded-xl bg-black border border-white/20 overflow-hidden flex items-center justify-center shadow-lg shadow-white/10 group-hover:scale-105 transition-transform p-1">
             <Image
               src="/logo.png"
-              alt="MRR Logo"
+              alt="DAN Logo"
               width={32}
               height={32}
               priority
@@ -108,7 +108,7 @@ export default function Nav() {
           </div>
           <div className="flex flex-col">
             <span className="text-sm font-bold font-mono tracking-tight text-white group-hover:text-zinc-300 transition-colors">
-              MRR.DEV
+              DAN.DEV
             </span>
             <span className="text-[10px] font-mono text-zinc-400 -mt-1 hidden sm:block">
               Full-Stack Software Engineer
