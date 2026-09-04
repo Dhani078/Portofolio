@@ -157,7 +157,7 @@ export default function AdminPage() {
               <ShieldCheck className="w-7 h-7" />
             </div>
             <h1 className="text-2xl font-extrabold text-white font-display tracking-tight">
-              MRR.DEV ADMIN
+              DAN.DEV ADMIN
             </h1>
             <p className="text-xs font-mono text-zinc-400">
               Gerbang Otentikasi Terenkripsi Supabase

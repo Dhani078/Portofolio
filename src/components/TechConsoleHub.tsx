@@ -18,7 +18,7 @@ export default function TechConsoleHub() {
       response: (
         <div className="space-y-2 text-zinc-300">
           <div className="text-white font-bold">
-            ✦ MRR.DEV TERMINAL
+            ✦ DAN.DEV TERMINAL
           </div>
           <div>Welcome to the interactive console.</div>
           <div className="text-zinc-400">Type <span className="text-white font-bold font-mono">help</span> to see available commands.</div>

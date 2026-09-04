@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
         await resend.emails.send({
           from: 'Portfolio Contact <onboarding@resend.dev>',
           to: email, // Resend sandbox restricts to verified email, send copy back to sender or admin
-          subject: `MRR.DEV - Pesan diterima dari ${name}`,
+          subject: `DAN.DEV - Pesan diterima dari ${name}`,
           text: `Halo ${name},\n\nTerima kasih sudah menghubungi! Berikut adalah salinan pesan yang kamu kirimkan:\n\n"${message}"\n\nSaya akan segera membalas pesanmu.\n\nSalam hangat,\nMuhammad Rizki Ramadhani`,
         });
         console.log(`✉️ Email successfully sent via Resend to: ${email}`);

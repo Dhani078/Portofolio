@@ -34,7 +34,7 @@ export default function Footer() {
         {/* Brand & Copyright */}
         <div className="flex flex-col items-center md:items-start gap-1">
           <div className="text-sm font-bold font-mono text-white flex items-center gap-2">
-            <span>MRR.DEV</span>
+            <span>DAN.DEV</span>
             <span className="text-zinc-600">/</span>
             <span className="text-xs text-zinc-400 font-normal">
               Muhammad Rizki Ramadhani

@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   description: "Portofolio resmi Muhammad Rizki Ramadhani — Mahasiswa Teknik Informatika UNISKA Banjarmasin & Full-Stack Software Engineer spesialis Next.js 16, React 19, TypeScript, dan Supabase / PostgreSQL.",
   keywords: [
     "Muhammad Rizki Ramadhani",
-    "MRR.DEV",
+    "DAN.DEV",
     "Web Developer Banjarmasin",
     "Full-Stack Developer Indonesia",
     "Next.js 16",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     title: "Muhammad Rizki Ramadhani — Full-Stack Software Engineer",
     description: "Portofolio rekayasa web modern, sistem skala produksi, dan arsitektur database performa tinggi.",
     url: "https://mrr-dev.vercel.app",
-    siteName: "MRR.DEV",
+    siteName: "DAN.DEV",
     images: [
       {
         url: "/mrr.jpg",
@@ -59,7 +59,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Muhammad Rizki Ramadhani",
-  "alternateName": "MRR.DEV",
+  "alternateName": "DAN.DEV",
   "url": "https://mrr-dev.vercel.app",
   "image": "https://mrr-dev.vercel.app/mrr.jpg",
   "jobTitle": "Full-Stack Software Engineer",
