@@ -98,7 +98,7 @@ export default function Nav() {
         >
           <div className="relative w-8 h-8 rounded-xl bg-black border border-white/20 overflow-hidden flex items-center justify-center shadow-lg shadow-white/10 group-hover:scale-105 transition-transform p-1">
             <Image
-              src="/logo.png"
+              src="/Logo.png"
               alt="DAN Logo"
               width={32}
               height={32}
