@@ -118,7 +118,7 @@ export default function Contact() {
                 </a>
               </div>
               <div className="text-sm font-mono text-white font-medium">
-                +62 822-5197-2512
+                +62 821-4856-4979
               </div>
             </div>
 

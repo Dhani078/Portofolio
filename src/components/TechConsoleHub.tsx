@@ -30,7 +30,13 @@ export default function TechConsoleHub() {
 
   const endRef = useRef<HTMLDivElement>(null);
 
+  const hasMounted = useRef(false);
+
   useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
+    }
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [history]);
 
