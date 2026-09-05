@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 
@@ -43,9 +43,18 @@ export default function PortfolioView({
 
   const [loaded, setLoaded] = useState(false);
 
+  useEffect(() => {
+    // Wait for LoadingScreen to finish (it unmounts itself)
+    // LoadingScreen handles its own timing and exits
+    const timer = setTimeout(() => {
+      setLoaded(true);
+    }, 1800); // slightly longer than LoadingScreen max (1.7s)
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#000000] text-[#FFFFFF] font-sans relative selection:bg-white selection:text-black">
-      <LoadingScreen onComplete={() => setLoaded(true)} />
+      <LoadingScreen />
 
       <AnimatePresence mode="wait">
         {loaded && (
