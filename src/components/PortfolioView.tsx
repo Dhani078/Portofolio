@@ -17,7 +17,7 @@ import FaqSection from '@/components/FaqSection';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 import FloatingDock from '@/components/FloatingDock';
-import LoadingScreen from '@/components/LoadingScreen';
+import EntryScreen from '@/components/EntryScreen';
 
 // Dynamic components for optimal performance
 const SpotlightCursor = dynamic(() => import('@/components/SpotlightCursor'), { ssr: false });
@@ -41,23 +41,29 @@ export default function PortfolioView({
     restDelta: 0.001,
   });
 
-  const [loaded, setLoaded] = useState(false);
+  const [entered, setEntered] = useState(false);
 
+  const handleEnter = () => {
+    setEntered(true);
+  };
+
+  // Handle keyboard Enter/Space to enter
   useEffect(() => {
-    // Wait for LoadingScreen to finish (it unmounts itself)
-    // LoadingScreen handles its own timing and exits
-    const timer = setTimeout(() => {
-      setLoaded(true);
-    }, 1800); // slightly longer than LoadingScreen max (1.7s)
-    return () => clearTimeout(timer);
-  }, []);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.key === 'Enter' || e.key === ' ') && !entered) {
+        handleEnter();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [entered]);
 
   return (
     <div className="min-h-screen bg-[#000000] text-[#FFFFFF] font-sans relative selection:bg-white selection:text-black">
-      <LoadingScreen />
+      <EntryScreen onEnter={handleEnter} />
 
       <AnimatePresence mode="wait">
-        {loaded && (
+        {entered && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
