@@ -54,7 +54,7 @@ const defaultProjects: ProjectItem[] = [
     summary: 'Sistem Informasi Monitoring dan Penyewaan Alat Berat terintegrasi (Excavator, Bulldozer, Crane) dengan pelacakan GPS telemetri, jam operasional (Hour Meter), alur tanda tangan digital (E-Sign), dan verifikasi pembayaran multi-role.',
     metrics: { perf: 98, a11y: 100, build: '100%' },
     case_study_url: 'https://equiprent-pt-surya-bangun-sarana.dhanisepeda.workers.dev/',
-    image_url: 'https://raw.githubusercontent.com/Dhani078/equiprent-pt-surya-bangun-sarana/main/assets/screenshots/3_admin_dashboard.png',
+    image_url: '/equiprent-cover.jpg',
     live_url: 'https://equiprent-pt-surya-bangun-sarana.dhanisepeda.workers.dev/',
     github_url: 'https://github.com/Dhani078/equiprent-pt-surya-bangun-sarana',
   },
