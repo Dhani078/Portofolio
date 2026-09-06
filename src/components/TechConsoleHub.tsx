@@ -52,6 +52,7 @@ export default function TechConsoleHub() {
           <div className="space-y-1.5 text-zinc-300">
             <div className="text-white font-bold">COMMANDS:</div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pl-2 font-mono text-xs">
+              <div><span className="text-white font-bold">projects</span> — List production deployments</div>
               <div><span className="text-white font-bold">gh status</span> — Fetch latest GitHub activity</div>
               <div><span className="text-white font-bold">npm run test</span> — Run unit tests</div>
               <div><span className="text-white font-bold">clear</span> — Clear console</div>
@@ -72,7 +73,7 @@ export default function TechConsoleHub() {
             const updatedRes = (
               <div className="space-y-3 text-zinc-300 font-mono text-xs">
                 <div className="flex items-center gap-2">
-                  <span className="text-white font-bold">GITHUB ACTIVITY // Dhani078</span>
+                  <span className="text-white font-bold">GitHub Activity · Dhani078</span>
                   <span className="px-2 py-0.5 rounded-full bg-white/10 text-[10px]">
                     {data.user?.public_repos || 0} Repos
                   </span>
@@ -137,6 +138,35 @@ export default function TechConsoleHub() {
             <div>Tests       <span className="text-white font-bold">14 passed</span> (14)</div>
             <div>Time        1.24s</div>
             <div className="text-white font-bold mt-2">Coverage: 98.4% Statements</div>
+          </div>
+        );
+        break;
+
+      case 'projects':
+      case 'ls':
+        res = (
+          <div className="space-y-2 font-mono text-xs text-zinc-300">
+            <div className="text-white font-bold">✦ PRODUCTION DEPLOYMENTS:</div>
+            <div className="space-y-2 pl-2">
+              <div className="border-l-2 border-white/20 pl-3">
+                <div className="text-white font-bold">01. Embun-Laundry</div>
+                <div className="text-zinc-400 text-[11px]">Stack: Cloudflare Workers • TypeScript • Tailwind CSS • PostgreSQL</div>
+                <div className="text-zinc-500 text-[11px]">Live: <a href="https://embun-laundry.dhanisepeda.workers.dev/dashboard" target="_blank" rel="noreferrer" className="text-white underline">embun-laundry.dhanisepeda.workers.dev/dashboard</a></div>
+                <div className="text-zinc-500 text-[11px]">Repo: <a href="https://github.com/Dhani078/Embun-Laundry" target="_blank" rel="noreferrer" className="text-zinc-300 underline">github.com/Dhani078/Embun-Laundry</a></div>
+              </div>
+              <div className="border-l-2 border-white/20 pl-3">
+                <div className="text-white font-bold">02. EquipRent MS — PT. Surya Bangun Sarana</div>
+                <div className="text-zinc-400 text-[11px]">Stack: React 18 • TypeScript • Cloudflare Workers • TiDB Cloud Serverless</div>
+                <div className="text-zinc-500 text-[11px]">Live: <a href="https://equiprent-pt-surya-bangun-sarana.dhanisepeda.workers.dev/" target="_blank" rel="noreferrer" className="text-white underline">equiprent-pt-surya-bangun-sarana.dhanisepeda.workers.dev</a></div>
+                <div className="text-zinc-500 text-[11px]">Repo: <a href="https://github.com/Dhani078/equiprent-pt-surya-bangun-sarana" target="_blank" rel="noreferrer" className="text-zinc-300 underline">github.com/Dhani078/equiprent-pt-surya-bangun-sarana</a></div>
+              </div>
+              <div className="border-l-2 border-white/20 pl-3">
+                <div className="text-white font-bold">03. GymVault — Fitness &amp; Gym Companion</div>
+                <div className="text-zinc-400 text-[11px]">Stack: Next.js 16 • TypeScript • Tailwind CSS • Vercel Edge</div>
+                <div className="text-zinc-500 text-[11px]">Live: <a href="https://gymvault-app.vercel.app/" target="_blank" rel="noreferrer" className="text-white underline">gymvault-app.vercel.app</a></div>
+                <div className="text-zinc-500 text-[11px]">Repo: <a href="https://github.com/Dhani078/GymVault" target="_blank" rel="noreferrer" className="text-zinc-300 underline">github.com/Dhani078/GymVault</a></div>
+              </div>
+            </div>
           </div>
         );
         break;

@@ -43,78 +43,91 @@ export default function PortfolioView({
 
   const [entered, setEntered] = useState(false);
 
+  // Disable browser automatic scroll restoration so it always starts at the very top
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if ('scrollRestoration' in window.history) {
+        window.history.scrollRestoration = 'manual';
+      }
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
+  // Lock body scroll until user enters portfolio, and ensure view is at the absolute top
+  useEffect(() => {
+    if (!entered) {
+      window.scrollTo(0, 0);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      });
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [entered]);
+
   const handleEnter = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     setEntered(true);
   };
 
-  // Handle keyboard Enter/Space to enter
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.key === 'Enter' || e.key === ' ') && !entered) {
-        handleEnter();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [entered]);
-
   return (
     <div className="min-h-screen bg-[#000000] text-[#FFFFFF] font-sans relative selection:bg-white selection:text-black">
-      <EntryScreen onEnter={handleEnter} />
-
-      <AnimatePresence mode="wait">
-        {entered && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="relative z-10"
-          >
-            {/* GPU Smooth Scroll Progress Indicator */}
-            <motion.div
-              className="fixed top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-white via-zinc-200 to-white origin-left z-50 shadow-[0_0_12px_rgba(255,255,255,0.8)]"
-              style={{ scaleX }}
-            />
-
-            {/* Ambient Lighting Layers */}
-            <div className="fixed inset-0 pointer-events-none z-0">
-              <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-white/[0.03] rounded-full blur-[140px]" />
-              <div className="absolute top-1/2 right-10 w-[500px] h-[500px] bg-white/[0.02] rounded-full blur-[140px]" />
-              <div className="absolute bottom-10 left-1/3 w-[600px] h-[600px] bg-white/[0.02] rounded-full blur-[140px]" />
-              {/* Subtle Cyber Grid Hairline Overlay */}
-              <div className="absolute inset-0 bg-tech-grid opacity-30" />
-            </div>
-
-            {/* Spotlight Cursor Follower */}
-            <SpotlightCursor />
-
-            {/* Floating Navigation Header */}
-            <Nav />
-
-            {/* Main Content Sections */}
-            <main className="relative z-10 flex flex-col">
-              <Hero />
-              <TechTicker />
-              <SelectedWork projects={projects} />
-              <About stats={stats} />
-              <Experience />
-              <Capabilities skillNodes={skillNodes} />
-              <TechConsoleHub />
-              <Process />
-              <Testimonials />
-              <FaqSection />
-              <Contact />
-            </main>
-
-            {/* Footer */}
-            <Footer />
-
-            {/* Floating Fast Contact Hub */}
-            <FloatingDock />
-          </motion.div>
+      {/* Entry Screen Gate with Exit Transition */}
+      <AnimatePresence>
+        {!entered && (
+          <EntryScreen key="entry-screen" onEnter={handleEnter} />
         )}
       </AnimatePresence>
+
+      {/* Main Portfolio Surface */}
+      <div className="relative z-10">
+        {/* GPU Smooth Scroll Progress Indicator */}
+        <motion.div
+          className="fixed top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-white via-zinc-200 to-white origin-left z-50 shadow-[0_0_12px_rgba(255,255,255,0.8)]"
+          style={{ scaleX }}
+        />
+
+        {/* Ambient Lighting Layers */}
+        <div className="fixed inset-0 pointer-events-none z-0">
+          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-white/[0.03] rounded-full blur-[140px]" />
+          <div className="absolute top-1/2 right-10 w-[500px] h-[500px] bg-white/[0.02] rounded-full blur-[140px]" />
+          <div className="absolute bottom-10 left-1/3 w-[600px] h-[600px] bg-white/[0.02] rounded-full blur-[140px]" />
+          {/* Subtle Cyber Grid Hairline Overlay */}
+          <div className="absolute inset-0 bg-tech-grid opacity-30" />
+        </div>
+
+        {/* Spotlight Cursor Follower */}
+        <SpotlightCursor />
+
+        {/* Floating Navigation Header */}
+        <Nav />
+
+        {/* Main Content Sections */}
+        <main className="relative z-10 flex flex-col">
+          <Hero />
+          <TechTicker />
+          <SelectedWork projects={projects} />
+          <About stats={stats} />
+          <Experience />
+          <Capabilities skillNodes={skillNodes} />
+          <TechConsoleHub />
+          <Process />
+          <Testimonials />
+          <FaqSection />
+          <Contact />
+        </main>
+
+        {/* Footer */}
+        <Footer />
+
+        {/* Floating Fast Contact Hub */}
+        <FloatingDock />
+      </div>
     </div>
   );
 }

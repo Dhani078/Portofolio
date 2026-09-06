@@ -21,8 +21,8 @@ const timelineData: TimelineItem[] = [
     institution: 'Independent Software Engineering',
     location: 'Banjarmasin, Indonesia',
     type: 'work',
-    description: 'Mengembangkan aplikasi web full-stack end-to-end untuk berbagai klien bisnis (Laundry Online, Sistem Manajemen Alat Berat PT Surya Bangun Sarana, dsb) dengan fokus performa Next.js 16, Supabase, dan integrasi payment gateway Midtrans.',
-    skills: ['Next.js 16', 'React 19', 'TypeScript', 'Supabase', 'PostgreSQL', 'Tailwind CSS'],
+    description: 'Mengembangkan aplikasi web full-stack end-to-end untuk berbagai produk & klien bisnis (Embun-Laundry, Sistem Monitoring Alat Berat PT Surya Bangun Sarana, GymVault, dsb) dengan fokus performa Next.js 16, Cloudflare Workers, dan arsitektur database modern.',
+    skills: ['Next.js 16', 'React 19', 'TypeScript', 'Cloudflare Workers', 'PostgreSQL', 'Tailwind CSS'],
   },
   {
     year: '2022 — Sekarang',

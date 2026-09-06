@@ -30,26 +30,38 @@ git push origin main # Vercel auto-deploys
 | File | Purpose |
 |------|---------|
 | `src/app/page.tsx` | Server Component, Supabase query, ISR 300s |
-| `src/components/PortfolioView.tsx` | Client shell, LoadingScreen, all sections |
-| `src/components/LoadingScreen.tsx` | Cinematic boot (rAF, clip-path exit, 1.4s) |
+| `src/components/PortfolioView.tsx` | Client shell, EntryScreen coordinator, scroll-to-top enforcement, manual scroll restoration |
+| `src/components/EntryScreen.tsx` | Clean 3D tilt deck, live WITA clock, tactile keyboard triggers, dissolve exit + shockwave |
+| `src/components/SelectedWork.tsx` | Deduplicated work grid with direct "Code" & "Kunjungi" triggers |
 | `src/components/LanyardCard.tsx` | R3F + Rapier physics (ID card + ribbon) |
-| `src/components/TechConsoleHub.tsx` | Interactive terminal (no auto-scroll on mount) |
+| `src/components/TechConsoleHub.tsx` | Interactive terminal (`projects`, `gh status`, `test`, `skills`, `clear`) |
 | `src/components/Hero.tsx` | Headline + 3D Lanyard placement |
 | `src/middleware.ts` | CSP, cache headers, security |
 | `next.config.ts` | Standalone output, image domains, CSP nonce |
 | `public/assets/kartu.glb` | ID card GLTF (embedded texture, updated at build) |
 | `public/assets/bandd.png` | Lanyard ribbon texture (2048x256) |
 
+## Active Production Deployments
+1. **Embun-Laundry**: `https://embun-laundry.dhanisepeda.workers.dev/dashboard` (Repo: `https://github.com/Dhani078/Embun-Laundry`)
+2. **EquipRent MS — PT. Surya Bangun Sarana**: `https://equiprent-pt-surya-bangun-sarana.dhanisepeda.workers.dev/` (Repo: `https://github.com/Dhani078/equiprent-pt-surya-bangun-sarana`)
+3. **GymVault — Fitness Companion**: `https://gymvault-app.vercel.app/` (Repo: `https://github.com/Dhani078/GymVault`)
+
 ## Brand Constants
 - **Name**: DAN.DEV
 - **Person**: Muhammad Rizki Ramadhani
 - **Role**: Full-Stack Software Engineer
-- **Stack**: Next.js 16 • React 19 • TS • PostgreSQL • Supabase • RLS
+- **Stack**: Next.js 16 • React 19 • TS • PostgreSQL • Supabase • Cloudflare Workers
 - **Location**: Banjarmasin, ID (WITA/UTC+8)
 - **WhatsApp**: +62 821-4856-4979 (wa.me/6282148564979)
 - **Email**: dhanisepeda@gmail.com
 
-## Common Tasks
+## Common Tasks & Troubleshooting
+
+### Local Port 3000 In-Use (Fast Fix)
+If Next.js gives `Port 3000 is in use by process <PID>`:
+```powershell
+Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }
+```
 
 ### Update ID Card (Logo/Photo/Info)
 1. Replace `public/Logo.png` and/or `public/mrr.jpg`
@@ -61,10 +73,10 @@ git push origin main # Vercel auto-deploys
 2. Regenerates `public/assets/bandd.png`
 3. `npm run build`
 
-### Add Project (No Code Deploy)
+### Add Project (CMS-driven)
 ```sql
-INSERT INTO projects (title, description, tech_stack, github_url, live_url, image_url, sort_order)
-VALUES ('Name', 'Desc', '["Next.js","TS"]', 'https://github.com/...', 'https://...', '/img.jpg', 1);
+INSERT INTO projects (title, summary, case_study_url, sort_order, year, tags, metrics)
+VALUES ('Project Name', 'Summary', 'https://...', 1, 2026, '["Next.js", "TS"]'::jsonb, '{"perf": 99, "a11y": 100, "build": "✓"}'::jsonb);
 ```
 
 ### Debug 3D Scene
@@ -78,12 +90,17 @@ git push origin main
 ```
 
 ## Quality Gates (Pre-commit Mental Checklist)
-- [ ] `npm run build` passes (TypeScript + Next.js)
+- [ ] `npm run build` passes (TypeScript + Next.js with 0 errors)
 - [ ] No hydration warnings in console
-- [ ] Loading screen exits cleanly (no stuck)
+- [ ] EntryScreen Space/Enter keyboard triggers work smoothly
+- [ ] Zero black screen overlay lingering after entry transition (EntryScreen unmounts properly)
+- [ ] Opening portfolio lands strictly at coordinates `(0, 0)` at the top of Hero (no mid-page jump)
+- [ ] Zero AI slop copy (no `//`, `///`, `SYS-*`, fake radar/telemetry jargon)
+- [ ] No duplicate cards in SelectedWork (Embun-Laundry, EquipRent, GymVault unified)
+- [ ] Direct "Kunjungi" and "Code" buttons open proper target URLs
 - [ ] 3D lanyard draggable, no edge clipping
 - [ ] WhatsApp links use `+6282148564979`
-- [ ] Console doesn't auto-scroll on page load
+- [ ] Interactive terminal supports `projects`, `gh status`, `test`, `skills`, `clear`
 - [ ] CSP headers present (check Network tab)
 - [ ] ISR working (check Vercel dashboard → Functions → ISR)
 
@@ -96,4 +113,4 @@ git push origin main
 
 ---
 
-*Updated: September 2026 — Commit `3a71d9e`*
+*Updated: September 2026 — Production Polish Edition*

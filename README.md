@@ -1,18 +1,19 @@
 # DAN.DEV — "Obsidian Editorial" Dark Brutalist Portfolio
 
-A real, animated, full-stack developer portfolio. Rebuilt from the static visual reference using Next.js (App Router), TypeScript, Tailwind CSS v4, Framer Motion, R3F/Rapier physics, Lenis smooth scrolling, and Supabase.
+A production-grade, full-stack engineer portfolio built with a ruthless Brutalist Monochrome aesthetic (`#000000` / `#09090B` / `#FFFFFF`). Powered by Next.js 16 (Turbopack), React 19, TypeScript strict mode, Tailwind CSS v4, Framer Motion 120 FPS physics, R3F/Rapier 3D physics, Lenis smooth scrolling, and live Supabase PostgreSQL.
 
 ---
 
 ## 🛠️ TECH STACK
 
-- **Frontend**: Next.js 16 (App Router) + React 19 + TypeScript + Tailwind CSS v4
-- **Animations**: Framer Motion (GSAP parity) + Lenis Smooth Scroll
-- **3D / Physics**: React Three Fiber + @react-three/rapier (Rapier physics) + Drei
-- **Database & Backend**: Supabase (PostgreSQL) + Row Level Security (RLS)
-- **Forms & Validation**: React Hook Form + Zod schema validation
-- **Emails**: Resend API (with local console logging fallback)
-- **Deployment**: Vercel Hobby (Free Tier) — ISR `revalidate = 300`, CSP hardened
+- **Core Framework**: Next.js 16.2 (App Router, Turbopack) + React 19 + TypeScript (Strict Mode)
+- **Styling**: Tailwind CSS v4 (Pure Monochrome tokens, custom `@config`)
+- **GPU Motion**: Framer Motion (120 FPS GPU-accelerated transforms) + Lenis Smooth Scroll
+- **3D Physics**: React Three Fiber + `@react-three/rapier` (Rapier physics engine) + Drei
+- **Persistence & Cloud**: Supabase (PostgreSQL with Row Level Security) + Cloudflare Workers
+- **Forms & Contracts**: React Hook Form + Zod runtime schema validation
+- **Integrations**: GitHub REST API (ISR 3600s cache) + Resend Email API
+- **Deployment Target**: Vercel Edge / Hobby Tier — ISR `revalidate = 300`, CSP hardened, 100GB bandwidth budget
 
 ---
 
@@ -63,48 +64,60 @@ To access the messages dashboard at `/admin`, create a login user in your **Supa
 
 ## 🚀 RUNNING LOCALLY
 
-To run the development server, execute:
 ```bash
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+> [!TIP]
+> **Windows Port 3000 In-Use Troubleshooting**:
+> If Next.js falls back to port 3001 with `Port 3000 is in use by process <PID>`, terminate the orphan process via PowerShell:
+> ```powershell
+> # Kill process on port 3000
+> Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }
+> ```
+> Or in Command Prompt:
+> ```cmd
+> taskkill /PID <PID> /F
+> ```
 
 ---
 
 ## 🕸️ DATA FLOW & CODE ARCHITECTURE
 
-### CMS-driven Homepage
-- The home page (`src/app/page.tsx`) functions as a Server Component, querying data directly from Supabase.
-- If the environment variables are not configured yet, the site automatically falls back to rendering default mock data, preventing crashes and allowing local evaluation.
+### 1. Entry Screen Gate & View Lifecycle (`EntryScreen.tsx` & `PortfolioView.tsx`)
+- **Brutalist 3D Tilt Deck**: Interactive 3D perspective card with cursor-tracking spring physics (`useSpring` + `useTransform`) and clean monochrome corner brackets.
+- **Live WITA Synchronized Clock**: Live digital clock synchronized to Banjarmasin (`UTC+8` / `Asia/Makassar`) ticking every second.
+- **Tactile Keyboard & Click Triggers**: Keycaps `[ SPACE ]` and `[ ENTER ↵ ]` actively depress, along with the `BUKA PORTOFOLIO` CTA featuring immediate feedback (`MEMBUKA...` + active ping indicator).
+- **Clean Dissolve Transition & Shockwave**: Expanding hairline shockwave ring with smooth motion blur and scale exit (`blur(20px)`, `scale(1.05)`).
+- **Scroll-to-Top Guarantee**: Body scroll locked while in entry screen; browser scroll restoration disabled (`history.scrollRestoration = 'manual'`); instantly resets coordinates to `(0, 0)` with `requestAnimationFrame` ensuring the user always begins at the top of the Hero section.
+- **Zero-Block Unmounting**: Managed via Framer Motion `<AnimatePresence>` in `PortfolioView.tsx`, fully unmounting the entry gate after transition to prevent lingering overlays.
 
-### Contact API & Spam Protection (`/api/contact`)
-- Submits form values to a Next.js serverless route handler.
-- Validates data formats (email structure, lengths) using **Zod**.
-- Blocks automated spam submissions using a **website honeypot** input (invisible to users).
-- Restricts repetitive submissions using a lightweight **in-memory IP rate limiter** (3 messages per 5 minutes).
-- Saves messages into the database, then triggers an email copy via **Resend**.
+### 2. Deduplicated Production Work Grid (`SelectedWork.tsx`)
+- **Single Definitive Project Cards**: Projects featured in database (`Embun-Laundry`, `EquipRent MS`, `GymVault`) are automatically deduplicated against live GitHub API feeds to eliminate duplicate cards.
+- **Direct Dual Action Triggers**:
+  - **"Kunjungi"**: Directly launches the production live URL (e.g. `https://embun-laundry.dhanisepeda.workers.dev/dashboard`).
+  - **"Code"**: Directly opens the public GitHub repository (e.g. `https://github.com/Dhani078/Embun-Laundry`).
+- **3D Gyroscope Perspective**: Gyroscopic tilt on hover with dynamic liquid indicator pills for category switching.
 
-### Framer Motion + Lenis Animations
-- **Hero Intro**: Individual letters stagger in with `framer-motion` `staggerChildren`.
-- **Cursor Parallax**: `SpotlightCursor` tracks cursor, creates weight-shifting skews via `useMotionValue` + `useSpring`.
-- **Smooth Scroll**: Powered by **Lenis** synchronized with Framer Motion `useScroll` / `useSpring` progress indicator.
-- **Viewport Entrance**: Sections slide up/fade in with `whileInView` + `staggerChildren`.
-- **Node Graph**: SVG paths dynamically trace links between `skill_nodes` coordinates using native `strokeDashoffset` scroll transitions.
-- **Count-Up Numbers**: Metric values increment from zero with `useSpring` + `useScroll` when entering viewport.
+### 3. Interactive CLI Developer Console (`TechConsoleHub.tsx`)
+An in-browser terminal emulator supporting interactive developer commands:
+- `projects` / `ls` — Lists all production deployments, live links, and repository URLs.
+- `gh status` — Fetches real-time GitHub repositories and stargazer telemetry.
+- `npm run test` — Runs simulated Vitest unit test suite with 98.4% coverage report.
+- `skills` — Displays technical capability matrix across frontend, backend, cloud, and databases.
+- `about` / `contact` / `date` — Returns developer profile, direct WhatsApp/email links, and WITA time.
+- `clear` — Clears console history buffer.
 
-### 3D Interactive Lanyard (R3F + Rapier Physics)
+### 4. CMS & Real-time Persistence (`src/app/page.tsx` & Supabase)
+- Homepage functions as a React Server Component with ISR `revalidate = 300` querying Supabase PostgreSQL.
+- Graceful offline fallback to curated local datasets if Supabase credentials are not supplied.
+
+### 5. 3D Interactive Lanyard (R3F + Rapier Physics)
 - **Physics-driven ID Card**: `kartu.glb` (GLTF) hanging from rope joints (`useRopeJoint` + `useSphericalJoint`), draggable with pointer capture.
 - **ID Card Texture**: Embedded in GLB (`1024x1024` PNG), updated at build with **DAN.DEV logo** + photo + info (front/back UV split).
-- **Lanyard Ribbon**: `meshline` with `bandd.png` (2048x256) texture — "DAN.DEV /// FULL-STACK ///" repeating, anisotropic 16x.
-- **Responsive**: Mobile scale `1.7`, anchor `[1.2, 4.2, 0]`; Desktop scale `2.25`, anchor `[3, 4, 0]`.
-- **Full-bleed Canvas**: `left: 50%; transform: translateX(-50%)` prevents edge clipping on drag.
-- **Suspense Wrapper**: Prevents blank screen during async GLTF/texture load.
-
-### Loading Screen (God Mode)
-- **Cinematic boot sequence** (`LoadingScreen.tsx`): 60fps `requestAnimationFrame` counter 0→100% in 1.4s with `easeOutExpo`.
-- **Brutalist UI**: Giant monospaced counter (`text-9xl`), hairline progress bar, corner-bracket logo frame, tech-grid noise background.
-- **Clip-path wipe exit** (`polygon` top→bottom) + fade-in content transition via `AnimatePresence`.
-- **Zero stuck risk**: Self-timed, no callback dependency; hard fallback `setTimeout(2500ms)` guarantees exit.
+- **Lanyard Ribbon**: `meshline` with `bandd.png` (2048x256) texture — "DAN.DEV • FULL-STACK •" repeating, anisotropic 16x.
+- **Full-bleed Canvas**: Centered positioning prevents edge clipping on drag.
 
 ---
 
@@ -136,9 +149,19 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 | Asset | Path | Purpose |
 |-------|------|---------|
 | Logo | `public/Logo.png` | Monogram "DAN" geometric interlocking, white on black |
-| Lanyard Ribbon | `public/assets/bandd.png` | 2048x256 repeating texture "DAN.DEV /// FULL-STACK ///" |
+| Lanyard Ribbon | `public/assets/bandd.png` | 2048x256 repeating texture "DAN.DEV • FULL-STACK •" |
 | ID Card Texture | Embedded in `public/assets/kartu.glb` | 1024x1024 PNG (front/back UV), updated at build |
 | Photo | `public/mrr.jpg` | Portrait for ID card (3:4 ratio) |
+
+---
+
+## 🚀 PRODUCTION PROJECTS MATRIX
+
+| # | Project | Live Production URL | GitHub Repository | Stack |
+|---|---------|---------------------|-------------------|-------|
+| **01** | **Embun-Laundry** | [embun-laundry.dhanisepeda.workers.dev/dashboard](https://embun-laundry.dhanisepeda.workers.dev/dashboard) | [github.com/Dhani078/Embun-Laundry](https://github.com/Dhani078/Embun-Laundry) | Cloudflare Workers • TypeScript • Tailwind CSS • PostgreSQL |
+| **02** | **EquipRent MS — PT. Surya Bangun Sarana** | [equiprent-pt-surya-bangun-sarana.dhanisepeda.workers.dev](https://equiprent-pt-surya-bangun-sarana.dhanisepeda.workers.dev/) | [github.com/Dhani078/equiprent-pt-surya-bangun-sarana](https://github.com/Dhani078/equiprent-pt-surya-bangun-sarana) | React 18 • TypeScript • Cloudflare Workers • TiDB Cloud Serverless |
+| **03** | **GymVault — Fitness Companion** | [gymvault-app.vercel.app](https://gymvault-app.vercel.app/) | [github.com/Dhani078/GymVault](https://github.com/Dhani078/GymVault) | Next.js 16 • TypeScript • Tailwind CSS • Vercel Edge |
 
 ---
 
@@ -167,8 +190,16 @@ npm run build
 ### Add New Project (CMS-driven)
 ```sql
 -- In Supabase SQL Editor
-INSERT INTO projects (title, description, tech_stack, github_url, live_url, image_url, sort_order)
-VALUES ('Project Name', 'Description', '["Next.js", "TS", "Supabase"]', 'https://github.com/...', 'https://...', '/images/project.jpg', 1);
+INSERT INTO projects (title, summary, case_study_url, sort_order, year, tags, metrics)
+VALUES (
+  'Embun-Laundry', 
+  'Aplikasi pengelolaan operasional layanan laundry modern terintegrasi dengan dashboard kasir.', 
+  'https://embun-laundry.dhanisepeda.workers.dev/dashboard', 
+  1, 
+  2026, 
+  '["Cloudflare Workers", "TypeScript", "Tailwind CSS"]'::jsonb, 
+  '{"perf": 99, "a11y": 100, "build": "✓"}'::jsonb
+);
 ```
 No code deploy needed — ISR picks up in ≤5 min.
 
@@ -199,18 +230,21 @@ src/
 │   ├── sitemap.ts            # Dynamic sitemap.xml
 │   ├── api/
 │   │   ├── contact/route.ts  # Contact form + spam protection
-│   │   └── github/route.ts   # GitHub activity feed
+│   │   └── github/route.ts   # GitHub activity feed (3600s cache)
 │   └── admin/page.tsx        # Admin dashboard (RLS protected)
 ├── components/
-│   ├── PortfolioView.tsx     # Root client shell + LoadingScreen
-│   ├── LoadingScreen.tsx     # Cinematic boot (rAF, clip-path exit)
+│   ├── PortfolioView.tsx     # Root client shell, EntryScreen coordinator, scroll-to-top enforcement
+│   ├── EntryScreen.tsx       # Clean 3D tilt deck, live WITA clock, tactile keyboard triggers, dissolve exit
 │   ├── Hero.tsx              # Headline + 3D LanyardCard
 │   ├── LanyardCard.tsx       # R3F + Rapier physics (ID card + ribbon)
-│   ├── Nav.tsx               # Floating nav + brand monogram
-│   ├── TechConsoleHub.tsx    # Interactive terminal (no auto-scroll)
+│   ├── Nav.tsx               # Floating nav + brand monogram + GitHub icon
+│   ├── SelectedWork.tsx      # Deduplicated work grid with direct Code & Kunjungi triggers
+│   ├── TechConsoleHub.tsx    # Interactive terminal (projects, gh status, test, skills, clear)
 │   ├── Contact.tsx           # Contact cards (WhatsApp: +6282148564979)
 │   ├── FloatingDock.tsx      # Fixed bottom-right quick actions
-│   └── ... (sections: About, Experience, Capabilities, etc.)
+│   ├── ui/
+│   │   └── AnimatedCounter.tsx # Spring-driven odometer counter (120 FPS)
+│   └── ... (sections: About, Experience, Capabilities, Testimonials, FaqSection)
 ├── lib/
 │   └── supabase.ts           # Supabase client (server + browser)
 └── middleware.ts             # CSP, cache headers, security
