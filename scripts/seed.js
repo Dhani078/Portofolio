@@ -31,28 +31,28 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const projects = [
   {
     index: "01",
-    title: "Laundry Online System",
+    title: "Embun-Laundry",
     category: "FULL-STACK",
-    year: 2025,
-    tags: ["Next.js 16", "Supabase", "Tailwind CSS", "Midtrans"],
-    summary: "Aplikasi pemesanan layanan laundry terintegrasi dengan penjemputan cucian, pelacakan status pengerjaan secara real-time, dan sistem pembayaran online otomatis.",
-    metrics: { perf: 98, a11y: 100, build: "100%" },
-    case_study_url: "https://laundry-demo.example.com",
-    live_url: "https://laundry-demo.example.com",
-    github_url: "https://github.com",
+    year: 2026,
+    tags: ["Cloudflare Workers", "TypeScript", "Tailwind CSS", "PostgreSQL"],
+    summary: "Aplikasi pengelolaan operasional layanan laundry modern terintegrasi dengan dashboard kasir, tracking status cucian real-time, dan manajemen transaksi online otomatis.",
+    metrics: { perf: 99, a11y: 100, build: "100%" },
+    case_study_url: "https://embun-laundry.dhanisepeda.workers.dev/dashboard",
+    live_url: "https://embun-laundry.dhanisepeda.workers.dev/dashboard",
+    github_url: "https://github.com/Dhani078/Embun-Laundry",
     sort_order: 1
   },
   {
     index: "02",
-    title: "Surya Heavy Rental Hub",
+    title: "EquipRent MS — PT. Surya Bangun Sarana",
     category: "SISTEM WEB",
-    year: 2025,
-    tags: ["React 19", "TypeScript", "Dashboard", "PostgreSQL"],
-    summary: "Sistem manajemen armada dan penyewaan alat berat terintegrasi untuk PT. Surya Bangun Sarana Banjarmasin, mencakup jadwal operator, logistik, dan invoice otomatis.",
-    metrics: { perf: 96, a11y: 98, build: "100%" },
-    case_study_url: "https://surya-rental.example.com",
-    live_url: "https://surya-rental.example.com",
-    github_url: "https://github.com",
+    year: 2026,
+    tags: ["React 18", "TypeScript", "Cloudflare Workers", "TiDB Cloud Serverless", "Tailwind CSS"],
+    summary: "Sistem Informasi Monitoring dan Penyewaan Alat Berat terintegrasi (Excavator, Bulldozer, Crane) dengan pelacakan GPS telemetri, jam operasional (Hour Meter), alur tanda tangan digital (E-Sign), dan verifikasi pembayaran multi-role.",
+    metrics: { perf: 98, a11y: 100, build: "100%" },
+    case_study_url: "https://equiprent-pt-surya-bangun-sarana.dhanisepeda.workers.dev/",
+    live_url: "https://equiprent-pt-surya-bangun-sarana.dhanisepeda.workers.dev/",
+    github_url: "https://github.com/Dhani078/equiprent-pt-surya-bangun-sarana",
     sort_order: 2
   },
   {
@@ -65,7 +65,7 @@ const projects = [
     metrics: { perf: 99, a11y: 100, build: "100%" },
     case_study_url: "https://gymvault-app.vercel.app/",
     live_url: "https://gymvault-app.vercel.app/",
-    github_url: "https://github.com",
+    github_url: "https://github.com/Dhani078/GymVault",
     sort_order: 3
   }
 ];

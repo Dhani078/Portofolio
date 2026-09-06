@@ -15,12 +15,12 @@ const endorsements = [
     colSpan: 'lg:col-span-7',
   },
   {
-    org: 'MITRA USAHA LAUNDRY',
-    domain: 'Real-time Tracking & Fintech',
+    org: 'EMBUN LAUNDRY',
+    domain: 'Real-time Tracking & POS Dashboard',
     verdict: 'ZERO LATENCY',
-    quote: 'Webhook Midtrans QRIS bekerja deterministik tanpa missing callback. State mesin cuci real-time terdistribusi cepat ke klien.',
+    quote: 'Sistem dashboard tracking order dan status operasional laundry bekerja cepat dengan latensi minimal via Cloudflare Workers. Sangat membantu manajemen transaksi harian.',
     author: 'Business Principal & Operations',
-    stack: 'Midtrans Snap API • QRIS Webhook • SSE',
+    stack: 'Cloudflare Workers • TypeScript • REST API',
     colSpan: 'lg:col-span-5',
   },
   {
