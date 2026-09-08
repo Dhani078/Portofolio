@@ -18,6 +18,7 @@ import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 import FloatingDock from '@/components/FloatingDock';
 import EntryScreen from '@/components/EntryScreen';
+import Certificates from '@/components/Certificates';
 
 // Dynamic components for optimal performance
 const SpotlightCursor = dynamic(() => import('@/components/SpotlightCursor'), { ssr: false });
@@ -150,6 +151,7 @@ export default function PortfolioView({
           <Testimonials />
           <FaqSection />
           <Contact />
+          <Certificates />
         </main>
 
         {/* Footer */}
