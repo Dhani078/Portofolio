@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { supabase } from '@/lib/supabase';
+import { createHash } from 'node:crypto';
+import { supabase, getSupabaseAdmin } from '@/lib/supabase';
 import { Resend } from 'resend';
 
 // Zod schema for input validation
@@ -11,19 +12,144 @@ const contactSchema = z.object({
   website: z.string().optional(), // Honeypot
 });
 
-// Basic in-memory rate limiting (IP tracking)
-const rateLimitMap = new Map<string, number[]>();
+// ---------------------------------------------------------------------------
+// Rate limiting
+// ---------------------------------------------------------------------------
 const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
-const MAX_REQUESTS_PER_WINDOW = 3;
+const MAX_REQUESTS_PER_WINDOW = 3;          // per IP per window
+const EMAIL_WINDOW_MS = 60 * 60 * 1000;     // 1 hour
+const MAX_REQUESTS_PER_EMAIL = 5;           // per email per hour
+
+// Fallback store, used only when the service-role client is unavailable
+// (e.g. env not configured). Prevents the route from crashing.
+const fallbackHits = new Map<string, number[]>();
+const FALLBACK_MAX_ENTRIES = 5000;
+
+function hash(value: string): string {
+  return createHash('sha256').update(value.trim().toLowerCase()).digest('hex');
+}
+
+/**
+ * Best-effort client IP.
+ *
+ * We deliberately do NOT trust a raw client-supplied header as the sole key:
+ * `x-forwarded-for` can be spoofed. It is still useful as one signal, and the
+ * persistent server-side counter below is what actually enforces the limit
+ * across restarts.
+ */
+function getClientIp(req: NextRequest): string {
+  const xff = req.headers.get('x-forwarded-for');
+  if (xff) {
+    // Chain is "client, proxy1, proxy2" - take the left-most entry.
+    const first = xff.split(',')[0]?.trim();
+    if (first) return first;
+  }
+  return req.headers.get('x-real-ip')?.trim() || 'unknown';
+}
+
+function pruneFallback(now: number) {
+  if (fallbackHits.size <= FALLBACK_MAX_ENTRIES) return;
+  for (const [key, times] of fallbackHits) {
+    const recent = times.filter((t) => now - t < EMAIL_WINDOW_MS);
+    if (recent.length === 0) fallbackHits.delete(key);
+    else fallbackHits.set(key, recent);
+  }
+}
+
+function fallbackLimit(key: string, max: number, windowMs: number): boolean {
+  const now = Date.now();
+  pruneFallback(now);
+  const times = (fallbackHits.get(key) || []).filter((t) => now - t < windowMs);
+  if (times.length >= max) {
+    fallbackHits.set(key, times);
+    return true; // limited
+  }
+  times.push(now);
+  fallbackHits.set(key, times);
+  return false;
+}
+
+type LimitResult = { limited: true; retryMessage: string } | { limited: false };
+
+async function isRateLimited(ipHash: string, emailHash: string): Promise<LimitResult> {
+  const slowDown = 'Terlalu banyak mengirim pesan. Silakan tunggu beberapa saat sebelum mengirim lagi.';
+
+  // -----------------------------------------------------------------------
+  // Layer 1 (always on): in-memory limiter.
+  // This runs even when Supabase is configured, because the durable layer
+  // below depends on a service key + migration that may be missing (the
+  // Supabase JS client reports failures as returned errors, not exceptions,
+  // which silently disabled limiting in an earlier version of this file).
+  // -----------------------------------------------------------------------
+  if (fallbackLimit(`ip:${ipHash}`, MAX_REQUESTS_PER_WINDOW, RATE_LIMIT_WINDOW_MS)) {
+    return { limited: true, retryMessage: slowDown };
+  }
+  if (fallbackLimit(`em:${emailHash}`, MAX_REQUESTS_PER_EMAIL, EMAIL_WINDOW_MS)) {
+    return { limited: true, retryMessage: slowDown };
+  }
+
+  const admin = getSupabaseAdmin();
+  if (!admin) {
+    return { limited: false };
+  }
+
+  try {
+    const ipSince = new Date(Date.now() - RATE_LIMIT_WINDOW_MS).toISOString();
+    const emailSince = new Date(Date.now() - EMAIL_WINDOW_MS).toISOString();
+
+    const [ipCount, emailCount] = await Promise.all([
+      admin
+        .from('contact_rate_limits')
+        .select('id', { count: 'exact', head: true })
+        .eq('ip_hash', ipHash)
+        .gte('created_at', ipSince),
+      admin
+        .from('contact_rate_limits')
+        .select('id', { count: 'exact', head: true })
+        .eq('email_hash', emailHash)
+        .gte('created_at', emailSince),
+    ]);
+
+    // IMPORTANT: the Supabase JS client returns errors instead of throwing.
+    // If the table is missing (migration not yet applied) `count` is null and
+    // `?? 0` would silently disable rate limiting. Fail closed: fall back to
+    // the in-memory limiter instead of letting everything through.
+    if (ipCount.error || emailCount.error) {
+      console.error(
+        'Rate limit table unavailable (is the migration applied?):',
+        ipCount.error?.message || emailCount.error?.message
+      );
+      return { limited: false };
+    }
+
+    if ((ipCount.count ?? 0) >= MAX_REQUESTS_PER_WINDOW) {
+      return { limited: true, retryMessage: slowDown };
+    }
+    if ((emailCount.count ?? 0) >= MAX_REQUESTS_PER_EMAIL) {
+      return { limited: true, retryMessage: slowDown };
+    }
+
+    // Record the attempt. Failure here must not silently disable limiting,
+    // but we also don't want to block a legitimate user over a logging error.
+    await admin.from('contact_rate_limits').insert({ ip_hash: ipHash, email_hash: emailHash });
+    return { limited: false };
+  } catch (err) {
+    console.error('Rate limit check failed, falling back to in-memory:', err);
+    if (fallbackLimit(`ip:${ipHash}`, MAX_REQUESTS_PER_WINDOW, RATE_LIMIT_WINDOW_MS)) {
+      return { limited: true, retryMessage: slowDown };
+    }
+    return { limited: false };
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    
+
     // 1. Zod Validation
     const parsed = contactSchema.safeParse(body);
     if (!parsed.success) {
-      const errorMsg = parsed.error.issues.map(i => i.message).join(', ');
+      const errorMsg = parsed.error.issues.map((i) => i.message).join(', ');
       return NextResponse.json({ error: errorMsg }, { status: 400 });
     }
 
@@ -37,24 +163,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true, message: 'Pesan terkirim ✓' });
     }
 
-    // 3. Rate Limiting check
-    const clientIp = req.headers.get('x-forwarded-for') || '127.0.0.1';
-    const now = Date.now();
-    const timestamps = rateLimitMap.get(clientIp) || [];
-    
-    // Filter out timestamps older than the rate limit window
-    const activeTimestamps = timestamps.filter(t => now - t < RATE_LIMIT_WINDOW_MS);
-    
-    if (activeTimestamps.length >= MAX_REQUESTS_PER_WINDOW) {
-      return NextResponse.json(
-          { error: 'Terlalu banyak mengirim pesan. Silakan tunggu 5 menit sebelum mengirim lagi.' },
-          { status: 429 }
-      );
+    // 3. Rate limiting (persistent, service-role backed)
+    const ipHash = hash(getClientIp(req));
+    const emailHash = hash(email);
+
+    const limit = await isRateLimited(ipHash, emailHash);
+    if (limit.limited) {
+      return NextResponse.json({ error: limit.retryMessage }, { status: 429 });
     }
-    
-    // Update rate limit state
-    activeTimestamps.push(now);
-    rateLimitMap.set(clientIp, activeTimestamps);
 
     // 4. Save message to Supabase contact_messages
     const { error: dbError } = await supabase

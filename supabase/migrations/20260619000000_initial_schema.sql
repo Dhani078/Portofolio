@@ -72,30 +72,57 @@ CREATE POLICY "Allow authenticated admin read on contact_messages" ON public.con
 CREATE POLICY "Allow authenticated admin update on contact_messages" ON public.contact_messages
     FOR UPDATE USING (auth.role() = 'authenticated');
 
--- Seed Data (Clean up existing before insert to avoid duplicates)
-TRUNCATE public.projects CASCADE;
-TRUNCATE public.skill_nodes CASCADE;
-TRUNCATE public.stats CASCADE;
+-- Seed Data
+-- NOTE: the original version ran TRUNCATE ... CASCADE here. Re-running this
+-- migration (or running it against a live database) would have destroyed every
+-- row in these tables. Seeding is now idempotent: we use ON CONFLICT DO UPDATE
+-- so re-running updates the seed rows instead of wiping the tables.
+-- Natural keys must exist for upserts to work:
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS seed_key TEXT;
+ALTER TABLE public.skill_nodes ADD COLUMN IF NOT EXISTS seed_key TEXT;
+ALTER TABLE public.stats ADD COLUMN IF NOT EXISTS seed_key TEXT;
+CREATE UNIQUE INDEX IF NOT EXISTS uq_projects_seed_key ON public.projects (seed_key);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_skill_nodes_seed_key ON public.skill_nodes (seed_key);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_stats_seed_key ON public.stats (seed_key);
 
 -- Projects Seed
-INSERT INTO public.projects (index, title, year, tags, summary, metrics, case_study_url, sort_order) VALUES
-('01', 'Laundry Online', 2025, ARRAY['Web', 'Booking', 'Payments'], 'Aplikasi web pemesanan, jemput, dan antar laundry online secara praktis.', '{"perf": 95, "a11y": 100, "build": "✓"}', '#', 1),
-('02', 'Surya Heavy Rental', 2025, ARRAY['Web', 'Dashboard', 'Inventory'], 'Sistem manajemen penyewaan alat berat terintegrasi untuk PT. Surya Bangun Sarana Banjarmasin.', '{"perf": 96, "a11y": 98, "build": "✓"}', '#', 2),
-('03', 'Vault — Mobile Gym', 2026, ARRAY['Mobile', 'Fitness', 'App'], 'Aplikasi mobile tracker & pendamping latihan gym harian yang simpel dan interaktif.', '{"perf": 94, "a11y": 97, "build": "✓"}', '#', 3);
+INSERT INTO public.projects (seed_key, index, title, year, tags, summary, metrics, case_study_url, sort_order) VALUES
+('proj-01', '01', 'Laundry Online', 2025, ARRAY['Web', 'Booking', 'Payments'], 'Aplikasi web pemesanan, jemput, dan antar laundry online secara praktis.', '{"perf": 95, "a11y": 100, "build": "✓"}', '#', 1),
+('proj-02', '02', 'Surya Heavy Rental', 2025, ARRAY['Web', 'Dashboard', 'Inventory'], 'Sistem manajemen penyewaan alat berat terintegrasi untuk PT. Surya Bangun Sarana Banjarmasin.', '{"perf": 96, "a11y": 98, "build": "✓"}', '#', 2),
+('proj-03', '03', 'Vault — Mobile Gym', 2026, ARRAY['Mobile', 'Fitness', 'App'], 'Aplikasi mobile tracker & pendamping latihan gym harian yang simpel dan interaktif.', '{"perf": 94, "a11y": 97, "build": "✓"}', '#', 3)
+ON CONFLICT (seed_key) DO UPDATE SET
+    index = EXCLUDED.index,
+    title = EXCLUDED.title,
+    year = EXCLUDED.year,
+    tags = EXCLUDED.tags,
+    summary = EXCLUDED.summary,
+    metrics = EXCLUDED.metrics,
+    case_study_url = EXCLUDED.case_study_url,
+    sort_order = EXCLUDED.sort_order;
 
 -- Stats Seed
-INSERT INTO public.stats (label, value, sort_order) VALUES
-('Proyek Selesai', '3+', 1),
-('Alur Kerja', 'AI-First', 2),
-('Teknik Informatika', 'UNISKA', 3);
+INSERT INTO public.stats (seed_key, label, value, sort_order) VALUES
+('stat-projects', 'Proyek Selesai', '3+', 1),
+('stat-workflow', 'Alur Kerja', 'AI-First', 2),
+('stat-campus', 'Teknik Informatika', 'UNISKA', 3)
+ON CONFLICT (seed_key) DO UPDATE SET
+    label = EXCLUDED.label,
+    value = EXCLUDED.value,
+    sort_order = EXCLUDED.sort_order;
 
 -- Skill Nodes Seed
-INSERT INTO public.skill_nodes (label, "group", connects_to, x, y) VALUES
-('Claude', 'ai_tools', ARRAY['Web Apps', 'Mobile Apps'], 60, 60),
-('Stitch', 'ai_tools', ARRAY['Web Apps', 'Mobile Apps'], 60, 110),
-('Antigravity', 'ai_tools', ARRAY['Web Apps', 'Mobile Apps'], 60, 160),
-('Cursor', 'ai_tools', ARRAY['Web Apps', 'Mobile Apps'], 60, 210),
-('Web Apps', 'build', ARRAY['Prompt Engineering', 'UI/UX'], 200, 100),
-('Mobile Apps', 'build', ARRAY['Prompt Engineering', 'UI/UX'], 200, 170),
-('Prompt Engineering', 'craft', ARRAY[]::text[], 340, 100),
-('UI/UX', 'craft', ARRAY[]::text[], 340, 170);
+INSERT INTO public.skill_nodes (seed_key, label, "group", connects_to, x, y) VALUES
+('skill-claude', 'Claude', 'ai_tools', ARRAY['Web Apps', 'Mobile Apps'], 60, 60),
+('skill-stitch', 'Stitch', 'ai_tools', ARRAY['Web Apps', 'Mobile Apps'], 60, 110),
+('skill-antigravity', 'Antigravity', 'ai_tools', ARRAY['Web Apps', 'Mobile Apps'], 60, 160),
+('skill-cursor', 'Cursor', 'ai_tools', ARRAY['Web Apps', 'Mobile Apps'], 60, 210),
+('skill-web', 'Web Apps', 'build', ARRAY['Prompt Engineering', 'UI/UX'], 200, 100),
+('skill-mobile', 'Mobile Apps', 'build', ARRAY['Prompt Engineering', 'UI/UX'], 200, 170),
+('skill-prompt', 'Prompt Engineering', 'craft', ARRAY[]::text[], 340, 100),
+('skill-uiux', 'UI/UX', 'craft', ARRAY[]::text[], 340, 170)
+ON CONFLICT (seed_key) DO UPDATE SET
+    label = EXCLUDED.label,
+    "group" = EXCLUDED."group",
+    connects_to = EXCLUDED.connects_to,
+    x = EXCLUDED.x,
+    y = EXCLUDED.y;
