@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import {
@@ -82,6 +83,9 @@ const certificates: Certificate[] = [
 
 export default function Certificates() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  // Portal hanya bisa dipakai setelah hydration (document tersedia di browser).
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const isOpen = selectedIndex !== null;
   const active = isOpen ? certificates[selectedIndex as number] : null;
@@ -227,9 +231,15 @@ export default function Certificates() {
         </p>
       </div>
 
-      {/* Lightbox viewer */}
-      <AnimatePresence>
-        {isOpen && active && (
+      {/* Lightbox viewer
+          Dirender lewat portal ke document.body. Tanpa portal, modal ini hidup
+          di dalam <main class="relative z-10"> sehingga z-[9999] hanya berlaku
+          di dalam stacking context itu dan Nav (z-50 di level root) tetap
+          menangkap klik - tombol Tutup/Unduh jadi tidak bisa diklik. */}
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {isOpen && active && (
           <motion.div
             key="cert-lightbox"
             initial={{ opacity: 0 }}
@@ -293,14 +303,14 @@ export default function Certificates() {
               </div>
 
               {/* Image viewer */}
-              <div className="relative flex-1 overflow-auto rounded-2xl bg-[#09090B] border border-white/10">
+              <div className="relative flex-1 min-h-0 overflow-auto rounded-2xl bg-[#09090B] border border-white/10">
                 <Image
                   key={active.id}
                   src={active.imageUrl}
                   alt={active.title}
                   width={1684}
                   height={1191}
-                  className="w-full h-auto mx-auto block"
+                  className="w-full h-auto max-h-[70vh] object-contain mx-auto block"
                   sizes="(max-width: 1024px) 100vw, 896px"
                 />
               </div>
@@ -340,8 +350,10 @@ export default function Certificates() {
               </p>
             </motion.div>
           </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </section>
   );
 }
