@@ -156,7 +156,7 @@ export default function Contact() {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Contoh: Budi Santoso (PT. Maju)"
-                  className="w-full px-4 py-3 rounded-2xl bg-[#121215] border border-white/10 text-white font-mono text-xs focus:border-white focus:outline-none placeholder:text-zinc-600 transition-colors"
+                  className="w-full px-4 py-3 rounded-2xl bg-[#121215] border border-white/10 text-white font-mono text-base focus:border-white focus:outline-none placeholder:text-zinc-600 transition-colors"
                 />
               </div>
 
@@ -170,7 +170,7 @@ export default function Contact() {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="budi@example.com"
-                  className="w-full px-4 py-3 rounded-2xl bg-[#121215] border border-white/10 text-white font-mono text-xs focus:border-white focus:outline-none placeholder:text-zinc-600 transition-colors"
+                  className="w-full px-4 py-3 rounded-2xl bg-[#121215] border border-white/10 text-white font-mono text-base focus:border-white focus:outline-none placeholder:text-zinc-600 transition-colors"
                 />
               </div>
             </div>
@@ -185,7 +185,7 @@ export default function Contact() {
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 placeholder="Ceritakan tentang proyek web yang ingin Anda bangun, estimasi waktu, atau kebutuhan fitur..."
-                className="w-full px-4 py-3 rounded-2xl bg-[#121215] border border-white/10 text-white font-mono text-xs focus:border-white focus:outline-none placeholder:text-zinc-600 transition-colors resize-none"
+                className="w-full px-4 py-3 rounded-2xl bg-[#121215] border border-white/10 text-white font-mono text-base focus:border-white focus:outline-none placeholder:text-zinc-600 transition-colors resize-none"
               />
             </div>
 

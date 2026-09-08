@@ -264,7 +264,7 @@ export default function LanyardCard() {
         width: '100vw',
         height: '100%',
         pointerEvents: 'none',
-        zIndex: 20,
+        zIndex: 0,
         overflow: 'visible',
       }}
     >
@@ -276,7 +276,11 @@ export default function LanyardCard() {
             background: 'transparent',
             width: '100%',
             height: '100%',
-            pointerEvents: 'auto',
+            // On touch/mobile the canvas spans 100vw and sits near the CTA buttons.
+            // Letting it capture pointer events there steals taps from the hero
+            // actions, so we disable interaction below the lg breakpoint while
+            // keeping drag-to-swing working on desktop.
+            pointerEvents: isMobile ? 'none' : 'auto',
           }}
         >
           <ambientLight intensity={Math.PI} />

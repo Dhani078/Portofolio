@@ -450,8 +450,9 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
                 </p>
               </div>
 
-              {/* Metrics Grid */}
-              <div className="grid grid-cols-3 gap-3 mb-6">
+              {/* Metrics Grid — stack on phones so labels like "A11y (WCAG)"
+                  and "100% Strict" never get squeezed/overflow */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
                 <div className="p-4 rounded-2xl bg-[#121215] border border-white/10 text-center">
                   <div className="text-[10px] font-mono text-zinc-400 uppercase">Lighthouse</div>
                   <div className="text-base font-bold text-white font-mono mt-0.5">
