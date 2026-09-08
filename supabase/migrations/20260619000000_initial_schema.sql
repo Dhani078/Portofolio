@@ -81,6 +81,23 @@ CREATE POLICY "Allow authenticated admin update on contact_messages" ON public.c
 ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS seed_key TEXT;
 ALTER TABLE public.skill_nodes ADD COLUMN IF NOT EXISTS seed_key TEXT;
 ALTER TABLE public.stats ADD COLUMN IF NOT EXISTS seed_key TEXT;
+-- Backfill: baris yang SUDAH ADA (mis. 3 proyek yang diedit lewat admin)
+-- punya seed_key NULL. Karena unique index mengizinkan banyak NULL, upsert
+-- akan menyisipkan DUPLIKAT alih-alih memperbarui. Karena itu kita isi
+-- seed_key untuk baris lama berdasarkan nilai alaminya dulu.
+-- Hasilnya HARUS sama persis dengan nilai seed_key pada INSERT di bawah;
+-- kalau meleset, unique index menganggapnya baris baru dan data jadi dobel.
+UPDATE public.projects SET seed_key = 'proj-' || index WHERE seed_key IS NULL;
+UPDATE public.stats SET seed_key = CASE lower(label)
+    WHEN 'proyek selesai'      THEN 'stat-projects'
+    WHEN 'alur kerja'          THEN 'stat-workflow'
+    WHEN 'teknik informatika'  THEN 'stat-campus'
+    ELSE 'stat-' || lower(regexp_replace(label, '[^a-zA-Z0-9]', '', 'g'))
+END WHERE seed_key IS NULL;
+UPDATE public.skill_nodes SET seed_key = 'skill-' || lower(
+    regexp_replace(label, '[^a-zA-Z0-9]', '', 'g')
+) WHERE seed_key IS NULL;
+
 CREATE UNIQUE INDEX IF NOT EXISTS uq_projects_seed_key ON public.projects (seed_key);
 CREATE UNIQUE INDEX IF NOT EXISTS uq_skill_nodes_seed_key ON public.skill_nodes (seed_key);
 CREATE UNIQUE INDEX IF NOT EXISTS uq_stats_seed_key ON public.stats (seed_key);
@@ -116,9 +133,9 @@ INSERT INTO public.skill_nodes (seed_key, label, "group", connects_to, x, y) VAL
 ('skill-stitch', 'Stitch', 'ai_tools', ARRAY['Web Apps', 'Mobile Apps'], 60, 110),
 ('skill-antigravity', 'Antigravity', 'ai_tools', ARRAY['Web Apps', 'Mobile Apps'], 60, 160),
 ('skill-cursor', 'Cursor', 'ai_tools', ARRAY['Web Apps', 'Mobile Apps'], 60, 210),
-('skill-web', 'Web Apps', 'build', ARRAY['Prompt Engineering', 'UI/UX'], 200, 100),
-('skill-mobile', 'Mobile Apps', 'build', ARRAY['Prompt Engineering', 'UI/UX'], 200, 170),
-('skill-prompt', 'Prompt Engineering', 'craft', ARRAY[]::text[], 340, 100),
+('skill-webapps', 'Web Apps', 'build', ARRAY['Prompt Engineering', 'UI/UX'], 200, 100),
+('skill-mobileapps', 'Mobile Apps', 'build', ARRAY['Prompt Engineering', 'UI/UX'], 200, 170),
+('skill-promptengineering', 'Prompt Engineering', 'craft', ARRAY[]::text[], 340, 100),
 ('skill-uiux', 'UI/UX', 'craft', ARRAY[]::text[], 340, 170)
 ON CONFLICT (seed_key) DO UPDATE SET
     label = EXCLUDED.label,
