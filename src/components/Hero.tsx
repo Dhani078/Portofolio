@@ -16,7 +16,7 @@ const LanyardCard = dynamic(() => import('@/components/LanyardCard'), {
   ssr: false,
 });
 
-export default function Hero() {
+export default function Hero({ showLanyard = true }: { showLanyard?: boolean }) {
   const handleScrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
@@ -28,7 +28,7 @@ export default function Hero() {
   return (
     <section className="relative min-h-[92vh] flex flex-col justify-center pt-24 sm:pt-32 pb-16 max-w-[1400px] mx-auto w-full px-4 sm:px-8 lg:px-12 scroll-mt-24 overflow-visible" id="hero">
       {/* 3D Interactive Lanyard Hanging Natural Background/Right Placement (Same as Reference) */}
-      <LanyardCard />
+      {showLanyard && <LanyardCard />}
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10 pointer-events-none">
         {/* Left Column: Monumental Monochrome Typography & Actions */}
