@@ -5,6 +5,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 export default function EntryScreen({ onEnter }: { onEnter: () => void }) {
   const [isEntering, setIsEntering] = useState(false);
+  const enterTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [mounted, setMounted] = useState(false);
   const [pressedKey, setPressedKey] = useState<'space' | 'enter' | null>(null);
   const [currentTime, setCurrentTime] = useState('02:00:00');
@@ -68,11 +69,24 @@ export default function EntryScreen({ onEnter }: { onEnter: () => void }) {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [mouseX, mouseY, cardMouseX, cardMouseY]);
 
+  // Cancel the pending enter transition if this screen unmounts first.
+  useEffect(() => {
+    return () => {
+      if (enterTimeoutRef.current) {
+        clearTimeout(enterTimeoutRef.current);
+        enterTimeoutRef.current = null;
+      }
+    };
+  }, []);
+
   // Keyboard trigger listener (Space & Enter)
   const handleTriggerEnter = () => {
     if (isEntering) return;
     setIsEntering(true);
-    setTimeout(() => {
+    // Store the id so the pending callback can be cancelled if EntryScreen
+    // unmounts before it fires (avoids calling onEnter on a dead component).
+    enterTimeoutRef.current = setTimeout(() => {
+      enterTimeoutRef.current = null;
       onEnter();
     }, 120);
   };

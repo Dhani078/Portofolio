@@ -232,9 +232,14 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Abortable fetch: without this, navigating away mid-request triggers a
+    // "setState on unmounted component" warning and a wasted request.
+    const controller = new AbortController();
+
     async function fetchGithubRepos() {
       try {
-        const res = await fetch('/api/github');
+        const res = await fetch('/api/github', { signal: controller.signal });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         
         if (data.repos) {
@@ -260,14 +265,18 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
           }));
           setGithubProjects(mapped);
         }
-      } catch (err) {
+      } catch (err: any) {
+        // An aborted request is intentional (component unmounted) - stay quiet.
+        if (err?.name === 'AbortError') return;
         console.error('Failed to load GitHub repos:', err);
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     }
     
     fetchGithubRepos();
+
+    return () => controller.abort();
   }, []);
 
   // Combine DB/Default projects with live GitHub repos (preventing duplicates)
@@ -345,6 +354,28 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
 
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
 
+  // Modal UX: close on Escape and lock background scroll, matching the
+  // Certificates viewer so behaviour is consistent across the site.
+  useEffect(() => {
+    if (!selectedProject) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setSelectedProject(null);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [selectedProject]);
+
   return (
     <section className="py-24 border-t border-white/10 max-w-[1400px] mx-auto w-full px-4 sm:px-8 lg:px-12 scroll-mt-24" id="work">
       {/* Section Header */}
@@ -408,12 +439,19 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
       {/* Project Detail Modal */}
       <AnimatePresence>
         {selectedProject && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-2xl">
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-2xl"
+            onClick={() => setSelectedProject(null)}
+            role="dialog"
+            aria-modal="true"
+            aria-label={selectedProject.title}
+          >
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.25 }}
+              onClick={(e) => e.stopPropagation()}
               className="relative w-full max-w-2xl bg-[#09090B] border border-white/20 rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto"
             >
               <button
