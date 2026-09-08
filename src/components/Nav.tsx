@@ -28,7 +28,7 @@ export default function Nav() {
   }, []);
 
   useEffect(() => {
-    const sections = ['hero', 'work', 'about', 'experience', 'skills', 'console', 'process', 'testimonials', 'faq', 'contact'];
+    const sections = ['hero', 'work', 'about', 'experience', 'skills', 'console', 'process', 'testimonials', 'faq', 'contact', 'certificates'];
     const handleScrollSpy = () => {
       const scrollPosition = window.scrollY + 200;
 
@@ -59,6 +59,7 @@ export default function Nav() {
     { id: 'process', label: 'Alur' },
     { id: 'testimonials', label: 'Testimoni' },
     { id: 'faq', label: 'FAQ' },
+    { id: 'certificates', label: 'Sertifikat' },
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
