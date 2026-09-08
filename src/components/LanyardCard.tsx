@@ -68,6 +68,8 @@ function Band({ isMobile = false, maxSpeed = 50, minSpeed = 10 }: BandProps) {
 
   const [dragged, setDragged] = useState<THREE.Vector3 | false>(false);
   const [hovered, setHovered] = useState(false);
+  // Tali baru ditampilkan setelah geometrinya punya titik valid.
+  const [bandReady, setBandReady] = useState(false);
 
   // Rope joints for string physics
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
@@ -128,11 +130,33 @@ function Band({ isMobile = false, maxSpeed = 50, minSpeed = 10 }: BandProps) {
       });
 
       curve.points[0].copy(j3.current.translation());
-      curve.points[1].copy((j2.current as any).lerped || j2.current.translation());
-      curve.points[2].copy((j1.current as any).lerped || j1.current.translation());
+      // Guard: on the first frames the physics bodies can still hold NaN
+      // (lerped not initialised yet). Feeding NaN into the ribbon produces
+      // "computeBoundingSphere(): Computed radius is NaN" and makes the
+      // band disappear entirely. Fall back to the raw translation.
+      const p2 = (j2.current as any).lerped || j2.current.translation();
+      const p1 = (j1.current as any).lerped || j1.current.translation();
+      const safe = (v: any, fallback: any) =>
+        v && Number.isFinite(v.x) && Number.isFinite(v.y) && Number.isFinite(v.z) ? v : fallback;
+      curve.points[1].copy(safe(p2, j2.current.translation()));
+      curve.points[2].copy(safe(p1, j1.current.translation()));
       curve.points[3].copy(fixed.current.translation());
 
-      band.current?.geometry?.setPoints(curve.getPoints(32));
+      // Validasi SELURUH titik sebelum setPoints. Kalau satu saja NaN/Infinity,
+      // geometri jadi rusak dan three.js mengeluarkan
+      // "computeBoundingSphere(): Computed radius is NaN" terus-menerus
+      // (terlihat membeludak saat modal sertifikat dibuka karena komponen
+      // 3D ikut di-render ulang).
+      const finite = (v: { x: number; y: number; z: number }) =>
+        Number.isFinite(v.x) && Number.isFinite(v.y) && Number.isFinite(v.z);
+
+      if (curve.points.every(finite)) {
+        const pts = curve.getPoints(32);
+        if (pts.every(finite) && pts.length > 1) {
+          band.current?.geometry?.setPoints(pts);
+          if (!bandReady) setBandReady(true);
+        }
+      }
 
       ang.copy(card.current.angvel());
       rot.copy(card.current.rotation());
@@ -221,8 +245,12 @@ function Band({ isMobile = false, maxSpeed = 50, minSpeed = 10 }: BandProps) {
         </RigidBody>
       </group>
 
-      {/* Dynamic Lanyard Ribbon MeshLine */}
-      <mesh ref={band}>
+      {/* Dynamic Lanyard Ribbon MeshLine
+          setPoints() is called from useFrame; before the first call the
+          geometry has no points at all, which is what produced
+          "computeBoundingSphere(): Computed radius is NaN".
+          Initialising it with a valid straight segment avoids that. */}
+      <mesh ref={band} frustumCulled={false} visible={bandReady}>
         {/* @ts-ignore */}
         <meshLineGeometry />
         {/* @ts-ignore */}

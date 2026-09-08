@@ -20,14 +20,18 @@ const securityHeaders = [
     value: [
       "default-src 'self'",
       // Next.js needs unsafe-inline + unsafe-eval for its runtime/hydration.
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:",
       // React & framer-motion write inline styles at runtime.
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://images.unsplash.com https://images.pexels.com https://me7aitdbxq.ufs.sh https://raw.githubusercontent.com",
       "font-src 'self' data:",
-      // Outbound links (github, wa.me, live project demos) are <a>, not fetch(),
-      // but keep connect-src explicit for the GitHub stats route.
-      "connect-src 'self' https://*.supabase.co https://api.github.com",
+      // blob: is REQUIRED - the 3D lanyard loads kartu.glb and its textures
+      // via blob: URLs. Without it three.js fails with
+      // "GLTFLoader: Couldn't load texture blob:...".
+      // media-src covers <audio>/<video>; worker-src for blob workers.
+      "connect-src 'self' blob: data: https://*.supabase.co https://api.github.com",
+      "media-src 'self' blob: data:",
+      "worker-src 'self' blob:",
       // Clickjacking protection: nobody may frame this site.
       "frame-ancestors 'none'",
       "base-uri 'self'",
