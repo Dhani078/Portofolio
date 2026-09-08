@@ -42,6 +42,7 @@ export default function PortfolioView({
   });
 
   const [entered, setEntered] = useState(false);
+  const [showLanyard, setShowLanyard] = useState(false);
 
   // Disable browser automatic scroll restoration so it always starts at the very top
   useEffect(() => {
@@ -74,6 +75,35 @@ export default function PortfolioView({
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     setEntered(true);
   };
+
+  // Defer heavy 3D (three.js + rapier) until after the user enters.
+  // Mounting it during the entry screen would download ~3.3MB up front and
+  // compete for bandwidth with the first paint of the hero content.
+  useEffect(() => {
+    if (!entered) return;
+
+    let rafId = 0;
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    // requestIdleCallback is not available in Safari; fall back to a timeout.
+    const schedule =
+      typeof window !== 'undefined' && 'requestIdleCallback' in window
+        ? (cb: () => void) => {
+            rafId = (window as any).requestIdleCallback(cb, { timeout: 1200 });
+          }
+        : (cb: () => void) => {
+            timeoutId = setTimeout(cb, 200);
+          };
+
+    schedule(() => setShowLanyard(true));
+
+    return () => {
+      if (rafId && 'cancelIdleCallback' in window) {
+        (window as any).cancelIdleCallback(rafId);
+      }
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [entered]);
 
   return (
     <div className="min-h-screen bg-[#000000] text-[#FFFFFF] font-sans relative selection:bg-white selection:text-black">
@@ -109,7 +139,7 @@ export default function PortfolioView({
 
         {/* Main Content Sections */}
         <main className="relative z-10 flex flex-col">
-          <Hero />
+          <Hero showLanyard={showLanyard} />
           <TechTicker />
           <SelectedWork projects={projects} />
           <About stats={stats} />
