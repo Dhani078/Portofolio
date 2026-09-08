@@ -265,7 +265,7 @@ export default function TechConsoleHub() {
               onChange={(e) => setInputVal(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Type 'help' or 'gh status'..."
-              className="w-full bg-transparent text-white font-mono text-xs sm:text-sm focus:outline-none placeholder:text-zinc-600"
+              className="w-full bg-transparent text-white font-mono text-base focus:outline-none placeholder:text-zinc-600"
             />
             <button
               onClick={() => {

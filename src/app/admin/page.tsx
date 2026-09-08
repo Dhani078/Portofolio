@@ -178,7 +178,7 @@ export default function AdminPage() {
               <div className="relative">
                 <Mail className="w-4 h-4 text-zinc-500 absolute left-3.5 top-3.5" />
                 <input
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#131826] border border-white/10 text-white font-mono text-xs focus:border-sky-400 focus:outline-none placeholder:text-zinc-600 transition-colors"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#131826] border border-white/10 text-white font-mono text-base focus:border-sky-400 focus:outline-none placeholder:text-zinc-600 transition-colors"
                   id="email"
                   type="email"
                   placeholder="admin@mrr.dev"
@@ -197,7 +197,7 @@ export default function AdminPage() {
               <div className="relative">
                 <Lock className="w-4 h-4 text-zinc-500 absolute left-3.5 top-3.5" />
                 <input
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#131826] border border-white/10 text-white font-mono text-xs focus:border-sky-400 focus:outline-none placeholder:text-zinc-600 transition-colors"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#131826] border border-white/10 text-white font-mono text-base focus:border-sky-400 focus:outline-none placeholder:text-zinc-600 transition-colors"
                   id="password"
                   type="password"
                   placeholder="••••••••"
