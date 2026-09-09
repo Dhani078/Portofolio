@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, Terminal, CheckCircle2, ShieldCheck, GitPullRequest, Code2 } from 'lucide-react';
+import { Sparkles, CheckCircle2 } from 'lucide-react';
 
 const endorsements = [
   {

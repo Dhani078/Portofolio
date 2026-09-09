@@ -81,10 +81,17 @@ export const categories = [
   { id: 'GITHUB OSS', label: 'OPEN SOURCE' },
 ];
 
+interface GithubRepoItem {
+  name: string;
+  html_url: string;
+  description?: string;
+  language?: string;
+  updated_at: string;
+}
+
 export default function SelectedWork({ projects }: SelectedWorkProps) {
   const [activeCategory, setActiveCategory] = useState('ALL');
   const [githubProjects, setGithubProjects] = useState<ProjectItem[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Abortable fetch: without this, navigating away mid-request triggers a
@@ -100,12 +107,12 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
         if (data.repos) {
           // Exclude repos that are already primary featured projects or internal config
           const excludedRepos = ['embun-laundry', 'gymvault', 'equiprent-pt-surya-bangun-sarana', 'portofolio', 'dhani078'];
-          const standaloneRepos = data.repos.filter((repo: any) => {
+          const standaloneRepos = data.repos.filter((repo: GithubRepoItem) => {
             const nameLower = (repo.name || '').toLowerCase();
             return !excludedRepos.some((ex) => nameLower === ex || nameLower.includes(ex));
           });
 
-          const mapped = standaloneRepos.map((repo: any, index: number) => ({
+          const mapped = standaloneRepos.map((repo: GithubRepoItem, index: number) => ({
             index: `GH-0${index + 1}`,
             title: repo.name,
             category: 'GITHUB OSS',
@@ -120,12 +127,10 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
           }));
           setGithubProjects(mapped);
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         // An aborted request is intentional (component unmounted) - stay quiet.
-        if (err?.name === 'AbortError') return;
+        if (err instanceof Error && err.name === 'AbortError') return;
         console.error('Failed to load GitHub repos:', err);
-      } finally {
-        if (!controller.signal.aborted) setLoading(false);
       }
     }
     
@@ -169,7 +174,7 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
     const cat = p.category || (i === 1 ? 'SISTEM WEB' : 'FULL-STACK');
     
     // Judul juga diambil dari proyek yang cocok, bukan dari posisi.
-    let rawTitle = p.title || matchByTitle?.title || (i === 0 ? 'Embun-Laundry' : i === 1 ? 'EquipRent MS — PT. Surya Bangun Sarana' : 'GymVault — Fitness & Gym Companion');
+    const rawTitle = p.title || matchByTitle?.title || (i === 0 ? 'Embun-Laundry' : i === 1 ? 'EquipRent MS — PT. Surya Bangun Sarana' : 'GymVault — Fitness & Gym Companion');
     let title = rawTitle;
 
     const isLaundry = rawTitle.toLowerCase().includes('embun') || rawTitle.toLowerCase().includes('laundry') || i === 0;
