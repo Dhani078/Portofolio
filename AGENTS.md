@@ -30,9 +30,12 @@ git push origin main # Vercel auto-deploys
 | File | Purpose |
 |------|---------|
 | `src/app/page.tsx` | Server Component, Supabase query, ISR 300s |
-| `src/components/PortfolioView.tsx` | Client shell, EntryScreen coordinator, scroll-to-top enforcement, manual scroll restoration |
+| `src/components/PortfolioView.tsx` | Client shell, 3-phase gate coordinator (LoadingScreen → EntryScreen → Hero), scroll-to-top enforcement |
+| `src/components/LoadingScreen.tsx` | Brutalist boot sequence (60fps counter, cascading runtime specs, clipPath wipe-up exit) |
 | `src/components/EntryScreen.tsx` | Clean 3D tilt deck, live WITA clock, tactile keyboard triggers, dissolve exit + shockwave |
-| `src/components/SelectedWork.tsx` | Deduplicated work grid with direct "Code" & "Kunjungi" triggers |
+| `src/components/SelectedWork.tsx` | Deduplicated work coordinator with liquid category switcher |
+| `src/components/ProjectCard.tsx` | Isolated 3D tilt project card with direct "Code" & "Kunjungi" triggers |
+| `src/components/ProjectModal.tsx` | Architecture spec detail modal with AnimatePresence exit transitions and metrics grid |
 | `src/components/LanyardCard.tsx` | R3F + Rapier physics (ID card + ribbon) |
 | `src/components/TechConsoleHub.tsx` | Interactive terminal (`projects`, `gh status`, `test`, `skills`, `clear`) |
 | `src/components/Hero.tsx` | Headline + 3D Lanyard placement |
