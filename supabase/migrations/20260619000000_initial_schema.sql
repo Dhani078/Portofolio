@@ -103,29 +103,25 @@ CREATE UNIQUE INDEX IF NOT EXISTS uq_skill_nodes_seed_key ON public.skill_nodes 
 CREATE UNIQUE INDEX IF NOT EXISTS uq_stats_seed_key ON public.stats (seed_key);
 
 -- Projects Seed
+-- PENTING: DO NOTHING (bukan DO UPDATE) untuk projects.
+--   Proyek bisa diedit lewat halaman /admin. Kalau seed memakai DO UPDATE,
+--   menjalankan ulang migrasi ini akan MENIMPA judul/deskripsi yang sudah
+--   kamu ubah dengan nilai contoh di bawah. DO NOTHING menjaga data asli:
+--   baris baru hanya dibuat saat seed_key benar-benar belum ada (fresh DB).
+-- Nilai di bawah disamakan dengan data yang sudah ada di database produksi.
 INSERT INTO public.projects (seed_key, index, title, year, tags, summary, metrics, case_study_url, sort_order) VALUES
-('proj-01', '01', 'Laundry Online', 2025, ARRAY['Web', 'Booking', 'Payments'], 'Aplikasi web pemesanan, jemput, dan antar laundry online secara praktis.', '{"perf": 95, "a11y": 100, "build": "✓"}', '#', 1),
-('proj-02', '02', 'Surya Heavy Rental', 2025, ARRAY['Web', 'Dashboard', 'Inventory'], 'Sistem manajemen penyewaan alat berat terintegrasi untuk PT. Surya Bangun Sarana Banjarmasin.', '{"perf": 96, "a11y": 98, "build": "✓"}', '#', 2),
-('proj-03', '03', 'Vault — Mobile Gym', 2026, ARRAY['Mobile', 'Fitness', 'App'], 'Aplikasi mobile tracker & pendamping latihan gym harian yang simpel dan interaktif.', '{"perf": 94, "a11y": 97, "build": "✓"}', '#', 3)
-ON CONFLICT (seed_key) DO UPDATE SET
-    index = EXCLUDED.index,
-    title = EXCLUDED.title,
-    year = EXCLUDED.year,
-    tags = EXCLUDED.tags,
-    summary = EXCLUDED.summary,
-    metrics = EXCLUDED.metrics,
-    case_study_url = EXCLUDED.case_study_url,
-    sort_order = EXCLUDED.sort_order;
+('proj-01', '01', 'Embun-Laundry', 2026, ARRAY['Web', 'Booking', 'Payments'], 'Aplikasi pengelolaan operasional layanan laundry modern terintegrasi dengan dashboard kasir, tracking status cucian real-time, dan manajemen transaksi online otomatis.', '{"perf": 95, "a11y": 100, "build": "✓"}', '#', 1),
+('proj-02', '02', 'EquipRent MS — PT. Surya Bangun Sarana', 2026, ARRAY['Web', 'Dashboard', 'Inventory'], 'Sistem manajemen penyewaan alat berat terintegrasi untuk PT. Surya Bangun Sarana Banjarmasin.', '{"perf": 96, "a11y": 98, "build": "✓"}', '#', 2),
+('proj-03', '03', 'GymVault — Fitness & Gym Companion', 2026, ARRAY['Mobile', 'Fitness', 'App'], 'Aplikasi mobile tracker & pendamping latihan gym harian yang simpel dan interaktif.', '{"perf": 94, "a11y": 97, "build": "✓"}', '#', 3)
+ON CONFLICT (seed_key) DO NOTHING;
 
 -- Stats Seed
+-- DO NOTHING dengan alasan sama: jangan timpa yang sudah diedit.
 INSERT INTO public.stats (seed_key, label, value, sort_order) VALUES
 ('stat-projects', 'Proyek Selesai', '3+', 1),
 ('stat-workflow', 'Alur Kerja', 'AI-First', 2),
 ('stat-campus', 'Teknik Informatika', 'UNISKA', 3)
-ON CONFLICT (seed_key) DO UPDATE SET
-    label = EXCLUDED.label,
-    value = EXCLUDED.value,
-    sort_order = EXCLUDED.sort_order;
+ON CONFLICT (seed_key) DO NOTHING;
 
 -- Skill Nodes Seed
 INSERT INTO public.skill_nodes (seed_key, label, "group", connects_to, x, y) VALUES
@@ -137,9 +133,4 @@ INSERT INTO public.skill_nodes (seed_key, label, "group", connects_to, x, y) VAL
 ('skill-mobileapps', 'Mobile Apps', 'build', ARRAY['Prompt Engineering', 'UI/UX'], 200, 170),
 ('skill-promptengineering', 'Prompt Engineering', 'craft', ARRAY[]::text[], 340, 100),
 ('skill-uiux', 'UI/UX', 'craft', ARRAY[]::text[], 340, 170)
-ON CONFLICT (seed_key) DO UPDATE SET
-    label = EXCLUDED.label,
-    "group" = EXCLUDED."group",
-    connects_to = EXCLUDED.connects_to,
-    x = EXCLUDED.x,
-    y = EXCLUDED.y;
+ON CONFLICT (seed_key) DO NOTHING;
