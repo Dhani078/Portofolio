@@ -28,7 +28,7 @@ export default function Nav() {
   }, []);
 
   useEffect(() => {
-    const sections = ['hero', 'work', 'about', 'experience', 'skills', 'console', 'process', 'testimonials', 'faq', 'contact', 'certificates'];
+    const sections = ['hero', 'work', 'about', 'experience', 'skills', 'process', 'testimonials', 'faq', 'contact', 'certificates'];
     const handleScrollSpy = () => {
       const scrollPosition = window.scrollY + 200;
 
@@ -55,7 +55,6 @@ export default function Nav() {
     { id: 'about', label: 'Tentang' },
     { id: 'experience', label: 'Pengalaman' },
     { id: 'skills', label: 'Keahlian' },
-    { id: 'console', label: 'Konsol' },
     { id: 'process', label: 'Alur' },
     { id: 'testimonials', label: 'Testimoni' },
     { id: 'faq', label: 'FAQ' },

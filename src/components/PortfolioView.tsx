@@ -23,7 +23,6 @@ import LoadingScreen from '@/components/LoadingScreen';
 
 // Dynamic components for optimal performance
 const SpotlightCursor = dynamic(() => import('@/components/SpotlightCursor'), { ssr: false });
-const TechConsoleHub = dynamic(() => import('@/components/TechConsoleHub'), { ssr: false });
 
 interface PortfolioViewProps {
   projects?: ProjectItem[];
@@ -153,7 +152,6 @@ export default function PortfolioView({
           <About stats={stats} />
           <Experience />
           <Capabilities skillNodes={skillNodes} />
-          <TechConsoleHub />
           <Process />
           <Testimonials />
           <FaqSection />

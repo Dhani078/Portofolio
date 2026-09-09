@@ -37,7 +37,6 @@ git push origin main # Vercel auto-deploys
 | `src/components/ProjectCard.tsx` | Isolated 3D tilt project card with direct "Code" & "Kunjungi" triggers |
 | `src/components/ProjectModal.tsx` | Architecture spec detail modal with AnimatePresence exit transitions and metrics grid |
 | `src/components/LanyardCard.tsx` | R3F + Rapier physics (ID card + ribbon) |
-| `src/components/TechConsoleHub.tsx` | Interactive terminal (`projects`, `gh status`, `test`, `skills`, `clear`) |
 | `src/components/Hero.tsx` | Headline + 3D Lanyard placement |
 | `src/middleware.ts` | CSP, cache headers, security |
 | `next.config.ts` | Standalone output, image domains, CSP nonce |
@@ -103,7 +102,6 @@ git push origin main
 - [ ] Direct "Kunjungi" and "Code" buttons open proper target URLs
 - [ ] 3D lanyard draggable, no edge clipping
 - [ ] WhatsApp links use `+6282148564979`
-- [ ] Interactive terminal supports `projects`, `gh status`, `test`, `skills`, `clear`
 - [ ] CSP headers present (check Network tab)
 - [ ] ISR working (check Vercel dashboard → Functions → ISR)
 
