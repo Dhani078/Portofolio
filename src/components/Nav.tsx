@@ -28,7 +28,7 @@ export default function Nav() {
   }, []);
 
   useEffect(() => {
-    const sections = ['hero', 'work', 'about', 'experience', 'skills', 'process', 'testimonials', 'faq', 'contact', 'certificates'];
+    const sections = ['hero', 'work', 'about', 'experience', 'skills', 'certificates', 'process', 'testimonials', 'faq', 'contact'];
     const handleScrollSpy = () => {
       const scrollPosition = window.scrollY + 200;
 
@@ -55,10 +55,11 @@ export default function Nav() {
     { id: 'about', label: 'Tentang' },
     { id: 'experience', label: 'Pengalaman' },
     { id: 'skills', label: 'Keahlian' },
+    { id: 'certificates', label: 'Sertifikat' },
     { id: 'process', label: 'Alur' },
     { id: 'testimonials', label: 'Testimoni' },
     { id: 'faq', label: 'FAQ' },
-    { id: 'certificates', label: 'Sertifikat' },
+    { id: 'contact', label: 'Kontak' },
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -117,7 +118,7 @@ export default function Nav() {
         </a>
 
         {/* Liquid Sliding Pill Nav Links */}
-        <nav className="hidden md:flex items-center gap-1 bg-[#121215] p-1.5 rounded-xl border border-white/10">
+        <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 bg-[#121215] p-1.5 rounded-xl border border-white/10">
           {navItems.map((item) => {
             const isActive = activeSection === item.id;
             return (
@@ -125,7 +126,7 @@ export default function Nav() {
                 key={item.id}
                 href={`#${item.id}`}
                 onClick={(e) => handleNavClick(e, item.id)}
-                className={`relative px-3.5 py-1.5 text-xs font-mono transition-colors cursor-pointer ${
+                className={`relative px-2.5 xl:px-3 py-1.5 text-xs font-mono transition-colors cursor-pointer ${
                   isActive ? 'text-black font-bold' : 'text-zinc-400 hover:text-white'
                 }`}
               >
@@ -166,7 +167,7 @@ export default function Nav() {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl bg-[#121215] border border-white/10 text-zinc-300 hover:text-white cursor-pointer"
+            className="lg:hidden p-2 rounded-xl bg-[#121215] border border-white/10 text-zinc-300 hover:text-white cursor-pointer"
             aria-label="Toggle Menu"
           >
             {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -182,7 +183,7 @@ export default function Nav() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-20 left-4 right-4 bg-[#09090B]/95 border border-white/15 rounded-2xl p-5 shadow-2xl backdrop-blur-2xl md:hidden pointer-events-auto"
+            className="absolute top-20 left-4 right-4 bg-[#09090B]/95 border border-white/15 rounded-2xl p-5 shadow-2xl backdrop-blur-2xl lg:hidden pointer-events-auto"
           >
             <div className="flex flex-col gap-2">
               {navItems.map((item) => (
