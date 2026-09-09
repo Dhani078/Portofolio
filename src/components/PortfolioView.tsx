@@ -152,11 +152,11 @@ export default function PortfolioView({
           <About stats={stats} />
           <Experience />
           <Capabilities skillNodes={skillNodes} />
+          <Certificates />
           <Process />
           <Testimonials />
           <FaqSection />
           <Contact />
-          <Certificates />
         </main>
 
         {/* Footer */}
