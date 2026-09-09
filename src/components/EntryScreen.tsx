@@ -3,7 +3,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
-export default function EntryScreen({ onEnter }: { onEnter: () => void }) {
+interface EntryScreenProps {
+  onEnter: () => void;
+  enabled?: boolean;
+}
+
+export default function EntryScreen({ onEnter, enabled = true }: EntryScreenProps) {
   const [isEntering, setIsEntering] = useState(false);
   const enterTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -81,7 +86,7 @@ export default function EntryScreen({ onEnter }: { onEnter: () => void }) {
 
   // Keyboard trigger listener (Space & Enter)
   const handleTriggerEnter = () => {
-    if (isEntering) return;
+    if (!enabled || isEntering) return;
     setIsEntering(true);
     // Store the id so the pending callback can be cancelled if EntryScreen
     // unmounts before it fires (avoids calling onEnter on a dead component).
@@ -93,7 +98,7 @@ export default function EntryScreen({ onEnter }: { onEnter: () => void }) {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (isEntering) return;
+      if (!enabled || isEntering) return;
       if (e.key === ' ' || e.code === 'Space') {
         e.preventDefault();
         setPressedKey('space');
@@ -235,9 +240,9 @@ export default function EntryScreen({ onEnter }: { onEnter: () => void }) {
               {/* Master Trigger Button */}
               <motion.button
                 onClick={handleTriggerEnter}
-                disabled={isEntering}
-                whileHover={!isEntering ? { scale: 1.03 } : {}}
-                whileTap={!isEntering ? { scale: 0.97 } : {}}
+                disabled={!enabled || isEntering}
+                whileHover={enabled && !isEntering ? { scale: 1.03 } : {}}
+                whileTap={enabled && !isEntering ? { scale: 0.97 } : {}}
                 transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                 className="relative w-full sm:w-auto px-9 py-3.5 rounded-2xl bg-white hover:bg-zinc-100 text-black font-mono font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2.5 shadow-xl shadow-white/20 transition-all cursor-pointer group/btn disabled:opacity-90"
               >

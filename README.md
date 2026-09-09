@@ -85,16 +85,20 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🕸️ DATA FLOW & CODE ARCHITECTURE
 
-### 1. Entry Screen Gate & View Lifecycle (`EntryScreen.tsx` & `PortfolioView.tsx`)
-- **Brutalist 3D Tilt Deck**: Interactive 3D perspective card with cursor-tracking spring physics (`useSpring` + `useTransform`) and clean monochrome corner brackets.
+### 1. 3-Phase Gate & View Lifecycle (`LoadingScreen.tsx`, `EntryScreen.tsx` & `PortfolioView.tsx`)
+- **Brutalist Boot Preloader (`LoadingScreen.tsx`)**: High-performance 60 FPS counter with `easeOutExpo` curve (000 → 100 in 1.6s), cascading real system specifications (Next.js 16, React 19, R3F Rapier, Supabase RLS), scanning line sweep, and curtain wipe-up exit transition (`clipPath`).
+- **Brutalist 3D Tilt Deck (`EntryScreen.tsx`)**: Interactive 3D perspective card with cursor-tracking spring physics (`useSpring` + `useTransform`) and clean monochrome corner brackets.
 - **Live WITA Synchronized Clock**: Live digital clock synchronized to Banjarmasin (`UTC+8` / `Asia/Makassar`) ticking every second.
-- **Tactile Keyboard & Click Triggers**: Keycaps `[ SPACE ]` and `[ ENTER ↵ ]` actively depress, along with the `BUKA PORTOFOLIO` CTA featuring immediate feedback (`MEMBUKA...` + active ping indicator).
+- **Tactile Keyboard & Click Triggers**: Keycaps `[ SPACE ]` and `[ ENTER ↵ ]` actively depress, along with the `BUKA PORTOFOLIO` CTA featuring immediate feedback (`MEMBUKA...` + active ping indicator), guarded until boot preloader finishes.
 - **Clean Dissolve Transition & Shockwave**: Expanding hairline shockwave ring with smooth motion blur and scale exit (`blur(20px)`, `scale(1.05)`).
 - **Scroll-to-Top Guarantee**: Body scroll locked while in entry screen; browser scroll restoration disabled (`history.scrollRestoration = 'manual'`); instantly resets coordinates to `(0, 0)` with `requestAnimationFrame` ensuring the user always begins at the top of the Hero section.
 - **Zero-Block Unmounting**: Managed via Framer Motion `<AnimatePresence>` in `PortfolioView.tsx`, fully unmounting the entry gate after transition to prevent lingering overlays.
 
-### 2. Deduplicated Production Work Grid (`SelectedWork.tsx`)
+### 2. Deduplicated Production Work Grid (`SelectedWork.tsx`, `ProjectCard.tsx`, `ProjectModal.tsx`)
 - **Single Definitive Project Cards**: Projects featured in database (`Embun-Laundry`, `EquipRent MS`, `GymVault`) are automatically deduplicated against live GitHub API feeds to eliminate duplicate cards.
+- **Modular Component Isolation**:
+  - `ProjectCard.tsx`: Standalone 3D gyroscopic tilt card with mouse tracking physics, category tags, and dual direct action buttons.
+  - `ProjectModal.tsx`: Architecture spec detail modal with smooth `<AnimatePresence>` scale transitions, keyboard `Escape` dismissal, body scroll locking, and Lighthouse / A11y / Type Safety metrics grid.
 - **Direct Dual Action Triggers**:
   - **"Kunjungi"**: Directly launches the production live URL (e.g. `https://embun-laundry.dhanisepeda.workers.dev/dashboard`).
   - **"Code"**: Directly opens the public GitHub repository (e.g. `https://github.com/Dhani078/Embun-Laundry`).
@@ -233,12 +237,15 @@ src/
 │   │   └── github/route.ts   # GitHub activity feed (3600s cache)
 │   └── admin/page.tsx        # Admin dashboard (RLS protected)
 ├── components/
-│   ├── PortfolioView.tsx     # Root client shell, EntryScreen coordinator, scroll-to-top enforcement
+│   ├── PortfolioView.tsx     # Root client shell, 3-phase gate coordinator, scroll-to-top enforcement
+│   ├── LoadingScreen.tsx     # Brutalist boot sequence (60fps counter, tech spec cascade, wipe-up exit)
 │   ├── EntryScreen.tsx       # Clean 3D tilt deck, live WITA clock, tactile keyboard triggers, dissolve exit
 │   ├── Hero.tsx              # Headline + 3D LanyardCard
 │   ├── LanyardCard.tsx       # R3F + Rapier physics (ID card + ribbon)
 │   ├── Nav.tsx               # Floating nav + brand monogram + GitHub icon
-│   ├── SelectedWork.tsx      # Deduplicated work grid with direct Code & Kunjungi triggers
+│   ├── SelectedWork.tsx      # Deduplicated work coordinator with category switcher
+│   ├── ProjectCard.tsx       # Isolated 3D tilt project card with direct Code & Kunjungi triggers
+│   ├── ProjectModal.tsx      # Architecture spec detail modal with metrics grid
 │   ├── TechConsoleHub.tsx    # Interactive terminal (projects, gh status, test, skills, clear)
 │   ├── Contact.tsx           # Contact cards (WhatsApp: +6282148564979)
 │   ├── FloatingDock.tsx      # Fixed bottom-right quick actions

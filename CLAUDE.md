@@ -18,8 +18,8 @@
 - Skills matrix: pure technical depth/architecture specs, never app feature descriptions
 - Vercel Free Tier: ISR `revalidate = 300`, immutable caching on assets
 - 3D Lanyard: R3F + Rapier physics, kartu.glb (embedded texture), bandd.png (2048x256)
-- Entry Screen: Clean 3D tilt deck, live WITA clock, active Space/Enter triggers, 120ms launch feedback, dissolve exit + hairline shockwave, scroll-to-top guarantee
-- SelectedWork: Deduplicated cards, direct "Kunjungi" & "Code" triggers
+- 3-Phase Loading Gate: LoadingScreen (brutalist boot counter + tech specs) → EntryScreen (3D tilt deck + live WITA clock + Space/Enter triggers) → PortfolioView
+- SelectedWork: Modularized with ProjectCard (3D tilt card, direct "Code" & "Kunjungi") and ProjectModal (AnimatePresence architecture modal)
 
 ## Contact Info
 - Name: Muhammad Rizki Ramadhani (DAN.DEV)

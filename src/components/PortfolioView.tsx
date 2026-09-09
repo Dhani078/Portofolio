@@ -19,6 +19,7 @@ import Footer from '@/components/Footer';
 import FloatingDock from '@/components/FloatingDock';
 import EntryScreen from '@/components/EntryScreen';
 import Certificates from '@/components/Certificates';
+import LoadingScreen from '@/components/LoadingScreen';
 
 // Dynamic components for optimal performance
 const SpotlightCursor = dynamic(() => import('@/components/SpotlightCursor'), { ssr: false });
@@ -43,6 +44,7 @@ export default function PortfolioView({
   });
 
   const [entered, setEntered] = useState(false);
+  const [booted, setBooted] = useState(false);
   const [showLanyard, setShowLanyard] = useState(false);
 
   // Disable browser automatic scroll restoration so it always starts at the very top
@@ -108,10 +110,15 @@ export default function PortfolioView({
 
   return (
     <div className="min-h-screen bg-[#000000] text-[#FFFFFF] font-sans relative selection:bg-white selection:text-black">
-      {/* Entry Screen Gate with Exit Transition */}
+      {/* Boot Loading Screen — auto-dismisses to reveal EntryScreen */}
+      {!booted && (
+        <LoadingScreen onComplete={() => setBooted(true)} />
+      )}
+
+      {/* Entry Screen Gate — visible after boot, dismissed on user action */}
       <AnimatePresence>
         {!entered && (
-          <EntryScreen key="entry-screen" onEnter={handleEnter} />
+          <EntryScreen key="entry-screen" onEnter={handleEnter} enabled={booted} />
         )}
       </AnimatePresence>
 
