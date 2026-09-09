@@ -77,6 +77,11 @@ CREATE POLICY "Allow authenticated admin update on contact_messages" ON public.c
 -- migration (or running it against a live database) would have destroyed every
 -- row in these tables. Seeding is now idempotent: we use ON CONFLICT DO UPDATE
 -- so re-running updates the seed rows instead of wiping the tables.
+-- Menyimpan cover proyek. Tanpa kolom ini, kode前端 memilih gambar
+-- berdasarkan POSISI array, bukan identitas proyek, sehingga cover bisa
+-- salah pasang (lihat SelectedWork.tsx). Nilai boleh path lokal
+-- ('/equiprent-cover.jpg') atau URL absolut.
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS image_url TEXT;
 -- Natural keys must exist for upserts to work:
 ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS seed_key TEXT;
 ALTER TABLE public.skill_nodes ADD COLUMN IF NOT EXISTS seed_key TEXT;
@@ -109,10 +114,10 @@ CREATE UNIQUE INDEX IF NOT EXISTS uq_stats_seed_key ON public.stats (seed_key);
 --   kamu ubah dengan nilai contoh di bawah. DO NOTHING menjaga data asli:
 --   baris baru hanya dibuat saat seed_key benar-benar belum ada (fresh DB).
 -- Nilai di bawah disamakan dengan data yang sudah ada di database produksi.
-INSERT INTO public.projects (seed_key, index, title, year, tags, summary, metrics, case_study_url, sort_order) VALUES
-('proj-01', '01', 'Embun-Laundry', 2026, ARRAY['Web', 'Booking', 'Payments'], 'Aplikasi pengelolaan operasional layanan laundry modern terintegrasi dengan dashboard kasir, tracking status cucian real-time, dan manajemen transaksi online otomatis.', '{"perf": 95, "a11y": 100, "build": "✓"}', '#', 1),
-('proj-02', '02', 'EquipRent MS — PT. Surya Bangun Sarana', 2026, ARRAY['Web', 'Dashboard', 'Inventory'], 'Sistem manajemen penyewaan alat berat terintegrasi untuk PT. Surya Bangun Sarana Banjarmasin.', '{"perf": 96, "a11y": 98, "build": "✓"}', '#', 2),
-('proj-03', '03', 'GymVault — Fitness & Gym Companion', 2026, ARRAY['Mobile', 'Fitness', 'App'], 'Aplikasi mobile tracker & pendamping latihan gym harian yang simpel dan interaktif.', '{"perf": 94, "a11y": 97, "build": "✓"}', '#', 3)
+INSERT INTO public.projects (seed_key, index, title, year, tags, summary, metrics, case_study_url, image_url, sort_order) VALUES
+('proj-01', '01', 'Embun-Laundry', 2026, ARRAY['Web', 'Booking', 'Payments'], 'Aplikasi pengelolaan operasional layanan laundry modern terintegrasi dengan dashboard kasir, tracking status cucian real-time, dan manajemen transaksi online otomatis.', '{"perf": 95, "a11y": 100, "build": "✓"}', 'https://embun-laundry.dhanisepeda.workers.dev/dashboard', 'https://images.unsplash.com/photo-1545173168-9f1947eebb7f?q=80&w=1000&auto=format&fit=crop', 1),
+('proj-02', '02', 'EquipRent MS — PT. Surya Bangun Sarana', 2026, ARRAY['Web', 'Dashboard', 'Inventory'], 'Sistem manajemen penyewaan alat berat terintegrasi untuk PT. Surya Bangun Sarana Banjarmasin.', '{"perf": 96, "a11y": 98, "build": "✓"}', 'https://equiprent-pt-surya-bangun-sarana.dhanisepeda.workers.dev/', '/equiprent-cover.jpg', 2),
+('proj-03', '03', 'GymVault — Fitness & Gym Companion', 2026, ARRAY['Mobile', 'Fitness', 'App'], 'Aplikasi mobile tracker & pendamping latihan gym harian yang simpel dan interaktif.', '{"perf": 94, "a11y": 97, "build": "✓"}', 'https://gymvault-app.vercel.app/', 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1000&auto=format&fit=crop', 3)
 ON CONFLICT (seed_key) DO NOTHING;
 
 -- Stats Seed

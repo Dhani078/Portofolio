@@ -289,14 +289,32 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
 
   const normalizedProjects = allProjects.map((p, i) => {
     let img = p.image_url;
+
+    // Cocokkan proyek dengan default berdasarkan JUDUL, bukan posisi array.
+    // Tabel `projects` tidak punya kolom image_url, jadi p.image_url selalu
+    // undefined. Logika lama memakai indeks (i === 0/1/2) sehingga cover
+    // salah pasang: EquipRent justru dapat foto Unsplash generik, sementara
+    // /equiprent-cover.jpg (foto excavator asli) tidak pernah tampil.
+    const norm = (s?: string) => (s || '').toLowerCase().replace(/[-_.\s]/g, '');
+    const matchByTitle = defaultProjects.find((d) => {
+      const a = norm(d.title);
+      const b = norm(p.title);
+      return a && b && (a.includes(b) || b.includes(a));
+    });
+
+    // Prioritas: image_url dari DB > cover milik proyek yang cocok > fallback.
     if (!img || img.includes('photo-1517677208171')) {
+      img = matchByTitle?.image_url;
+    }
+    if (!img) {
       if (i === 0) img = 'https://images.unsplash.com/photo-1545173168-9f1947eebb7f?q=80&w=1000&auto=format&fit=crop';
       else if (i === 1) img = 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1000&auto=format&fit=crop';
       else if (i === 2) img = 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1000&auto=format&fit=crop';
     }
     const cat = p.category || (i === 1 ? 'SISTEM WEB' : 'FULL-STACK');
     
-    let rawTitle = p.title || (i === 0 ? 'Embun-Laundry' : i === 1 ? 'EquipRent MS — PT. Surya Bangun Sarana' : 'GymVault — Fitness & Gym Companion');
+    // Judul juga diambil dari proyek yang cocok, bukan dari posisi.
+    let rawTitle = p.title || matchByTitle?.title || (i === 0 ? 'Embun-Laundry' : i === 1 ? 'EquipRent MS — PT. Surya Bangun Sarana' : 'GymVault — Fitness & Gym Companion');
     let title = rawTitle;
 
     const isLaundry = rawTitle.toLowerCase().includes('embun') || rawTitle.toLowerCase().includes('laundry') || i === 0;

@@ -7,7 +7,9 @@
 -- ============================================================================
 
 
--- ==========================================================================-- FILE: 20260619000000_initial_schema.sql-- ==========================================================================
+-- ==========================================================================
+-- FILE: 20260619000000_initial_schema.sql
+-- ==========================================================================
 -- Create projects table
 CREATE TABLE IF NOT EXISTS public.projects (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -87,6 +89,11 @@ CREATE POLICY "Allow authenticated admin update on contact_messages" ON public.c
 -- migration (or running it against a live database) would have destroyed every
 -- row in these tables. Seeding is now idempotent: we use ON CONFLICT DO UPDATE
 -- so re-running updates the seed rows instead of wiping the tables.
+-- Menyimpan cover proyek. Tanpa kolom ini, kode前端 memilih gambar
+-- berdasarkan POSISI array, bukan identitas proyek, sehingga cover bisa
+-- salah pasang (lihat SelectedWork.tsx). Nilai boleh path lokal
+-- ('/equiprent-cover.jpg') atau URL absolut.
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS image_url TEXT;
 -- Natural keys must exist for upserts to work:
 ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS seed_key TEXT;
 ALTER TABLE public.skill_nodes ADD COLUMN IF NOT EXISTS seed_key TEXT;
@@ -119,10 +126,10 @@ CREATE UNIQUE INDEX IF NOT EXISTS uq_stats_seed_key ON public.stats (seed_key);
 --   kamu ubah dengan nilai contoh di bawah. DO NOTHING menjaga data asli:
 --   baris baru hanya dibuat saat seed_key benar-benar belum ada (fresh DB).
 -- Nilai di bawah disamakan dengan data yang sudah ada di database produksi.
-INSERT INTO public.projects (seed_key, index, title, year, tags, summary, metrics, case_study_url, sort_order) VALUES
-('proj-01', '01', 'Embun-Laundry', 2026, ARRAY['Web', 'Booking', 'Payments'], 'Aplikasi pengelolaan operasional layanan laundry modern terintegrasi dengan dashboard kasir, tracking status cucian real-time, dan manajemen transaksi online otomatis.', '{"perf": 95, "a11y": 100, "build": "✓"}', '#', 1),
-('proj-02', '02', 'EquipRent MS — PT. Surya Bangun Sarana', 2026, ARRAY['Web', 'Dashboard', 'Inventory'], 'Sistem manajemen penyewaan alat berat terintegrasi untuk PT. Surya Bangun Sarana Banjarmasin.', '{"perf": 96, "a11y": 98, "build": "✓"}', '#', 2),
-('proj-03', '03', 'GymVault — Fitness & Gym Companion', 2026, ARRAY['Mobile', 'Fitness', 'App'], 'Aplikasi mobile tracker & pendamping latihan gym harian yang simpel dan interaktif.', '{"perf": 94, "a11y": 97, "build": "✓"}', '#', 3)
+INSERT INTO public.projects (seed_key, index, title, year, tags, summary, metrics, case_study_url, image_url, sort_order) VALUES
+('proj-01', '01', 'Embun-Laundry', 2026, ARRAY['Web', 'Booking', 'Payments'], 'Aplikasi pengelolaan operasional layanan laundry modern terintegrasi dengan dashboard kasir, tracking status cucian real-time, dan manajemen transaksi online otomatis.', '{"perf": 95, "a11y": 100, "build": "✓"}', 'https://embun-laundry.dhanisepeda.workers.dev/dashboard', 'https://images.unsplash.com/photo-1545173168-9f1947eebb7f?q=80&w=1000&auto=format&fit=crop', 1),
+('proj-02', '02', 'EquipRent MS — PT. Surya Bangun Sarana', 2026, ARRAY['Web', 'Dashboard', 'Inventory'], 'Sistem manajemen penyewaan alat berat terintegrasi untuk PT. Surya Bangun Sarana Banjarmasin.', '{"perf": 96, "a11y": 98, "build": "✓"}', 'https://equiprent-pt-surya-bangun-sarana.dhanisepeda.workers.dev/', '/equiprent-cover.jpg', 2),
+('proj-03', '03', 'GymVault — Fitness & Gym Companion', 2026, ARRAY['Mobile', 'Fitness', 'App'], 'Aplikasi mobile tracker & pendamping latihan gym harian yang simpel dan interaktif.', '{"perf": 94, "a11y": 97, "build": "✓"}', 'https://gymvault-app.vercel.app/', 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1000&auto=format&fit=crop', 3)
 ON CONFLICT (seed_key) DO NOTHING;
 
 -- Stats Seed
@@ -146,7 +153,9 @@ INSERT INTO public.skill_nodes (seed_key, label, "group", connects_to, x, y) VAL
 ON CONFLICT (seed_key) DO NOTHING;
 
 
--- ==========================================================================-- FILE: 20260620000000_secure_contact_messages_rls.sql-- ==========================================================================
+-- ==========================================================================
+-- FILE: 20260620000000_secure_contact_messages_rls.sql
+-- ==========================================================================
 -- ============================================================================
 -- SECURITY FIX: contact_messages leak (revisi - berbasis admin_users)
 -- ============================================================================
@@ -243,7 +252,9 @@ CREATE POLICY "Admin update contact_messages" ON public.contact_messages
 -- Sengaja TIDAK ada policy DELETE: pesan tidak bisa dihapus lewat SDK.
 
 
--- ==========================================================================-- FILE: 20260621000000_contact_rate_limits.sql-- ==========================================================================
+-- ==========================================================================
+-- FILE: 20260621000000_contact_rate_limits.sql
+-- ==========================================================================
 -- ============================================================================
 -- SECURITY FIX: persistent, tamper-resistant contact-form rate limiting
 -- ============================================================================
@@ -293,26 +304,25 @@ ALTER TABLE public.contact_rate_limits ENABLE ROW LEVEL SECURITY;
 -- ============================================================================
 -- LANGKAH BERIKUTNYA (WAJIB - supaya /admin tidak terkunci)
 -- ============================================================================
--- Skrip di atas MEMBUTUHKAN akun Auth yang terdaftar di admin_users.
--- Tanpa itu, halaman /admin tidak bisa membaca pesan sama sekali.
---
 -- A. Buat akun dulu (kalau belum punya):
 --      Dashboard -> Authentication -> Users -> Add user
 --      Email: dhanisepeda@gmail.com
 --      Centang "Auto Confirm User"  <-- PENTING
 --
--- B. Lalu jadikan dirimu admin. Pilih SALAH SATU:
---
---    Opsi 1 - jadikan admin SEMUA user yang ada sekarang:
+-- B. Jadikan dirimu admin (pilih salah satu):
 --      INSERT INTO public.admin_users (user_id)
 --      SELECT id FROM auth.users ON CONFLICT DO NOTHING;
 --
---    Opsi 2 - hanya satu user tertentu (ganti UUID-nya):
---      INSERT INTO public.admin_users (user_id)
---      VALUES ('<uuid-user-anda>') ON CONFLICT DO NOTHING;
+-- C. Isi cover proyek yang sudah ada (kolom baru image_url):
+--      UPDATE public.projects SET image_url = '/equiprent-cover.jpg'
+--      WHERE title ILIKE '%EquipRent%';
+--      UPDATE public.projects SET image_url =
+--        'https://images.unsplash.com/photo-1545173168-9f1947eebb7f?q=80&w=1000&auto=format&fit=crop'
+--      WHERE title ILIKE '%Embun%';
+--      UPDATE public.projects SET image_url =
+--        'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1000&auto=format&fit=crop'
+--      WHERE title ILIKE '%GymVault%';
 --
--- C. Verifikasi dari terminal:
---      npm run check:rls
---
--- D. Terakhir, deploy ke Vercel (git push sudah dilakukan).
+-- D. Verifikasi dari terminal:  npm run check:rls
+-- E. Deploy ke Vercel.
 -- ============================================================================
