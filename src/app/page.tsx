@@ -2,7 +2,7 @@ import React from 'react';
 import { supabase } from '@/lib/supabase';
 import PortfolioView from '@/components/PortfolioView';
 
-export const revalidate = 0;
+export const revalidate = 300;
 
 export default async function Home() {
   let projects: any[] = [];
@@ -10,22 +10,15 @@ export default async function Home() {
   let skillNodes: any[] = [];
 
   try {
-    const { data: pData } = await supabase
-      .from('projects')
-      .select('*')
-      .order('sort_order', { ascending: true });
-    if (pData) projects = pData;
+    const [pRes, sRes, snRes] = await Promise.all([
+      supabase.from('projects').select('*').order('sort_order', { ascending: true }),
+      supabase.from('stats').select('*').order('sort_order', { ascending: true }),
+      supabase.from('skill_nodes').select('*'),
+    ]);
 
-    const { data: sData } = await supabase
-      .from('stats')
-      .select('*')
-      .order('sort_order', { ascending: true });
-    if (sData) stats = sData;
-
-    const { data: snData } = await supabase
-      .from('skill_nodes')
-      .select('*');
-    if (snData) skillNodes = snData;
+    if (pRes?.data) projects = pRes.data;
+    if (sRes?.data) stats = sRes.data;
+    if (snRes?.data) skillNodes = snRes.data;
   } catch (error) {
     console.error('⚠️ Supabase data fallback active.', error);
   }

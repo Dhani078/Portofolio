@@ -28,7 +28,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
     exitTimerRef.current = setTimeout(() => {
       exitTimerRef.current = null;
       onComplete();
-    }, 850);
+    }, 520);
   }, [onComplete]);
 
   useEffect(() => {
@@ -40,21 +40,21 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
     };
   }, []);
 
-  // Cascade boot lines one-by-one
+  // Cascade boot lines one-by-one with faster cadence
   useEffect(() => {
     if (visibleLines >= BOOT_LINES.length) return;
 
-    const delay = visibleLines === 0 ? 200 : 180 + Math.random() * 120;
+    const delay = visibleLines === 0 ? 100 : 90 + Math.random() * 60;
     const timer = setTimeout(() => {
       setVisibleLines((v) => v + 1);
     }, delay);
     return () => clearTimeout(timer);
   }, [visibleLines]);
 
-  // 60fps counter animation (0 → 100 in 1.6s)
+  // 60fps counter animation (0 → 100 in 1.0s, snappy & high-adrenaline)
   useEffect(() => {
     let startTs: number | null = null;
-    const duration = 1600;
+    const duration = 1000;
 
     const step = (ts: number) => {
       if (!startTs) startTs = ts;
@@ -67,15 +67,15 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         window.requestAnimationFrame(step);
       } else {
         setCount(100);
-        // Brief hold at 100% before dismissing
-        setTimeout(dismiss, 400);
+        // Brief hold at 100% before fast exit wipe
+        setTimeout(dismiss, 180);
       }
     };
 
     const id = window.requestAnimationFrame(step);
 
     // Hard safety fallback
-    const fallback = setTimeout(dismiss, 3000);
+    const fallback = setTimeout(dismiss, 2000);
 
     return () => {
       window.cancelAnimationFrame(id);
@@ -91,7 +91,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           initial={{ opacity: 1 }}
           exit={{
             clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)',
-            transition: { duration: 0.8, ease: [0.77, 0, 0.175, 1] },
+            transition: { duration: 0.5, ease: [0.77, 0, 0.175, 1] },
           }}
           className="fixed inset-0 z-[999999] bg-[#000000] text-white flex flex-col justify-between p-6 sm:p-10 lg:p-14 select-none overflow-hidden"
           style={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' }}
