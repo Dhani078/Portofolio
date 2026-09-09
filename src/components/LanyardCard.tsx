@@ -167,13 +167,15 @@ function Band({ isMobile = false, maxSpeed = 50, minSpeed = 10 }: BandProps) {
     }
   });
 
-  curve.curveType = 'chordal';
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-  texture.anisotropy = 16;
-  texture.minFilter = THREE.LinearFilter;
-  texture.magFilter = THREE.LinearFilter;
-  texture.generateMipmaps = true;
-  texture.needsUpdate = true;
+  useEffect(() => {
+    curve.curveType = 'chordal';
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.anisotropy = 16;
+    texture.minFilter = THREE.LinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    texture.generateMipmaps = true;
+    texture.needsUpdate = true;
+  }, [curve, texture]);
 
   // Adaptive positioning: on mobile hang slightly center-right, on desktop hang top-right [3, 4, 0]
   const anchorPos: [number, number, number] = isMobile ? [1.2, 4.2, 0] : [3, 4, 0];
@@ -251,9 +253,9 @@ function Band({ isMobile = false, maxSpeed = 50, minSpeed = 10 }: BandProps) {
           "computeBoundingSphere(): Computed radius is NaN".
           Initialising it with a valid straight segment avoids that. */}
       <mesh ref={band} frustumCulled={false} visible={bandReady}>
-        {/* @ts-ignore */}
+        {/* @ts-expect-error R3F extension element */}
         <meshLineGeometry />
-        {/* @ts-ignore */}
+        {/* @ts-expect-error R3F extension element */}
         <meshLineMaterial
           transparent
           opacity={1.0}

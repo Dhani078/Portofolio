@@ -88,10 +88,16 @@ export default function PortfolioView({
     let timeoutId: ReturnType<typeof setTimeout>;
 
     // requestIdleCallback is not available in Safari; fall back to a timeout.
+    type WindowWithIdle = Window & {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    const win = typeof window !== 'undefined' ? (window as WindowWithIdle) : null;
+
     const schedule =
-      typeof window !== 'undefined' && 'requestIdleCallback' in window
+      win && typeof win.requestIdleCallback === 'function'
         ? (cb: () => void) => {
-            rafId = (window as any).requestIdleCallback(cb, { timeout: 1200 });
+            rafId = win.requestIdleCallback!(cb, { timeout: 1200 });
           }
         : (cb: () => void) => {
             timeoutId = setTimeout(cb, 200);
@@ -100,8 +106,8 @@ export default function PortfolioView({
     schedule(() => setShowLanyard(true));
 
     return () => {
-      if (rafId && 'cancelIdleCallback' in window) {
-        (window as any).cancelIdleCallback(rafId);
+      if (rafId && win?.cancelIdleCallback) {
+        win.cancelIdleCallback(rafId);
       }
       if (timeoutId) clearTimeout(timeoutId);
     };

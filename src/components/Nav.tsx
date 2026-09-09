@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { Menu, X, ArrowUpRight, Sparkles, Terminal } from 'lucide-react';
+import { Menu, X, Sparkles } from 'lucide-react';
 
 function GithubIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (

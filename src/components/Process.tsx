@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, Terminal, Cpu, GitCommit, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Sparkles, CheckCircle2 } from 'lucide-react';
 
 const pipelineStages = [
   {

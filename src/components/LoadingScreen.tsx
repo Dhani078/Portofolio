@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface LoadingScreenProps {
@@ -136,9 +137,12 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
               className="relative"
             >
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-zinc-950 border border-white/20 p-3 flex items-center justify-center shadow-[0_0_60px_rgba(255,255,255,0.06)]">
-                <img
+                <Image
                   src="/Logo.png"
                   alt="DAN Logo"
+                  width={80}
+                  height={80}
+                  priority
                   className="w-full h-full object-contain brightness-125"
                 />
               </div>
