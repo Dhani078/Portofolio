@@ -123,7 +123,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)',
             transition: { duration: 0.45, ease: [0.87, 0, 0.13, 1] },
           }}
-          className="fixed inset-0 z-[999999] bg-[#000000] text-white flex flex-col justify-between p-6 sm:p-10 lg:p-14 select-none overflow-hidden"
+          className="fixed inset-0 z-[999999] bg-[#000000] text-white flex flex-col justify-between p-6 sm:p-10 lg:p-14 select-none overflow-hidden preserve-dark"
           style={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' }}
         >
           {/* Subtle architectural background texture */}

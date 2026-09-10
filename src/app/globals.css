@@ -68,3 +68,276 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #71717A;
 }
+
+/* ==========================================================================
+   SWISS BRUTALIST WHITE MODE (HIGH-CONTRAST LIGHT THEME)
+   Default is strictly DARK (#000000). When .light or [data-theme="light"]
+   is active, the entire UI inverts cleanly into crisp architectural white.
+   ========================================================================== */
+
+html.light,
+html[data-theme="light"] {
+  background-color: #FAFAFA !important;
+  color: #09090B !important;
+  color-scheme: light;
+}
+
+html.light body,
+html[data-theme="light"] body {
+  background-color: #FAFAFA !important;
+  color: #09090B !important;
+}
+
+html.light ::selection,
+html[data-theme="light"] ::selection {
+  background-color: #000000 !important;
+  color: #FFFFFF !important;
+}
+
+/* Light Mode Focus Ring */
+html.light *:focus-visible,
+html[data-theme="light"] *:focus-visible {
+  outline: 2px solid #000000 !important;
+}
+
+/* Light Mode Scrollbar */
+html.light ::-webkit-scrollbar-track,
+html[data-theme="light"] ::-webkit-scrollbar-track {
+  background: #FAFAFA !important;
+}
+html.light ::-webkit-scrollbar-thumb,
+html[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: #D4D4D8 !important;
+}
+html.light ::-webkit-scrollbar-thumb:hover,
+html[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: #A1A1AA !important;
+}
+
+/* Light Mode Cyber Grid & Ambient Radial Glows */
+html.light .bg-tech-grid,
+html[data-theme="light"] .bg-tech-grid {
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.08) 1px, transparent 1px) !important;
+}
+
+html.light .radial-glow-white,
+html[data-theme="light"] .radial-glow-white {
+  background: radial-gradient(circle at 20% 15%, rgba(0, 0, 0, 0.03) 0%, transparent 60%) !important;
+}
+
+html.light .radial-glow-silver,
+html[data-theme="light"] .radial-glow-silver {
+  background: radial-gradient(circle at 80% 65%, rgba(0, 0, 0, 0.02) 0%, transparent 60%) !important;
+}
+
+/* Pure Black Backgrounds -> Crisp White in Light Mode */
+html.light .bg-\[\#000000\],
+html.light .bg-black:not(.preserve-dark):not(.preserve-dark *),
+html[data-theme="light"] .bg-\[\#000000\],
+html[data-theme="light"] .bg-black:not(.preserve-dark):not(.preserve-dark *) {
+  background-color: #FAFAFA !important;
+}
+
+/* Surface Cards -> Crisp White with Subtle Border & Depth */
+html.light .bg-\[\#09090B\],
+html.light .bg-\[\#09090B\]\/95,
+html.light .bg-\[\#09090B\]\/90,
+html.light .bg-\[\#09090B\]\/80,
+html.light .bg-\[\#09090B\]\/60,
+html.light .bg-\[\#09090B\]\/50,
+html[data-theme="light"] .bg-\[\#09090B\],
+html[data-theme="light"] .bg-\[\#09090B\]\/95,
+html[data-theme="light"] .bg-\[\#09090B\]\/90,
+html[data-theme="light"] .bg-\[\#09090B\]\/80,
+html[data-theme="light"] .bg-\[\#09090B\]\/60,
+html[data-theme="light"] .bg-\[\#09090B\]\/50 {
+  background-color: #FFFFFF !important;
+}
+
+/* Elevated Surfaces & Pills -> Soft Light Zinc (#F4F4F5) */
+html.light .bg-\[\#121215\],
+html.light .bg-\[\#18181b\],
+html.light .bg-\[\#1A1A1E\],
+html.light .bg-zinc-900,
+html.light .bg-zinc-950,
+html[data-theme="light"] .bg-\[\#121215\],
+html[data-theme="light"] .bg-\[\#18181b\],
+html[data-theme="light"] .bg-\[\#1A1A1E\],
+html[data-theme="light"] .bg-zinc-900,
+html[data-theme="light"] .bg-zinc-950 {
+  background-color: #F4F4F5 !important;
+}
+
+html.light .bg-\[\#121215\]\/80,
+html.light .bg-\[\#18181b\]\/70,
+html[data-theme="light"] .bg-\[\#121215\]\/80,
+html[data-theme="light"] .bg-\[\#18181b\]\/70 {
+  background-color: rgba(244, 244, 245, 0.90) !important;
+}
+
+/* Glass Card in Light Mode */
+html.light .glass-card,
+html[data-theme="light"] .glass-card {
+  background-color: rgba(255, 255, 255, 0.90) !important;
+  border-color: rgba(0, 0, 0, 0.10) !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05) !important;
+}
+html.light .glass-card:hover,
+html[data-theme="light"] .glass-card:hover {
+  border-color: rgba(0, 0, 0, 0.30) !important;
+}
+
+/* Borders in Light Mode */
+html.light [class*="border-white\/"]:not(.preserve-dark):not(.preserve-dark *),
+html[data-theme="light"] [class*="border-white\/"]:not(.preserve-dark):not(.preserve-dark *) {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+html.light .border-white:not(.preserve-dark):not(.preserve-dark *),
+html[data-theme="light"] .border-white:not(.preserve-dark):not(.preserve-dark *) {
+  border-color: #09090B !important;
+}
+
+html.light [class*="hover:border-white"]:hover:not(.preserve-dark),
+html[data-theme="light"] [class*="hover:border-white"]:hover:not(.preserve-dark) {
+  border-color: rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Typography in Light Mode */
+html.light .text-white:not(.preserve-dark):not(.preserve-dark *),
+html[data-theme="light"] .text-white:not(.preserve-dark):not(.preserve-dark *) {
+  color: #09090B !important;
+}
+
+html.light .text-zinc-200:not(.preserve-dark):not(.preserve-dark *),
+html.light .text-zinc-300:not(.preserve-dark):not(.preserve-dark *),
+html[data-theme="light"] .text-zinc-200:not(.preserve-dark):not(.preserve-dark *),
+html[data-theme="light"] .text-zinc-300:not(.preserve-dark):not(.preserve-dark *) {
+  color: #27272A !important;
+}
+
+html.light .text-zinc-400:not(.preserve-dark):not(.preserve-dark *),
+html[data-theme="light"] .text-zinc-400:not(.preserve-dark):not(.preserve-dark *) {
+  color: #52525B !important;
+}
+
+html.light .text-zinc-500:not(.preserve-dark):not(.preserve-dark *),
+html[data-theme="light"] .text-zinc-500:not(.preserve-dark):not(.preserve-dark *) {
+  color: #71717A !important;
+}
+
+html.light .text-zinc-600:not(.preserve-dark):not(.preserve-dark *),
+html[data-theme="light"] .text-zinc-600:not(.preserve-dark):not(.preserve-dark *) {
+  color: #A1A1AA !important;
+}
+
+/* Hero text gradient invert */
+html.light .bg-clip-text.text-transparent,
+html[data-theme="light"] .bg-clip-text.text-transparent {
+  background-image: linear-gradient(to right, #09090B, #27272A, #71717A) !important;
+}
+
+/* High-Contrast Action Buttons: In Light mode, primary white buttons invert to deep carbon black with white text */
+html.light .bg-white:not(img):not(svg):not(.preserve-white):not(.preserve-dark):not(.preserve-dark *),
+html[data-theme="light"] .bg-white:not(img):not(svg):not(.preserve-white):not(.preserve-dark):not(.preserve-dark *) {
+  background-color: #09090B !important;
+  color: #FFFFFF !important;
+}
+
+html.light .bg-white:not(img):not(svg):not(.preserve-white):not(.preserve-dark):not(.preserve-dark *) *:not(svg):not(path),
+html[data-theme="light"] .bg-white:not(img):not(svg):not(.preserve-white):not(.preserve-dark):not(.preserve-dark *) *:not(svg):not(path) {
+  color: #FFFFFF !important;
+}
+
+html.light .bg-white:not(img):not(svg):not(.preserve-white):not(.preserve-dark):not(.preserve-dark *) svg,
+html[data-theme="light"] .bg-white:not(img):not(svg):not(.preserve-white):not(.preserve-dark):not(.preserve-dark *) svg {
+  color: #FFFFFF !important;
+}
+
+/* Hover on inverted buttons */
+html.light .hover\:bg-zinc-200:hover:not(.preserve-dark),
+html[data-theme="light"] .hover\:bg-zinc-200:hover:not(.preserve-dark) {
+  background-color: #27272A !important;
+  color: #FFFFFF !important;
+}
+
+html.light .hover\:bg-zinc-100:hover:not(.preserve-dark),
+html[data-theme="light"] .hover\:bg-zinc-100:hover:not(.preserve-dark) {
+  background-color: #27272A !important;
+  color: #FFFFFF !important;
+}
+
+/* Secondary hover */
+html.light .hover\:bg-white:hover:not(.preserve-dark),
+html[data-theme="light"] .hover\:bg-white:hover:not(.preserve-dark) {
+  background-color: #09090B !important;
+  color: #FFFFFF !important;
+}
+
+/* Form Inputs & Textareas in Light Mode */
+html.light input,
+html.light textarea,
+html[data-theme="light"] input,
+html[data-theme="light"] textarea {
+  color: #09090B !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder,
+html[data-theme="light"] input::placeholder,
+html[data-theme="light"] textarea::placeholder {
+  color: #71717A !important;
+}
+
+/* Shadows in Light Mode */
+html.light .shadow-2xl,
+html[data-theme="light"] .shadow-2xl {
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.08) !important;
+}
+
+html.light .shadow-black\/80,
+html[data-theme="light"] .shadow-black\/80 {
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.10) !important;
+}
+
+html.light .shadow-white\/10,
+html.light .shadow-white\/15,
+html.light .shadow-white\/20,
+html[data-theme="light"] .shadow-white\/10,
+html[data-theme="light"] .shadow-white\/15,
+html[data-theme="light"] .shadow-white\/20 {
+  box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Scroll progress bar in light mode */
+html.light .from-white.via-zinc-200.to-white,
+html[data-theme="light"] .from-white.via-zinc-200.to-white {
+  background: #09090B !important;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Elements that must always retain dark styling (e.g., photo chips, boot screens, certificate lightbox) */
+.preserve-dark,
+html.light .preserve-dark,
+html[data-theme="light"] .preserve-dark {
+  background-color: rgba(9, 9, 11, 0.90) !important;
+  color: #FFFFFF !important;
+  border-color: rgba(255, 255, 255, 0.20) !important;
+}
+
+.preserve-dark *,
+html.light .preserve-dark *,
+html[data-theme="light"] .preserve-dark * {
+  color: #FFFFFF !important;
+}
+
+/* Prevent image filter destruction */
+html.light img,
+html.light canvas,
+html.light video,
+html[data-theme="light"] img,
+html[data-theme="light"] canvas,
+html[data-theme="light"] video {
+  filter: none !important;
+}
+

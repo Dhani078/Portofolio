@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -114,9 +115,9 @@ export default function RootLayout({
       </head>
       <body
         suppressHydrationWarning
-        className="relative bg-[#000000] text-[#FFFFFF] min-h-screen antialiased selection:bg-white selection:text-black font-sans [&_svg]:suppressHydrationWarning"
+        className="relative bg-[#000000] text-[#FFFFFF] min-h-screen antialiased selection:bg-white selection:text-black font-sans [&_svg]:suppressHydrationWarning transition-colors duration-200"
       >
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
