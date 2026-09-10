@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { Menu, X, Sparkles } from 'lucide-react';
+import { Menu, X, Sparkles, Sun, Moon } from 'lucide-react';
+import { useTheme } from '@/context/ThemeContext';
 
 function GithubIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
@@ -14,6 +15,7 @@ function GithubIcon({ className = "w-4 h-4" }: { className?: string }) {
 }
 
 export default function Nav() {
+  const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -97,7 +99,7 @@ export default function Nav() {
           }}
           className="flex items-center gap-3 group cursor-pointer"
         >
-          <div className="relative w-8 h-8 rounded-xl bg-black border border-white/20 overflow-hidden flex items-center justify-center shadow-lg shadow-white/10 group-hover:scale-105 transition-transform p-1">
+          <div className="relative w-8 h-8 rounded-xl bg-black border border-white/20 overflow-hidden flex items-center justify-center shadow-lg shadow-white/10 group-hover:scale-105 transition-transform p-1 preserve-dark">
             <Image
               src="/Logo.png"
               alt="DAN Logo"
@@ -143,14 +145,51 @@ export default function Nav() {
           })}
         </nav>
 
-        {/* Action Button: High-Contrast Pure White Pill */}
-        <div className="flex items-center gap-3">
+        {/* Action Buttons: Theme Switcher, GitHub, Hire Me */}
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* White / Night Mode Toggle Trigger */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="w-9 h-9 rounded-xl bg-[#121215] border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white hover:border-white/40 hover:bg-[#1A1A1E] transition-all cursor-pointer shadow-sm relative group/theme active:scale-95"
+            aria-label={theme === 'light' ? 'Ganti ke Night Mode' : 'Ganti ke White Mode'}
+            title={theme === 'light' ? 'Mode Malam (Night)' : 'Mode Terang (White)'}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              {theme === 'light' ? (
+                <motion.div
+                  key="moon-icon"
+                  initial={{ rotate: -90, scale: 0.5, opacity: 0 }}
+                  animate={{ rotate: 0, scale: 1, opacity: 1 }}
+                  exit={{ rotate: 90, scale: 0.5, opacity: 0 }}
+                  transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                  className="flex items-center justify-center"
+                >
+                  <Moon className="w-4 h-4 text-zinc-900 group-hover/theme:text-black transition-colors" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="sun-icon"
+                  initial={{ rotate: 90, scale: 0.5, opacity: 0 }}
+                  animate={{ rotate: 0, scale: 1, opacity: 1 }}
+                  exit={{ rotate: -90, scale: 0.5, opacity: 0 }}
+                  transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                  className="flex items-center justify-center"
+                >
+                  <Sun className="w-4 h-4 text-zinc-300 group-hover/theme:text-white transition-colors" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </button>
+
+          {/* GitHub Profile Link */}
           <a
             href="https://github.com/Dhani078"
             target="_blank"
             rel="noopener noreferrer"
             className="w-9 h-9 rounded-xl bg-[#121215] border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white hover:border-white/40 hover:bg-[#1A1A1E] transition-all hidden sm:flex cursor-pointer shadow-sm"
             aria-label="GitHub"
+            title="GitHub (Dhani078)"
           >
             <GithubIcon className="w-4 h-4" />
           </a>
@@ -200,6 +239,39 @@ export default function Nav() {
                   {item.label}
                 </a>
               ))}
+            </div>
+
+            {/* Mobile Actions: Theme Switcher & GitHub */}
+            <div className="pt-4 mt-2 border-t border-white/10 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  toggleTheme();
+                }}
+                className="flex-1 py-2.5 px-3 rounded-xl bg-[#121215] border border-white/10 text-zinc-300 hover:text-white font-mono text-xs flex items-center justify-center gap-2 cursor-pointer transition-colors"
+              >
+                {theme === 'light' ? (
+                  <>
+                    <Moon className="w-3.5 h-3.5 text-zinc-900" />
+                    <span>Night Mode</span>
+                  </>
+                ) : (
+                  <>
+                    <Sun className="w-3.5 h-3.5 text-zinc-300" />
+                    <span>White Mode</span>
+                  </>
+                )}
+              </button>
+
+              <a
+                href="https://github.com/Dhani078"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 py-2.5 px-3 rounded-xl bg-[#121215] border border-white/10 text-zinc-300 hover:text-white font-mono text-xs flex items-center justify-center gap-2"
+              >
+                <GithubIcon className="w-3.5 h-3.5" />
+                <span>GitHub</span>
+              </a>
             </div>
           </motion.div>
         )}

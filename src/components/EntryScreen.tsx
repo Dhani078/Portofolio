@@ -133,7 +133,7 @@ export default function EntryScreen({ onEnter, enabled = true }: EntryScreenProp
         filter: 'blur(16px)',
         transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
       }}
-      className="fixed inset-0 z-[99999] bg-[#000000] text-white flex flex-col justify-between p-5 sm:p-8 lg:p-12 select-none overflow-hidden"
+      className="fixed inset-0 z-[99999] bg-[#000000] text-white flex flex-col justify-between p-5 sm:p-8 lg:p-12 select-none overflow-hidden preserve-dark"
     >
       {/* Ambient Lighting & Architectural Grid */}
       <motion.div

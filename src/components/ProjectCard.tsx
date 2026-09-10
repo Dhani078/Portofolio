@@ -86,7 +86,7 @@ export default function ProjectCard({ project, onSelect, defaultImageUrl }: Proj
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
         <div className="absolute top-4 left-4">
-          <span className="px-3 py-1 rounded-xl bg-[#000000]/80 backdrop-blur-md border border-white/20 text-xs font-mono text-white shadow-md">
+          <span className="px-3 py-1 rounded-xl bg-[#000000]/80 backdrop-blur-md border border-white/20 text-xs font-mono text-white shadow-md preserve-dark">
             {project.index} · {project.year}
           </span>
         </div>
