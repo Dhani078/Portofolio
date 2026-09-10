@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from '@/context/ThemeContext';
 
 interface LoadingScreenProps {
   onComplete: () => void;
@@ -15,6 +16,8 @@ interface ClientHardwareSpecs {
 }
 
 export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
   const [show, setShow] = useState(true);
   const [count, setCount] = useState(0);
   const [specs, setSpecs] = useState<ClientHardwareSpecs>({
@@ -123,28 +126,52 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)',
             transition: { duration: 0.45, ease: [0.87, 0, 0.13, 1] },
           }}
-          className="fixed inset-0 z-[999999] bg-[#000000] text-white flex flex-col justify-between p-6 sm:p-10 lg:p-14 select-none overflow-hidden preserve-dark"
+          className={`fixed inset-0 z-[999999] ${
+            isLight ? 'bg-[#FAFAFA] text-[#09090B]' : 'bg-[#000000] text-white'
+          } flex flex-col justify-between p-6 sm:p-10 lg:p-14 select-none overflow-hidden transition-colors duration-200`}
           style={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' }}
         >
           {/* Subtle architectural background texture */}
-          <div className="absolute inset-0 bg-tech-grid opacity-[0.08] pointer-events-none" />
+          <div
+            className={`absolute inset-0 bg-tech-grid ${
+              isLight ? 'opacity-[0.05]' : 'opacity-[0.08]'
+            } pointer-events-none`}
+          />
 
           {/* ── TOP BAR: Header Meta ── */}
           <motion.div
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="relative z-20 flex items-center justify-between font-mono text-[11px] sm:text-xs text-zinc-400 tracking-wider"
+            className={`relative z-20 flex items-center justify-between font-mono text-[11px] sm:text-xs ${
+              isLight ? 'text-zinc-600' : 'text-zinc-400'
+            } tracking-wider`}
           >
             <div className="flex items-center gap-2.5">
-              <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-              <span className="text-white font-bold tracking-[0.2em] font-display">DAN.DEV</span>
-              <span className="text-zinc-600 hidden sm:inline">|</span>
-              <span className="text-zinc-400 uppercase hidden sm:inline text-[10px]">
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  isLight ? 'bg-black' : 'bg-white'
+                } animate-pulse`}
+              />
+              <span
+                className={`${
+                  isLight ? 'text-black' : 'text-white'
+                } font-bold tracking-[0.2em] font-display`}
+              >
+                DAN.DEV
+              </span>
+              <span className={isLight ? 'text-zinc-300 hidden sm:inline' : 'text-zinc-600 hidden sm:inline'}>
+                |
+              </span>
+              <span className={`${isLight ? 'text-zinc-500' : 'text-zinc-400'} uppercase hidden sm:inline text-[10px]`}>
                 Pre-flight Telemetry
               </span>
             </div>
-            <div className="text-zinc-400 font-mono text-[10px] sm:text-xs tracking-widest uppercase">
+            <div
+              className={`${
+                isLight ? 'text-zinc-500' : 'text-zinc-400'
+              } font-mono text-[10px] sm:text-xs tracking-widest uppercase`}
+            >
               Banjarmasin, ID (WITA / UTC+8)
             </div>
           </motion.div>
@@ -156,7 +183,11 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
               initial={{ scale: 0.85, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#09090B] border border-white/20 p-2.5 flex items-center justify-center shadow-[0_0_50px_rgba(255,255,255,0.05)]"
+              className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl ${
+                isLight
+                  ? 'bg-black border border-black shadow-[0_10px_30px_rgba(0,0,0,0.12)]'
+                  : 'bg-[#09090B] border border-white/20 shadow-[0_0_50px_rgba(255,255,255,0.05)]'
+              } p-2.5 flex items-center justify-center`}
             >
               <Image
                 src="/Logo.png"
@@ -173,10 +204,14 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-              className="font-mono text-7xl sm:text-9xl font-black tracking-tighter text-white leading-none tabular-nums flex items-baseline gap-1"
+              className={`font-mono text-7xl sm:text-9xl font-black tracking-tighter ${
+                isLight ? 'text-black' : 'text-white'
+              } leading-none tabular-nums flex items-baseline gap-1`}
             >
               <span>{count.toString().padStart(2, '0')}</span>
-              <span className="text-3xl sm:text-4xl text-zinc-500 font-light tracking-normal">%</span>
+              <span className={`text-3xl sm:text-4xl ${isLight ? 'text-zinc-400' : 'text-zinc-500'} font-light tracking-normal`}>
+                %
+              </span>
             </motion.div>
 
             {/* Real Client & Server Telemetry Grid */}
@@ -184,14 +219,22 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.15 }}
-              className="w-full bg-[#09090B]/90 border border-white/10 rounded-2xl p-4 sm:p-5 font-mono text-[11px] sm:text-xs space-y-2 divide-y divide-white/5"
+              className={`w-full ${
+                isLight
+                  ? 'bg-white border-black/10 divide-black/5 shadow-xl shadow-black/5'
+                  : 'bg-[#09090B]/90 border-white/10 divide-white/5'
+              } border rounded-2xl p-4 sm:p-5 font-mono text-[11px] sm:text-xs space-y-2 divide-y transition-colors`}
             >
               {telemetryData.map((item) => (
                 <div key={item.label} className="pt-2 first:pt-0 flex items-center justify-between gap-4">
                   <span className="text-zinc-500 uppercase tracking-widest text-[10px] min-w-[100px] sm:min-w-[120px]">
                     {item.label}
                   </span>
-                  <span className="text-zinc-200 font-medium text-right truncate">
+                  <span
+                    className={`${
+                      isLight ? 'text-zinc-900 font-semibold' : 'text-zinc-200 font-medium'
+                    } text-right truncate`}
+                  >
                     {item.value}
                   </span>
                 </div>
@@ -201,15 +244,25 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
 
           {/* ── BOTTOM: Precision Progress Instrument ── */}
           <div className="relative z-20 w-full max-w-xl mx-auto space-y-3">
-            <div className="flex justify-between items-center font-mono text-[10px] sm:text-xs text-zinc-400 uppercase tracking-widest">
+            <div
+              className={`flex justify-between items-center font-mono text-[10px] sm:text-xs ${
+                isLight ? 'text-zinc-600' : 'text-zinc-400'
+              } uppercase tracking-widest`}
+            >
               <span>{count < 100 ? 'Calibrating Hardware Runtime...' : 'System Fully Operational'}</span>
-              <span className="text-white font-bold tabular-nums">{count}/100</span>
+              <span className={`${isLight ? 'text-black font-extrabold' : 'text-white font-bold'} tabular-nums`}>
+                {count}/100
+              </span>
             </div>
 
             {/* Swiss Precision Hairline Progress Bar */}
-            <div className="w-full h-[2px] bg-zinc-900 overflow-hidden rounded-full">
+            <div
+              className={`w-full h-[2px] ${
+                isLight ? 'bg-zinc-200' : 'bg-zinc-900'
+              } overflow-hidden rounded-full`}
+            >
               <motion.div
-                className="h-full bg-white"
+                className={`h-full ${isLight ? 'bg-black' : 'bg-white'}`}
                 style={{ width: `${count}%` }}
                 transition={{ ease: 'linear' }}
               />

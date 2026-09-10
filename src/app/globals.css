@@ -130,205 +130,197 @@ html[data-theme="light"] .radial-glow-silver {
   background: radial-gradient(circle at 80% 65%, rgba(0, 0, 0, 0.02) 0%, transparent 60%) !important;
 }
 
-/* Pure Black Backgrounds -> Crisp White in Light Mode */
-html.light .bg-\[\#000000\],
-html.light .bg-black:not(.preserve-dark):not(.preserve-dark *),
-html[data-theme="light"] .bg-\[\#000000\],
-html[data-theme="light"] .bg-black:not(.preserve-dark):not(.preserve-dark *) {
+/* Scoped Portfolio Surface Rules (Ensures LoadingScreen and EntryScreen are never corrupted) */
+html.light .portfolio-surface .bg-\[\#000000\],
+html.light .portfolio-surface .bg-black:not(.preserve-dark),
+html[data-theme="light"] .portfolio-surface .bg-\[\#000000\],
+html[data-theme="light"] .portfolio-surface .bg-black:not(.preserve-dark) {
   background-color: #FAFAFA !important;
 }
 
 /* Surface Cards -> Crisp White with Subtle Border & Depth */
-html.light .bg-\[\#09090B\],
-html.light .bg-\[\#09090B\]\/95,
-html.light .bg-\[\#09090B\]\/90,
-html.light .bg-\[\#09090B\]\/80,
-html.light .bg-\[\#09090B\]\/60,
-html.light .bg-\[\#09090B\]\/50,
-html[data-theme="light"] .bg-\[\#09090B\],
-html[data-theme="light"] .bg-\[\#09090B\]\/95,
-html[data-theme="light"] .bg-\[\#09090B\]\/90,
-html[data-theme="light"] .bg-\[\#09090B\]\/80,
-html[data-theme="light"] .bg-\[\#09090B\]\/60,
-html[data-theme="light"] .bg-\[\#09090B\]\/50 {
+html.light .portfolio-surface .bg-\[\#09090B\],
+html.light .portfolio-surface .bg-\[\#09090B\]\/95,
+html.light .portfolio-surface .bg-\[\#09090B\]\/90,
+html.light .portfolio-surface .bg-\[\#09090B\]\/80,
+html.light .portfolio-surface .bg-\[\#09090B\]\/60,
+html.light .portfolio-surface .bg-\[\#09090B\]\/50,
+html[data-theme="light"] .portfolio-surface .bg-\[\#09090B\],
+html[data-theme="light"] .portfolio-surface .bg-\[\#09090B\]\/95,
+html[data-theme="light"] .portfolio-surface .bg-\[\#09090B\]\/90,
+html[data-theme="light"] .portfolio-surface .bg-\[\#09090B\]\/80,
+html[data-theme="light"] .portfolio-surface .bg-\[\#09090B\]\/60,
+html[data-theme="light"] .portfolio-surface .bg-\[\#09090B\]\/50 {
   background-color: #FFFFFF !important;
 }
 
 /* Elevated Surfaces & Pills -> Soft Light Zinc (#F4F4F5) */
-html.light .bg-\[\#121215\],
-html.light .bg-\[\#18181b\],
-html.light .bg-\[\#1A1A1E\],
-html.light .bg-zinc-900,
-html.light .bg-zinc-950,
-html[data-theme="light"] .bg-\[\#121215\],
-html[data-theme="light"] .bg-\[\#18181b\],
-html[data-theme="light"] .bg-\[\#1A1A1E\],
-html[data-theme="light"] .bg-zinc-900,
-html[data-theme="light"] .bg-zinc-950 {
+html.light .portfolio-surface .bg-\[\#121215\],
+html.light .portfolio-surface .bg-\[\#18181b\],
+html.light .portfolio-surface .bg-\[\#1A1A1E\],
+html.light .portfolio-surface .bg-zinc-900,
+html.light .portfolio-surface .bg-zinc-950,
+html[data-theme="light"] .portfolio-surface .bg-\[\#121215\],
+html[data-theme="light"] .portfolio-surface .bg-\[\#18181b\],
+html[data-theme="light"] .portfolio-surface .bg-\[\#1A1A1E\],
+html[data-theme="light"] .portfolio-surface .bg-zinc-900,
+html[data-theme="light"] .portfolio-surface .bg-zinc-950 {
   background-color: #F4F4F5 !important;
 }
 
-html.light .bg-\[\#121215\]\/80,
-html.light .bg-\[\#18181b\]\/70,
-html[data-theme="light"] .bg-\[\#121215\]\/80,
-html[data-theme="light"] .bg-\[\#18181b\]\/70 {
+html.light .portfolio-surface .bg-\[\#121215\]\/80,
+html.light .portfolio-surface .bg-\[\#18181b\]\/70,
+html[data-theme="light"] .portfolio-surface .bg-\[\#121215\]\/80,
+html[data-theme="light"] .portfolio-surface .bg-\[\#18181b\]\/70 {
   background-color: rgba(244, 244, 245, 0.90) !important;
 }
 
 /* Glass Card in Light Mode */
-html.light .glass-card,
-html[data-theme="light"] .glass-card {
+html.light .portfolio-surface .glass-card,
+html[data-theme="light"] .portfolio-surface .glass-card {
   background-color: rgba(255, 255, 255, 0.90) !important;
   border-color: rgba(0, 0, 0, 0.10) !important;
   box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05) !important;
 }
-html.light .glass-card:hover,
-html[data-theme="light"] .glass-card:hover {
+html.light .portfolio-surface .glass-card:hover,
+html[data-theme="light"] .portfolio-surface .glass-card:hover {
   border-color: rgba(0, 0, 0, 0.30) !important;
 }
 
 /* Borders in Light Mode */
-html.light [class*="border-white\/"]:not(.preserve-dark):not(.preserve-dark *),
-html[data-theme="light"] [class*="border-white\/"]:not(.preserve-dark):not(.preserve-dark *) {
+html.light .portfolio-surface [class*="border-white\/"]:not(.preserve-dark),
+html[data-theme="light"] .portfolio-surface [class*="border-white\/"]:not(.preserve-dark) {
   border-color: rgba(0, 0, 0, 0.12) !important;
 }
 
-html.light .border-white:not(.preserve-dark):not(.preserve-dark *),
-html[data-theme="light"] .border-white:not(.preserve-dark):not(.preserve-dark *) {
+html.light .portfolio-surface .border-white:not(.preserve-dark),
+html[data-theme="light"] .portfolio-surface .border-white:not(.preserve-dark) {
   border-color: #09090B !important;
 }
 
-html.light [class*="hover:border-white"]:hover:not(.preserve-dark),
-html[data-theme="light"] [class*="hover:border-white"]:hover:not(.preserve-dark) {
+html.light .portfolio-surface [class*="hover:border-white"]:hover:not(.preserve-dark),
+html[data-theme="light"] .portfolio-surface [class*="hover:border-white"]:hover:not(.preserve-dark) {
   border-color: rgba(0, 0, 0, 0.35) !important;
 }
 
 /* Typography in Light Mode */
-html.light .text-white:not(.preserve-dark):not(.preserve-dark *),
-html[data-theme="light"] .text-white:not(.preserve-dark):not(.preserve-dark *) {
+html.light .portfolio-surface .text-white:not(.preserve-dark),
+html[data-theme="light"] .portfolio-surface .text-white:not(.preserve-dark) {
   color: #09090B !important;
 }
 
-html.light .text-zinc-200:not(.preserve-dark):not(.preserve-dark *),
-html.light .text-zinc-300:not(.preserve-dark):not(.preserve-dark *),
-html[data-theme="light"] .text-zinc-200:not(.preserve-dark):not(.preserve-dark *),
-html[data-theme="light"] .text-zinc-300:not(.preserve-dark):not(.preserve-dark *) {
+html.light .portfolio-surface .text-zinc-200:not(.preserve-dark),
+html.light .portfolio-surface .text-zinc-300:not(.preserve-dark),
+html[data-theme="light"] .portfolio-surface .text-zinc-200:not(.preserve-dark),
+html[data-theme="light"] .portfolio-surface .text-zinc-300:not(.preserve-dark) {
   color: #27272A !important;
 }
 
-html.light .text-zinc-400:not(.preserve-dark):not(.preserve-dark *),
-html[data-theme="light"] .text-zinc-400:not(.preserve-dark):not(.preserve-dark *) {
+html.light .portfolio-surface .text-zinc-400:not(.preserve-dark),
+html[data-theme="light"] .portfolio-surface .text-zinc-400:not(.preserve-dark) {
   color: #52525B !important;
 }
 
-html.light .text-zinc-500:not(.preserve-dark):not(.preserve-dark *),
-html[data-theme="light"] .text-zinc-500:not(.preserve-dark):not(.preserve-dark *) {
+html.light .portfolio-surface .text-zinc-500:not(.preserve-dark),
+html[data-theme="light"] .portfolio-surface .text-zinc-500:not(.preserve-dark) {
   color: #71717A !important;
 }
 
-html.light .text-zinc-600:not(.preserve-dark):not(.preserve-dark *),
-html[data-theme="light"] .text-zinc-600:not(.preserve-dark):not(.preserve-dark *) {
+html.light .portfolio-surface .text-zinc-600:not(.preserve-dark),
+html[data-theme="light"] .portfolio-surface .text-zinc-600:not(.preserve-dark) {
   color: #A1A1AA !important;
 }
 
 /* Hero text gradient invert */
-html.light .bg-clip-text.text-transparent,
-html[data-theme="light"] .bg-clip-text.text-transparent {
+html.light .portfolio-surface .bg-clip-text.text-transparent,
+html[data-theme="light"] .portfolio-surface .bg-clip-text.text-transparent {
   background-image: linear-gradient(to right, #09090B, #27272A, #71717A) !important;
 }
 
 /* High-Contrast Action Buttons: In Light mode, primary white buttons invert to deep carbon black with white text */
-html.light .bg-white:not(img):not(svg):not(.preserve-white):not(.preserve-dark):not(.preserve-dark *),
-html[data-theme="light"] .bg-white:not(img):not(svg):not(.preserve-white):not(.preserve-dark):not(.preserve-dark *) {
+html.light .portfolio-surface .bg-white:not(img):not(svg):not(.preserve-white):not(.preserve-dark),
+html[data-theme="light"] .portfolio-surface .bg-white:not(img):not(svg):not(.preserve-white):not(.preserve-dark) {
   background-color: #09090B !important;
   color: #FFFFFF !important;
 }
 
-html.light .bg-white:not(img):not(svg):not(.preserve-white):not(.preserve-dark):not(.preserve-dark *) *:not(svg):not(path),
-html[data-theme="light"] .bg-white:not(img):not(svg):not(.preserve-white):not(.preserve-dark):not(.preserve-dark *) *:not(svg):not(path) {
+html.light .portfolio-surface .bg-white:not(img):not(svg):not(.preserve-white):not(.preserve-dark) *:not(svg):not(path),
+html[data-theme="light"] .portfolio-surface .bg-white:not(img):not(svg):not(.preserve-white):not(.preserve-dark) *:not(svg):not(path) {
   color: #FFFFFF !important;
 }
 
-html.light .bg-white:not(img):not(svg):not(.preserve-white):not(.preserve-dark):not(.preserve-dark *) svg,
-html[data-theme="light"] .bg-white:not(img):not(svg):not(.preserve-white):not(.preserve-dark):not(.preserve-dark *) svg {
+html.light .portfolio-surface .bg-white:not(img):not(svg):not(.preserve-white):not(.preserve-dark) svg,
+html[data-theme="light"] .portfolio-surface .bg-white:not(img):not(svg):not(.preserve-white):not(.preserve-dark) svg {
   color: #FFFFFF !important;
 }
 
 /* Hover on inverted buttons */
-html.light .hover\:bg-zinc-200:hover:not(.preserve-dark),
-html[data-theme="light"] .hover\:bg-zinc-200:hover:not(.preserve-dark) {
+html.light .portfolio-surface .hover\:bg-zinc-200:hover:not(.preserve-dark),
+html[data-theme="light"] .portfolio-surface .hover\:bg-zinc-200:hover:not(.preserve-dark) {
   background-color: #27272A !important;
   color: #FFFFFF !important;
 }
 
-html.light .hover\:bg-zinc-100:hover:not(.preserve-dark),
-html[data-theme="light"] .hover\:bg-zinc-100:hover:not(.preserve-dark) {
+html.light .portfolio-surface .hover\:bg-zinc-100:hover:not(.preserve-dark),
+html[data-theme="light"] .portfolio-surface .hover\:bg-zinc-100:hover:not(.preserve-dark) {
   background-color: #27272A !important;
   color: #FFFFFF !important;
 }
 
 /* Secondary hover */
-html.light .hover\:bg-white:hover:not(.preserve-dark),
-html[data-theme="light"] .hover\:bg-white:hover:not(.preserve-dark) {
+html.light .portfolio-surface .hover\:bg-white:hover:not(.preserve-dark),
+html[data-theme="light"] .portfolio-surface .hover\:bg-white:hover:not(.preserve-dark) {
   background-color: #09090B !important;
   color: #FFFFFF !important;
 }
 
 /* Form Inputs & Textareas in Light Mode */
-html.light input,
-html.light textarea,
-html[data-theme="light"] input,
-html[data-theme="light"] textarea {
+html.light .portfolio-surface input,
+html.light .portfolio-surface textarea,
+html[data-theme="light"] .portfolio-surface input,
+html[data-theme="light"] .portfolio-surface textarea {
   color: #09090B !important;
 }
 
-html.light input::placeholder,
-html.light textarea::placeholder,
-html[data-theme="light"] input::placeholder,
-html[data-theme="light"] textarea::placeholder {
+html.light .portfolio-surface input::placeholder,
+html.light .portfolio-surface textarea::placeholder,
+html[data-theme="light"] .portfolio-surface input::placeholder,
+html[data-theme="light"] .portfolio-surface textarea::placeholder {
   color: #71717A !important;
 }
 
 /* Shadows in Light Mode */
-html.light .shadow-2xl,
-html[data-theme="light"] .shadow-2xl {
+html.light .portfolio-surface .shadow-2xl,
+html[data-theme="light"] .portfolio-surface .shadow-2xl {
   box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.08) !important;
 }
 
-html.light .shadow-black\/80,
-html[data-theme="light"] .shadow-black\/80 {
+html.light .portfolio-surface .shadow-black\/80,
+html[data-theme="light"] .portfolio-surface .shadow-black\/80 {
   box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.10) !important;
 }
 
-html.light .shadow-white\/10,
-html.light .shadow-white\/15,
-html.light .shadow-white\/20,
-html[data-theme="light"] .shadow-white\/10,
-html[data-theme="light"] .shadow-white\/15,
-html[data-theme="light"] .shadow-white\/20 {
+html.light .portfolio-surface .shadow-white\/10,
+html.light .portfolio-surface .shadow-white\/15,
+html.light .portfolio-surface .shadow-white\/20,
+html[data-theme="light"] .portfolio-surface .shadow-white\/10,
+html[data-theme="light"] .portfolio-surface .shadow-white\/15,
+html[data-theme="light"] .portfolio-surface .shadow-white\/20 {
   box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.12) !important;
 }
 
 /* Scroll progress bar in light mode */
-html.light .from-white.via-zinc-200.to-white,
-html[data-theme="light"] .from-white.via-zinc-200.to-white {
+html.light .portfolio-surface .from-white.via-zinc-200.to-white,
+html[data-theme="light"] .portfolio-surface .from-white.via-zinc-200.to-white {
   background: #09090B !important;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.25) !important;
 }
 
-/* Elements that must always retain dark styling (e.g., photo chips, boot screens, certificate lightbox) */
-.preserve-dark,
-html.light .preserve-dark,
-html[data-theme="light"] .preserve-dark {
+/* Isolated dark chip for photo tags */
+.preserve-dark {
   background-color: rgba(9, 9, 11, 0.90) !important;
   color: #FFFFFF !important;
   border-color: rgba(255, 255, 255, 0.20) !important;
-}
-
-.preserve-dark *,
-html.light .preserve-dark *,
-html[data-theme="light"] .preserve-dark * {
-  color: #FFFFFF !important;
 }
 
 /* Prevent image filter destruction */
@@ -340,4 +332,5 @@ html[data-theme="light"] canvas,
 html[data-theme="light"] video {
   filter: none !important;
 }
+
 
