@@ -20,6 +20,7 @@ import FloatingDock from '@/components/FloatingDock';
 import EntryScreen from '@/components/EntryScreen';
 import Certificates from '@/components/Certificates';
 import LoadingScreen from '@/components/LoadingScreen';
+import { useTheme } from '@/context/ThemeContext';
 
 // Dynamic components for optimal performance
 const SpotlightCursor = dynamic(() => import('@/components/SpotlightCursor'), { ssr: false });
@@ -113,8 +114,17 @@ export default function PortfolioView({
     };
   }, [entered]);
 
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
+
   return (
-    <div className="min-h-screen bg-[#000000] text-[#FFFFFF] font-sans relative selection:bg-white selection:text-black">
+    <div
+      className={`min-h-screen ${
+        isLight
+          ? 'bg-[#FAFAFA] text-[#09090B] selection:bg-black selection:text-white'
+          : 'bg-[#000000] text-[#FFFFFF] selection:bg-white selection:text-black'
+      } font-sans relative transition-colors duration-200`}
+    >
       {/* Boot Loading Screen — auto-dismisses to reveal EntryScreen */}
       {!booted && (
         <LoadingScreen onComplete={() => setBooted(true)} />
@@ -128,7 +138,7 @@ export default function PortfolioView({
       </AnimatePresence>
 
       {/* Main Portfolio Surface */}
-      <div className="relative z-10">
+      <div className="relative z-10 portfolio-surface">
         {/* GPU Smooth Scroll Progress Indicator */}
         <motion.div
           className="fixed top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-white via-zinc-200 to-white origin-left z-50 shadow-[0_0_12px_rgba(255,255,255,0.8)]"

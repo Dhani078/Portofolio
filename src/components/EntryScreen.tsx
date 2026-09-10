@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { useTheme } from '@/context/ThemeContext';
 
 interface EntryScreenProps {
   onEnter: () => void;
@@ -11,6 +12,8 @@ interface EntryScreenProps {
 }
 
 export default function EntryScreen({ onEnter, enabled = true }: EntryScreenProps) {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
   const [isEntering, setIsEntering] = useState(false);
   const enterTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -133,15 +136,25 @@ export default function EntryScreen({ onEnter, enabled = true }: EntryScreenProp
         filter: 'blur(16px)',
         transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
       }}
-      className="fixed inset-0 z-[99999] bg-[#000000] text-white flex flex-col justify-between p-5 sm:p-8 lg:p-12 select-none overflow-hidden preserve-dark"
+      className={`fixed inset-0 z-[99999] ${
+        isLight ? 'bg-[#FAFAFA] text-[#09090B]' : 'bg-[#000000] text-white'
+      } flex flex-col justify-between p-5 sm:p-8 lg:p-12 select-none overflow-hidden transition-colors duration-200`}
     >
       {/* Ambient Lighting & Architectural Grid */}
       <motion.div
         style={{ x: bgTranslateX, y: bgTranslateY }}
         className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden"
       >
-        <div className="absolute w-[900px] h-[900px] rounded-full bg-radial from-white/[0.035] via-transparent to-transparent blur-[160px]" />
-        <div className="absolute inset-0 bg-tech-grid opacity-15" />
+        <div
+          className={`absolute w-[900px] h-[900px] rounded-full bg-radial ${
+            isLight ? 'from-black/[0.025]' : 'from-white/[0.035]'
+          } via-transparent to-transparent blur-[160px]`}
+        />
+        <div
+          className={`absolute inset-0 bg-tech-grid ${
+            isLight ? 'opacity-[0.05]' : 'opacity-15'
+          }`}
+        />
       </motion.div>
 
       {/* ── TOP BAR ── */}
@@ -149,27 +162,53 @@ export default function EntryScreen({ onEnter, enabled = true }: EntryScreenProp
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-20 flex items-center justify-between font-mono text-xs tracking-wider text-zinc-400"
+        className={`relative z-20 flex items-center justify-between font-mono text-xs tracking-wider ${
+          isLight ? 'text-zinc-600' : 'text-zinc-400'
+        }`}
       >
         {/* Left Brand Identifier */}
         <div className="flex items-center gap-2.5">
-          <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-          <span className="text-white font-bold tracking-widest font-display text-sm">
+          <span
+            className={`w-2 h-2 rounded-full ${
+              isLight ? 'bg-black' : 'bg-white'
+            } animate-pulse`}
+          />
+          <span
+            className={`${
+              isLight ? 'text-black' : 'text-white'
+            } font-bold tracking-widest font-display text-sm`}
+          >
             DAN.DEV
           </span>
         </div>
 
         {/* Center Live Synchronized WITA Clock */}
-        <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#121215] border border-white/10 text-zinc-300 font-mono text-xs shadow-inner">
-          <span className="text-white font-bold tracking-wider tabular-nums">
+        <div
+          className={`hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full ${
+            isLight
+              ? 'bg-white border-black/10 text-zinc-700 shadow-sm'
+              : 'bg-[#121215] border-white/10 text-zinc-300 shadow-inner'
+          } border font-mono text-xs`}
+        >
+          <span
+            className={`${
+              isLight ? 'text-black' : 'text-white'
+            } font-bold tracking-wider tabular-nums`}
+          >
             {mounted ? currentTime : '02:00:00'}
           </span>
           <span className="text-zinc-500 text-[10px]">WITA (UTC+8)</span>
         </div>
 
         {/* Right Geographic Tag */}
-        <div className="flex items-center gap-2 text-xs text-zinc-400 font-mono">
-          <span className="px-3 py-1 rounded-xl bg-[#121215] border border-white/10 text-zinc-300 text-[11px]">
+        <div className="flex items-center gap-2 text-xs font-mono">
+          <span
+            className={`px-3 py-1 rounded-xl ${
+              isLight
+                ? 'bg-white border-black/10 text-zinc-700 shadow-sm'
+                : 'bg-[#121215] border-white/10 text-zinc-300'
+            } border text-[11px]`}
+          >
             Banjarmasin, ID
           </span>
         </div>
@@ -187,14 +226,32 @@ export default function EntryScreen({ onEnter, enabled = true }: EntryScreenProp
           initial={{ opacity: 0, scale: 0.94, y: 25 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="relative p-8 sm:p-12 rounded-3xl bg-[#09090B]/95 border border-white/15 backdrop-blur-2xl shadow-[0_0_80px_rgba(255,255,255,0.03)] max-w-lg w-full flex flex-col items-center group transition-colors duration-300 overflow-hidden"
+          className={`relative p-8 sm:p-12 rounded-3xl ${
+            isLight
+              ? 'bg-white/95 border-black/10 shadow-[0_20px_60px_rgba(0,0,0,0.08)]'
+              : 'bg-[#09090B]/95 border-white/15 shadow-[0_0_80px_rgba(255,255,255,0.03)]'
+          } border backdrop-blur-2xl max-w-lg w-full flex flex-col items-center group transition-all duration-300 overflow-hidden`}
         >
           {/* Subtle Specular Highlight tracking cursor */}
-          <div className="absolute inset-0 bg-radial from-white/[0.04] to-transparent pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity" />
+          <div
+            className={`absolute inset-0 bg-radial ${
+              isLight ? 'from-black/[0.02]' : 'from-white/[0.04]'
+            } to-transparent pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity`}
+          />
 
           {/* Minimalist Header Status Pill */}
-          <div className="mb-6 flex items-center gap-2 px-3 py-1 rounded-full bg-[#121215] border border-white/10 text-[10px] font-mono text-zinc-400 uppercase tracking-widest">
-            <span className="w-1.5 h-1.5 rounded-full bg-white" />
+          <div
+            className={`mb-6 flex items-center gap-2 px-3 py-1 rounded-full ${
+              isLight
+                ? 'bg-zinc-100 border-black/10 text-zinc-600'
+                : 'bg-[#121215] border-white/10 text-zinc-400'
+            } border text-[10px] font-mono uppercase tracking-widest`}
+          >
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${
+                isLight ? 'bg-black' : 'bg-white'
+              }`}
+            />
             <span>PORTFOLIO 2026 • PRODUCTION RELEASE</span>
           </div>
 
@@ -202,7 +259,9 @@ export default function EntryScreen({ onEnter, enabled = true }: EntryScreenProp
           <motion.div
             whileHover={{ scale: 1.04 }}
             transition={{ type: 'spring', stiffness: 350, damping: 22 }}
-            className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-[#000000] border border-white/20 p-3.5 mb-6 flex items-center justify-center shadow-2xl cursor-pointer"
+            className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-black ${
+              isLight ? 'border border-black shadow-xl' : 'border border-white/20 shadow-2xl'
+            } p-3.5 mb-6 flex items-center justify-center cursor-pointer`}
           >
             <Image
               src="/Logo.png"
@@ -217,10 +276,18 @@ export default function EntryScreen({ onEnter, enabled = true }: EntryScreenProp
 
           {/* Identity & Technical Role */}
           <div className="space-y-2 mb-6">
-            <h1 className="font-display font-black text-base sm:text-lg tracking-[0.25em] text-white uppercase leading-tight">
+            <h1
+              className={`font-display font-black text-base sm:text-lg tracking-[0.25em] ${
+                isLight ? 'text-black' : 'text-white'
+              } uppercase leading-tight`}
+            >
               MUHAMMAD RIZKI RAMADHANI
             </h1>
-            <p className="font-mono text-xs sm:text-sm text-zinc-400 tracking-wider">
+            <p
+              className={`font-mono text-xs sm:text-sm ${
+                isLight ? 'text-zinc-600' : 'text-zinc-400'
+              } tracking-wider`}
+            >
               Full-Stack Software Engineer
             </p>
           </div>
@@ -237,7 +304,11 @@ export default function EntryScreen({ onEnter, enabled = true }: EntryScreenProp
             ].map((tech) => (
               <span
                 key={tech}
-                className="px-3 py-1 rounded-xl bg-[#121215] border border-white/10 font-mono text-[11px] text-zinc-300 hover:border-white/30 transition-colors"
+                className={`px-3 py-1 rounded-xl ${
+                  isLight
+                    ? 'bg-zinc-100 border-black/10 text-zinc-800 hover:border-black/30'
+                    : 'bg-[#121215] border-white/10 text-zinc-300 hover:border-white/30'
+                } border font-mono text-[11px] transition-colors`}
               >
                 {tech}
               </span>
@@ -251,7 +322,11 @@ export default function EntryScreen({ onEnter, enabled = true }: EntryScreenProp
             whileHover={enabled && !isEntering ? { scale: 1.03 } : {}}
             whileTap={enabled && !isEntering ? { scale: 0.97 } : {}}
             transition={{ type: 'spring', stiffness: 450, damping: 25 }}
-            className="relative w-full sm:w-auto px-10 py-4 rounded-2xl bg-white hover:bg-zinc-100 text-black font-mono font-extrabold text-xs tracking-wider uppercase flex items-center justify-center gap-2.5 shadow-2xl shadow-white/20 transition-all cursor-pointer group/btn disabled:opacity-90"
+            className={`relative w-full sm:w-auto px-10 py-4 rounded-2xl ${
+              isLight
+                ? 'bg-black hover:bg-zinc-800 text-white shadow-2xl shadow-black/20'
+                : 'bg-white hover:bg-zinc-100 text-black shadow-2xl shadow-white/20'
+            } font-mono font-extrabold text-xs tracking-wider uppercase flex items-center justify-center gap-2.5 transition-all cursor-pointer group/btn disabled:opacity-90`}
           >
             <span>{isEntering ? 'MEMBUKA PORTOFOLIO...' : 'BUKA PORTOFOLIO'}</span>
             <ArrowRight
@@ -262,12 +337,20 @@ export default function EntryScreen({ onEnter, enabled = true }: EntryScreenProp
           </motion.button>
 
           {/* Tactile Keycap Prompt */}
-          <div className="mt-5 flex items-center gap-2 font-mono text-xs text-zinc-400">
+          <div
+            className={`mt-5 flex items-center gap-2 font-mono text-xs ${
+              isLight ? 'text-zinc-500' : 'text-zinc-400'
+            }`}
+          >
             <span>atau tekan</span>
             <kbd
               className={`px-2.5 py-1 rounded-lg border text-[10px] font-bold tracking-wider transition-all duration-100 ${
                 pressedKey === 'space'
-                  ? 'bg-white text-black border-white scale-90 shadow-none'
+                  ? isLight
+                    ? 'bg-black text-white border-black scale-90 shadow-none'
+                    : 'bg-white text-black border-white scale-90 shadow-none'
+                  : isLight
+                  ? 'bg-zinc-100 border-black/20 text-zinc-800 shadow-sm'
                   : 'bg-[#121215] border-white/20 text-zinc-300 shadow-sm'
               }`}
             >
@@ -277,7 +360,11 @@ export default function EntryScreen({ onEnter, enabled = true }: EntryScreenProp
             <kbd
               className={`px-2.5 py-1 rounded-lg border text-[10px] font-bold tracking-wider transition-all duration-100 ${
                 pressedKey === 'enter'
-                  ? 'bg-white text-black border-white scale-90 shadow-none'
+                  ? isLight
+                    ? 'bg-black text-white border-black scale-90 shadow-none'
+                    : 'bg-white text-black border-white scale-90 shadow-none'
+                  : isLight
+                  ? 'bg-zinc-100 border-black/20 text-zinc-800 shadow-sm'
                   : 'bg-[#121215] border-white/20 text-zinc-300 shadow-sm'
               }`}
             >
@@ -292,12 +379,20 @@ export default function EntryScreen({ onEnter, enabled = true }: EntryScreenProp
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-20 flex flex-col sm:flex-row items-center justify-between font-mono text-xs text-zinc-500 tracking-wider gap-2"
+        className={`relative z-20 flex flex-col sm:flex-row items-center justify-between font-mono text-xs ${
+          isLight ? 'text-zinc-500' : 'text-zinc-500'
+        } tracking-wider gap-2`}
       >
         <div>Kalimantan Selatan, Indonesia</div>
         <div className="flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-white" />
-          <span className="text-zinc-400">Next.js 16 • React 19 • Rapier Physics</span>
+          <span
+            className={`w-1.5 h-1.5 rounded-full ${
+              isLight ? 'bg-black' : 'bg-white'
+            }`}
+          />
+          <span className={isLight ? 'text-zinc-700' : 'text-zinc-400'}>
+            Next.js 16 • React 19 • Rapier Physics
+          </span>
         </div>
       </motion.footer>
 
@@ -307,7 +402,9 @@ export default function EntryScreen({ onEnter, enabled = true }: EntryScreenProp
           initial={{ scale: 0.4, opacity: 0.9 }}
           animate={{ scale: 9, opacity: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute inset-0 m-auto w-48 h-48 rounded-full border border-white pointer-events-none z-30"
+          className={`absolute inset-0 m-auto w-48 h-48 rounded-full border ${
+            isLight ? 'border-black/40' : 'border-white'
+          } pointer-events-none z-30`}
         />
       )}
     </motion.div>
