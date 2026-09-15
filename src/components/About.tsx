@@ -17,7 +17,7 @@ interface AboutProps {
 }
 
 const defaultStats: StatItem[] = [
-  { label: 'Proyek Produksi', value: '3+' },
+  { label: 'Proyek Produksi', value: '4+' },
   { label: 'Fokus Engineering', value: 'Full-Stack' },
   { label: 'Pendidikan Formal', value: 'UNISKA' },
 ];

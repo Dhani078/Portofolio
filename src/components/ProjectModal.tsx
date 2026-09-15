@@ -45,6 +45,7 @@ export default function ProjectModal({ project, onClose, defaultImageUrl }: Proj
   const isSelLaundry = project?.title?.toLowerCase().includes('laundry') || project?.title?.toLowerCase().includes('embun') || project?.index === '01';
   const isSelGym = project?.title?.toLowerCase().includes('gym') || project?.title?.toLowerCase().includes('vault');
   const isSelEquip = project?.title?.toLowerCase().includes('surya') || project?.title?.toLowerCase().includes('equiprent');
+  const isSelKasDesk = project?.title?.toLowerCase().includes('kasdesk') || project?.title?.toLowerCase().includes('kas-desk') || project?.index === '04';
 
   const liveLink = isSelLaundry
     ? 'https://embun-laundry.dhanisepeda.workers.dev/dashboard'
@@ -52,6 +53,8 @@ export default function ProjectModal({ project, onClose, defaultImageUrl }: Proj
     ? 'https://gymvault-app.vercel.app/'
     : isSelEquip
     ? 'https://equiprent-pt-surya-bangun-sarana.dhanisepeda.workers.dev/'
+    : isSelKasDesk
+    ? 'https://kas-desk.vercel.app/'
     : project?.live_url || project?.case_study_url;
 
   const ghLink = isSelLaundry
@@ -60,7 +63,15 @@ export default function ProjectModal({ project, onClose, defaultImageUrl }: Proj
     ? 'https://github.com/Dhani078/GymVault'
     : isSelEquip
     ? 'https://github.com/Dhani078/equiprent-pt-surya-bangun-sarana'
+    : isSelKasDesk
+    ? 'https://github.com/Dhani078/KasDesk'
     : project?.github_url;
+
+  const modalImage = isSelEquip
+    ? '/equiprent-cover.jpg'
+    : isSelKasDesk
+    ? '/kasdesk-cover.jpg'
+    : (project?.image_url || defaultImageUrl || '/equiprent-cover.jpg');
 
   return (
     <AnimatePresence>
@@ -98,7 +109,7 @@ export default function ProjectModal({ project, onClose, defaultImageUrl }: Proj
 
           <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden mb-6 border border-white/10 bg-[#121215]">
             <Image
-              src={project.image_url || defaultImageUrl || '/equiprent-cover.jpg'}
+              src={modalImage}
               alt={project.title}
               fill
               sizes="(max-width: 768px) 100vw, 700px"

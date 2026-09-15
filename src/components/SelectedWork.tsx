@@ -72,6 +72,19 @@ export const defaultProjects: ProjectItem[] = [
     live_url: 'https://gymvault-app.vercel.app/',
     github_url: 'https://github.com/Dhani078/GymVault',
   },
+  {
+    index: '04',
+    title: 'KasDesk — Personal Finance & Wealth Tracker',
+    category: 'FULL-STACK',
+    year: 2026,
+    tags: ['Next.js 16', 'React 19', 'Drizzle ORM', 'TiDB Cloud', 'PWA', 'Auth.js'],
+    summary: 'PWA manajemen keuangan pribadi modern berkecepatan tinggi dengan kesiapan offline-first, Drizzle ORM + TiDB Serverless, pemindaian OCR struk otomatis, QuickLog 2-tap, kalkulator ekspresi di kolom nominal, dan proteksi biometrik/PIN.',
+    metrics: { perf: 99, a11y: 100, build: '100%' },
+    case_study_url: 'https://kas-desk.vercel.app/',
+    image_url: '/kasdesk-cover.jpg',
+    live_url: 'https://kas-desk.vercel.app/',
+    github_url: 'https://github.com/Dhani078/KasDesk',
+  },
 ];
 
 export const categories = [
@@ -106,7 +119,7 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
         
         if (data.repos) {
           // Exclude repos that are already primary featured projects or internal config
-          const excludedRepos = ['embun-laundry', 'gymvault', 'equiprent-pt-surya-bangun-sarana', 'portofolio', 'dhani078'];
+          const excludedRepos = ['embun-laundry', 'gymvault', 'equiprent-pt-surya-bangun-sarana', 'kasdesk', 'kas-desk', 'portofolio', 'dhani078'];
           const standaloneRepos = data.repos.filter((repo: GithubRepoItem) => {
             const nameLower = (repo.name || '').toLowerCase();
             return !excludedRepos.some((ex) => nameLower === ex || nameLower.includes(ex));
@@ -180,6 +193,7 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
     const isLaundry = rawTitle.toLowerCase().includes('embun') || rawTitle.toLowerCase().includes('laundry') || i === 0;
     const isGym = rawTitle.toLowerCase().includes('gym') || rawTitle.toLowerCase().includes('vault') || i === 2;
     const isEquip = rawTitle.toLowerCase().includes('surya') || rawTitle.toLowerCase().includes('equiprent') || i === 1;
+    const isKasDesk = rawTitle.toLowerCase().includes('kasdesk') || rawTitle.toLowerCase().includes('kas-desk') || i === 3;
 
     let liveUrl = p.live_url;
     let githubUrl = p.github_url;
@@ -203,6 +217,13 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
       liveUrl = 'https://equiprent-pt-surya-bangun-sarana.dhanisepeda.workers.dev/';
       githubUrl = 'https://github.com/Dhani078/equiprent-pt-surya-bangun-sarana';
       tags = tags.length > 0 ? tags : ['React 18', 'TypeScript', 'Cloudflare Workers', 'TiDB Cloud Serverless'];
+    } else if (isKasDesk) {
+      title = 'KasDesk — Personal Finance & Wealth Tracker';
+      liveUrl = 'https://kas-desk.vercel.app/';
+      githubUrl = 'https://github.com/Dhani078/KasDesk';
+      summary = summary || 'PWA manajemen keuangan pribadi modern berkecepatan tinggi dengan kesiapan offline-first, Drizzle ORM + TiDB Serverless, pemindaian OCR struk otomatis, QuickLog 2-tap, kalkulator ekspresi di kolom nominal, dan proteksi biometrik/PIN.';
+      tags = tags.length > 0 ? tags : ['Next.js 16', 'React 19', 'Drizzle ORM', 'TiDB Cloud', 'PWA', 'Auth.js'];
+      img = img || '/kasdesk-cover.jpg';
     }
 
     return { 
