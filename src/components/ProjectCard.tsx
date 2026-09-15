@@ -45,6 +45,7 @@ export default function ProjectCard({ project, onSelect, defaultImageUrl }: Proj
   const isEmbunLaundry = project.title?.toLowerCase().includes('laundry') || project.title?.toLowerCase().includes('embun') || project.index === '01';
   const isGymVault = project.title?.toLowerCase().includes('gym') || project.title?.toLowerCase().includes('vault');
   const isEquipRent = project.title?.toLowerCase().includes('surya') || project.title?.toLowerCase().includes('equiprent');
+  const isKasDesk = project.title?.toLowerCase().includes('kasdesk') || project.title?.toLowerCase().includes('kas-desk') || project.index === '04';
 
   const targetLiveUrl = isEmbunLaundry
     ? 'https://embun-laundry.dhanisepeda.workers.dev/dashboard'
@@ -52,6 +53,8 @@ export default function ProjectCard({ project, onSelect, defaultImageUrl }: Proj
     ? 'https://gymvault-app.vercel.app/'
     : isEquipRent
     ? 'https://equiprent-pt-surya-bangun-sarana.dhanisepeda.workers.dev/'
+    : isKasDesk
+    ? 'https://kas-desk.vercel.app/'
     : project.live_url || project.case_study_url || '#';
 
   const targetGithubUrl = isEmbunLaundry
@@ -60,7 +63,15 @@ export default function ProjectCard({ project, onSelect, defaultImageUrl }: Proj
     ? 'https://github.com/Dhani078/GymVault'
     : isEquipRent
     ? 'https://github.com/Dhani078/equiprent-pt-surya-bangun-sarana'
+    : isKasDesk
+    ? 'https://github.com/Dhani078/KasDesk'
     : project.github_url;
+
+  const cardImage = isEquipRent
+    ? '/equiprent-cover.jpg'
+    : isKasDesk
+    ? '/kasdesk-cover.jpg'
+    : (project.image_url || defaultImageUrl || '/equiprent-cover.jpg');
 
   return (
     <motion.div
@@ -79,7 +90,7 @@ export default function ProjectCard({ project, onSelect, defaultImageUrl }: Proj
         className="relative aspect-[16/10] w-full bg-[#121215] overflow-hidden cursor-pointer"
       >
         <Image
-          src={project.image_url || defaultImageUrl || '/equiprent-cover.jpg'}
+          src={cardImage}
           alt={project.title}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
