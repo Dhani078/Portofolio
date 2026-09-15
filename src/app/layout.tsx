@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -117,7 +118,10 @@ export default function RootLayout({
         suppressHydrationWarning
         className="relative bg-[#000000] text-[#FFFFFF] min-h-screen antialiased selection:bg-white selection:text-black font-sans [&_svg]:suppressHydrationWarning transition-colors duration-200"
       >
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {children}
+          <SpeedInsights />
+        </ThemeProvider>
       </body>
     </html>
   );
