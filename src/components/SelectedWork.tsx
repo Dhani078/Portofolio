@@ -75,7 +75,7 @@ export const defaultProjects: ProjectItem[] = [
   {
     index: '04',
     title: 'KasDesk — Personal Finance & Wealth Tracker',
-    category: 'FULL-STACK',
+    category: 'MOBILE & PWA',
     year: 2026,
     tags: ['Next.js 16', 'React 19', 'Drizzle ORM', 'TiDB Cloud', 'PWA', 'Auth.js'],
     summary: 'PWA manajemen keuangan pribadi modern berkecepatan tinggi dengan kesiapan offline-first, Drizzle ORM + TiDB Serverless, pemindaian OCR struk otomatis, QuickLog 2-tap, kalkulator ekspresi di kolom nominal, dan proteksi biometrik/PIN.',
@@ -91,6 +91,7 @@ export const categories = [
   { id: 'ALL', label: 'ALL PROJECTS' },
   { id: 'FULL-STACK', label: 'FULL-STACK WEB' },
   { id: 'SISTEM WEB', label: 'DASHBOARDS' },
+  { id: 'MOBILE', label: 'MOBILE & PWA' },
   { id: 'GITHUB OSS', label: 'OPEN SOURCE' },
 ];
 
@@ -184,8 +185,6 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
       else if (i === 1) img = 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1000&auto=format&fit=crop';
       else if (i === 2) img = 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1000&auto=format&fit=crop';
     }
-    const cat = p.category || (i === 1 ? 'SISTEM WEB' : 'FULL-STACK');
-    
     // Judul juga diambil dari proyek yang cocok, bukan dari posisi.
     const rawTitle = p.title || matchByTitle?.title || (i === 0 ? 'Embun-Laundry' : i === 1 ? 'EquipRent MS — PT. Surya Bangun Sarana' : 'GymVault — Fitness & Gym Companion');
     let title = rawTitle;
@@ -194,6 +193,8 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
     const isGym = rawTitle.toLowerCase().includes('gym') || rawTitle.toLowerCase().includes('vault') || i === 2;
     const isEquip = rawTitle.toLowerCase().includes('surya') || rawTitle.toLowerCase().includes('equiprent') || i === 1;
     const isKasDesk = rawTitle.toLowerCase().includes('kasdesk') || rawTitle.toLowerCase().includes('kas-desk') || i === 3;
+
+    const cat = p.category || (i === 1 ? 'SISTEM WEB' : (isKasDesk ? 'MOBILE & PWA' : 'FULL-STACK'));
 
     let liveUrl = p.live_url;
     let githubUrl = p.github_url;
@@ -245,9 +246,30 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
     ? normalizedProjects
     : normalizedProjects.filter((p) => {
         const cat = (p.category || '').toUpperCase();
+        const tags = (p.tags || []).map((t) => t.toUpperCase());
+        const title = (p.title || '').toUpperCase();
+        const summary = (p.summary || '').toUpperCase();
+
         if (activeCategory === 'GITHUB OSS') {
           return cat.includes('GITHUB OSS') || Boolean(p.github_url && p.github_url.includes('github.com/Dhani078'));
         }
+
+        if (activeCategory === 'MOBILE') {
+          return (
+            cat.includes('MOBILE') ||
+            cat.includes('PWA') ||
+            tags.some((t) => t.includes('MOBILE') || t.includes('PWA') || t.includes('REACT NATIVE') || t.includes('EXPO')) ||
+            title.includes('KASDESK') ||
+            title.includes('GYM') ||
+            summary.includes('PWA') ||
+            summary.includes('MOBILE')
+          );
+        }
+
+        if (activeCategory === 'FULL-STACK') {
+          return cat.includes('FULL-STACK') || title.includes('KASDESK') || title.includes('GYM') || title.includes('LAUNDRY');
+        }
+
         return cat.includes(activeCategory.toUpperCase());
       });
 
