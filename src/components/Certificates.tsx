@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
@@ -84,8 +84,11 @@ const certificates: Certificate[] = [
 export default function Certificates() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   // Portal hanya bisa dipakai setelah hydration (document tersedia di browser).
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   const isOpen = selectedIndex !== null;
   const active = isOpen ? certificates[selectedIndex as number] : null;

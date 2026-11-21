@@ -1,13 +1,16 @@
 import React from 'react';
 import { supabase } from '@/lib/supabase';
 import PortfolioView from '@/components/PortfolioView';
+import type { ProjectItem } from '@/components/SelectedWork';
+import type { StatItem } from '@/components/About';
+import type { SkillNode } from '@/components/Capabilities';
 
 export const revalidate = 300;
 
 export default async function Home() {
-  let projects: any[] = [];
-  let stats: any[] = [];
-  let skillNodes: any[] = [];
+  let projects: ProjectItem[] = [];
+  let stats: StatItem[] = [];
+  let skillNodes: SkillNode[] = [];
 
   try {
     const [pRes, sRes, snRes] = await Promise.all([
@@ -16,9 +19,9 @@ export default async function Home() {
       supabase.from('skill_nodes').select('*'),
     ]);
 
-    if (pRes?.data) projects = pRes.data;
-    if (sRes?.data) stats = sRes.data;
-    if (snRes?.data) skillNodes = snRes.data;
+    if (pRes?.data && !pRes.error) projects = pRes.data as unknown as ProjectItem[];
+    if (sRes?.data && !sRes.error) stats = sRes.data as unknown as StatItem[];
+    if (snRes?.data && !snRes.error) skillNodes = snRes.data as unknown as SkillNode[];
   } catch (error) {
     console.error('⚠️ Supabase data fallback active.', error);
   }

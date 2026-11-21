@@ -7,7 +7,6 @@ import {
   ArrowRight, 
   MapPin, 
   Sparkles, 
-  CheckCircle2, 
   ExternalLink,
   ChevronDown
 } from 'lucide-react';

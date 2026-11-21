@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Sparkles, HelpCircle } from 'lucide-react';
+import { ChevronDown, Sparkles } from 'lucide-react';
 
 const faqs = [
   {

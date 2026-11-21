@@ -29,7 +29,7 @@ const securityHeaders = [
       // via blob: URLs. Without it three.js fails with
       // "GLTFLoader: Couldn't load texture blob:...".
       // media-src covers <audio>/<video>; worker-src for blob workers.
-      "connect-src 'self' blob: data: https://*.supabase.co https://api.github.com",
+      "connect-src 'self' blob: data: https://*.supabase.co https://api.github.com https://vitals.vercel-insights.com https://*.vercel-insights.com",
       "media-src 'self' blob: data:",
       "worker-src 'self' blob:",
       // Clickjacking protection: nobody may frame this site.

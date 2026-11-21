@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquare, ArrowUp, Sparkles, Send } from 'lucide-react';
+import { MessageSquare, ArrowUp } from 'lucide-react';
 
 export default function FloatingDock() {
   const whatsapp = '+6282148564979';

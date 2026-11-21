@@ -13,7 +13,6 @@ interface AnimatedCounterProps {
 
 export default function AnimatedCounter({
   value,
-  duration: _duration = 1.8,
   suffix = '',
   prefix = '',
   className = '',

@@ -38,8 +38,7 @@ git push origin main # Vercel auto-deploys
 | `src/components/ProjectModal.tsx` | Architecture spec detail modal with AnimatePresence exit transitions and metrics grid |
 | `src/components/LanyardCard.tsx` | R3F + Rapier physics (ID card + ribbon) |
 | `src/components/Hero.tsx` | Headline + 3D Lanyard placement |
-| `src/middleware.ts` | CSP, cache headers, security |
-| `next.config.ts` | Standalone output, image domains, CSP nonce |
+| `next.config.ts` | Standalone output, image domains, CSP security headers |
 | `public/assets/kartu.glb` | ID card GLTF (embedded texture, updated at build) |
 | `public/assets/bandd.png` | Lanyard ribbon texture (2048x256) |
 
@@ -47,6 +46,10 @@ git push origin main # Vercel auto-deploys
 1. **Embun-Laundry**: `https://embun-laundry.dhanisepeda.workers.dev/dashboard` (Repo: `https://github.com/Dhani078/Embun-Laundry`)
 2. **EquipRent MS — PT. Surya Bangun Sarana**: `https://equiprent-pt-surya-bangun-sarana.dhanisepeda.workers.dev/` (Repo: `https://github.com/Dhani078/equiprent-pt-surya-bangun-sarana`)
 3. **GymVault — Fitness Companion**: `https://gymvault-app.vercel.app/` (Repo: `https://github.com/Dhani078/GymVault`)
+4. **KasDesk — Personal Finance & Wealth Tracker**: `https://kas-desk.vercel.app/` (Repo: `https://github.com/Dhani078/KasDesk`)
+5. **SIPASD — E-Arsip Dispora Kalsel**: `https://sipasd.my.id/` (Repo: `https://github.com/Dhani078/SIPASD`)
+6. **KiosAI — Toko AI & Multi-Model Platform**: `https://tokoai.my.id/` (Repo: `https://github.com/Dhani078/KiosAI`)
+7. **WarTicket — Flash-Sale Booking Engine**: `https://github.com/Dhani078/WarTicket` (Repo: `https://github.com/Dhani078/WarTicket`)
 
 ## Brand Constants
 - **Name**: DAN.DEV

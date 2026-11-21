@@ -85,13 +85,53 @@ export const defaultProjects: ProjectItem[] = [
     live_url: 'https://kas-desk.vercel.app/',
     github_url: 'https://github.com/Dhani078/KasDesk',
   },
+  {
+    index: '05',
+    title: 'SIPASD — E-Arsip Dispora Kalsel',
+    category: 'SISTEM WEB',
+    year: 2026,
+    tags: ['Next.js 15', 'TypeScript', 'Tailwind CSS v4', 'PostgreSQL', 'E-Arsip', 'UNISKA'],
+    summary: 'Sistem Informasi Pengelolaan Arsip Persuratan dan Disposisi resmi Dinas Kepemudaan dan Olahraga Provinsi Kalsel dengan 5 format laporan kearsipan resmi, disposisi hierarkis, pelacakan naskah surat, dan audit trail aktivitas.',
+    metrics: { perf: 99, a11y: 100, build: '100%' },
+    case_study_url: 'https://sipasd.my.id/',
+    image_url: 'https://images.unsplash.com/photo-1568667256549-094345857637?q=80&w=1000&auto=format&fit=crop',
+    live_url: 'https://sipasd.my.id/',
+    github_url: 'https://github.com/Dhani078/SIPASD',
+  },
+  {
+    index: '06',
+    title: 'KiosAI — Toko AI & Multi-Model Platform',
+    category: 'FULL-STACK',
+    year: 2026,
+    tags: ['Next.js 15', 'React 19', 'TiDB Cloud Serverless', 'DOKU QRIS', '9Router'],
+    summary: 'Platform e-commerce token AI dan agregator model cerdas dengan integrasi gateway pembayaran DOKU QRIS real-time (sinkronisasi saldo CAS HMAC), manajemen sesi HttpOnly defensif, dan routing inferensi AI terpadu.',
+    metrics: { perf: 98, a11y: 100, build: '100%' },
+    case_study_url: 'https://tokoai.my.id/',
+    image_url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop',
+    live_url: 'https://tokoai.my.id/',
+    github_url: 'https://github.com/Dhani078/KiosAI',
+  },
+  {
+    index: '07',
+    title: 'WarTicket — Flash-Sale Booking Engine',
+    category: 'BACKEND',
+    year: 2026,
+    tags: ['FastAPI', 'Python Async', 'Redis v8 Lua EVALSHA', 'Neon PgBouncer', 'React 18'],
+    summary: 'Engine pemesanan tiket flash-sale berkecepatan tinggi dengan garansi zero overselling via atomik Redis Lua EVALSHA, rollback transaksi terdistribusi Saga, dan connection pool PgBouncer.',
+    metrics: { perf: 100, a11y: 100, build: 'Pass' },
+    case_study_url: 'https://github.com/Dhani078/WarTicket',
+    image_url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000&auto=format&fit=crop',
+    live_url: 'https://github.com/Dhani078/WarTicket',
+    github_url: 'https://github.com/Dhani078/WarTicket',
+  },
 ];
 
 export const categories = [
   { id: 'ALL', label: 'ALL PROJECTS' },
   { id: 'FULL-STACK', label: 'FULL-STACK WEB' },
-  { id: 'SISTEM WEB', label: 'DASHBOARDS' },
+  { id: 'SISTEM WEB', label: 'ENTERPRISE & GOV' },
   { id: 'MOBILE', label: 'MOBILE & PWA' },
+  { id: 'BACKEND', label: 'BACKEND & ENGINE' },
   { id: 'GITHUB OSS', label: 'OPEN SOURCE' },
 ];
 
@@ -117,10 +157,22 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
         const res = await fetch('/api/github', { signal: controller.signal });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
-        
+
         if (data.repos) {
           // Exclude repos that are already primary featured projects or internal config
-          const excludedRepos = ['embun-laundry', 'gymvault', 'equiprent-pt-surya-bangun-sarana', 'kasdesk', 'kas-desk', 'portofolio', 'dhani078'];
+          const excludedRepos = [
+            'embun-laundry',
+            'gymvault',
+            'equiprent-pt-surya-bangun-sarana',
+            'kasdesk',
+            'kas-desk',
+            'portofolio',
+            'dhani078',
+            'sipasd',
+            'kiosai',
+            'warticket',
+            'autoclip'
+          ];
           const standaloneRepos = data.repos.filter((repo: GithubRepoItem) => {
             const nameLower = (repo.name || '').toLowerCase();
             return !excludedRepos.some((ex) => nameLower === ex || nameLower.includes(ex));
@@ -162,13 +214,6 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
   const allProjects = [...baseProjects, ...uniqueGithubProjects];
 
   const normalizedProjects = allProjects.map((p, i) => {
-    let img = p.image_url;
-
-    // Cocokkan proyek dengan default berdasarkan JUDUL, bukan posisi array.
-    // Tabel `projects` tidak punya kolom image_url, jadi p.image_url selalu
-    // undefined. Logika lama memakai indeks (i === 0/1/2) sehingga cover
-    // salah pasang: EquipRent justru dapat foto Unsplash generik, sementara
-    // /equiprent-cover.jpg (foto excavator asli) tidak pernah tampil.
     const norm = (s?: string) => (s || '').toLowerCase().replace(/[-_.\s]/g, '');
     const matchByTitle = defaultProjects.find((d) => {
       const a = norm(d.title);
@@ -176,68 +221,25 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
       return a && b && (a.includes(b) || b.includes(a));
     });
 
-    // Prioritas: image_url dari DB > cover milik proyek yang cocok > fallback.
-    if (!img || img.includes('photo-1517677208171')) {
-      img = matchByTitle?.image_url;
-    }
-    if (!img) {
-      if (i === 0) img = 'https://images.unsplash.com/photo-1545173168-9f1947eebb7f?q=80&w=1000&auto=format&fit=crop';
-      else if (i === 1) img = 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1000&auto=format&fit=crop';
-      else if (i === 2) img = 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1000&auto=format&fit=crop';
-    }
-    // Judul juga diambil dari proyek yang cocok, bukan dari posisi.
-    const rawTitle = p.title || matchByTitle?.title || (i === 0 ? 'Embun-Laundry' : i === 1 ? 'EquipRent MS — PT. Surya Bangun Sarana' : 'GymVault — Fitness & Gym Companion');
-    let title = rawTitle;
-
-    const isLaundry = rawTitle.toLowerCase().includes('embun') || rawTitle.toLowerCase().includes('laundry') || i === 0;
-    const isGym = rawTitle.toLowerCase().includes('gym') || rawTitle.toLowerCase().includes('vault') || i === 2;
-    const isEquip = rawTitle.toLowerCase().includes('surya') || rawTitle.toLowerCase().includes('equiprent') || i === 1;
-    const isKasDesk = rawTitle.toLowerCase().includes('kasdesk') || rawTitle.toLowerCase().includes('kas-desk') || i === 3;
-
-    const cat = p.category || (i === 1 ? 'SISTEM WEB' : (isKasDesk ? 'MOBILE & PWA' : 'FULL-STACK'));
-
-    let liveUrl = p.live_url;
-    let githubUrl = p.github_url;
-    let summary = p.summary;
-    let tags = p.tags && p.tags.length > 0 ? p.tags : [];
-
-    if (isLaundry) {
-      title = 'Embun-Laundry';
-      liveUrl = 'https://embun-laundry.dhanisepeda.workers.dev/dashboard';
-      githubUrl = 'https://github.com/Dhani078/Embun-Laundry';
-      summary = 'Aplikasi pengelolaan operasional layanan laundry modern terintegrasi dengan dashboard kasir, tracking status cucian real-time, dan manajemen transaksi online otomatis.';
-      tags = tags.length > 0 ? tags : ['Cloudflare Workers', 'TypeScript', 'Tailwind CSS', 'PostgreSQL'];
-    } else if (isGym) {
-      title = 'GymVault — Fitness & Gym Companion';
-      liveUrl = 'https://gymvault-app.vercel.app/';
-      githubUrl = 'https://github.com/Dhani078/GymVault';
-      summary = summary || 'Aplikasi pendamping latihan kebugaran dan pelacak program gym modern dengan visualisasi progres real-time, pencatatan beban/reps kinetik, dan deployment performa tinggi di Vercel Edge.';
-      tags = tags.length > 0 ? tags : ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Vercel'];
-    } else if (isEquip) {
-      title = 'EquipRent MS — PT. Surya Bangun Sarana';
-      liveUrl = 'https://equiprent-pt-surya-bangun-sarana.dhanisepeda.workers.dev/';
-      githubUrl = 'https://github.com/Dhani078/equiprent-pt-surya-bangun-sarana';
-      tags = tags.length > 0 ? tags : ['React 18', 'TypeScript', 'Cloudflare Workers', 'TiDB Cloud Serverless'];
-    } else if (isKasDesk) {
-      title = 'KasDesk — Personal Finance & Wealth Tracker';
-      liveUrl = 'https://kas-desk.vercel.app/';
-      githubUrl = 'https://github.com/Dhani078/KasDesk';
-      summary = summary || 'PWA manajemen keuangan pribadi modern berkecepatan tinggi dengan kesiapan offline-first, Drizzle ORM + TiDB Serverless, pemindaian OCR struk otomatis, QuickLog 2-tap, kalkulator ekspresi di kolom nominal, dan proteksi biometrik/PIN.';
-      tags = tags.length > 0 ? tags : ['Next.js 16', 'React 19', 'Drizzle ORM', 'TiDB Cloud', 'PWA', 'Auth.js'];
-      img = img || '/kasdesk-cover.jpg';
-    }
+    const title = p.title || matchByTitle?.title || defaultProjects[i]?.title || `Project ${i + 1}`;
+    const img = p.image_url || matchByTitle?.image_url || defaultProjects[i]?.image_url || '/equiprent-cover.jpg';
+    const cat = p.category || matchByTitle?.category || defaultProjects[i]?.category || 'FULL-STACK';
+    const liveUrl = p.live_url || matchByTitle?.live_url || defaultProjects[i]?.live_url;
+    const githubUrl = p.github_url || matchByTitle?.github_url || defaultProjects[i]?.github_url;
+    const summary = p.summary || matchByTitle?.summary || defaultProjects[i]?.summary || 'Aplikasi web modern skala produksi.';
+    const tags = p.tags && p.tags.length > 0 ? p.tags : (matchByTitle?.tags || defaultProjects[i]?.tags || ['Full-Stack']);
 
     return { 
       ...p, 
       index: p.index || (i < defaultProjects.length ? `0${i + 1}` : `GH-${i}`),
-      year: p.year || 2026,
+      year: p.year || matchByTitle?.year || 2026,
       title,
-      summary: summary || defaultProjects[i]?.summary || 'Aplikasi web modern skala produksi.',
+      summary,
       image_url: img, 
       category: cat,
       tags,
       live_url: liveUrl,
-      case_study_url: liveUrl || '#',
+      case_study_url: p.case_study_url || liveUrl || '#',
       github_url: githubUrl
     };
   });
@@ -266,8 +268,16 @@ export default function SelectedWork({ projects }: SelectedWorkProps) {
           );
         }
 
+        if (activeCategory === 'SISTEM WEB') {
+          return cat.includes('SISTEM') || cat.includes('ENTERPRISE') || cat.includes('GOV') || title.includes('SIPASD') || title.includes('EQUIPRENT');
+        }
+
+        if (activeCategory === 'BACKEND') {
+          return cat.includes('BACKEND') || tags.some((t) => t.includes('FASTAPI') || t.includes('REDIS') || t.includes('LUA')) || title.includes('WARTICKET');
+        }
+
         if (activeCategory === 'FULL-STACK') {
-          return cat.includes('FULL-STACK') || title.includes('KASDESK') || title.includes('GYM') || title.includes('LAUNDRY');
+          return cat.includes('FULL-STACK') || title.includes('KIOSAI') || title.includes('KASDESK') || title.includes('GYM') || title.includes('LAUNDRY');
         }
 
         return cat.includes(activeCategory.toUpperCase());

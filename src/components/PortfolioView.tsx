@@ -1,12 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 
 import Nav from '@/components/Nav';
 import Hero from '@/components/Hero';
-import TechTicker from '@/components/TechTicker';
 import SelectedWork, { ProjectItem } from '@/components/SelectedWork';
 import About, { StatItem } from '@/components/About';
 import Experience from '@/components/Experience';
@@ -21,9 +19,6 @@ import EntryScreen from '@/components/EntryScreen';
 import Certificates from '@/components/Certificates';
 import LoadingScreen from '@/components/LoadingScreen';
 import { useTheme } from '@/context/ThemeContext';
-
-// Dynamic components for optimal performance
-const SpotlightCursor = dynamic(() => import('@/components/SpotlightCursor'), { ssr: false });
 
 interface PortfolioViewProps {
   projects?: ProjectItem[];
@@ -154,16 +149,12 @@ export default function PortfolioView({
           <div className="absolute inset-0 bg-tech-grid opacity-30" />
         </div>
 
-        {/* Spotlight Cursor Follower */}
-        <SpotlightCursor />
-
         {/* Floating Navigation Header */}
         <Nav />
 
         {/* Main Content Sections */}
         <main className="relative z-10 flex flex-col">
           <Hero showLanyard={showLanyard} />
-          <TechTicker />
           <SelectedWork projects={projects} />
           <About stats={stats} />
           <Experience />

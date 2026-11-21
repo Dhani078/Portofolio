@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useSyncExternalStore } from 'react';
 
 export type Theme = 'dark' | 'light';
 
@@ -21,26 +21,33 @@ const ThemeContext = createContext<ThemeContextType>({
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // Always default strictly to 'dark' for SSR & initial state consistency
   const [theme, setThemeState] = useState<Theme>('dark');
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   useEffect(() => {
-    setMounted(true);
-    try {
-      const savedTheme = localStorage.getItem('portfolio-theme') as Theme | null;
-      if (savedTheme === 'light') {
-        setThemeState('light');
-        document.documentElement.classList.remove('dark');
-        document.documentElement.classList.add('light');
-        document.documentElement.setAttribute('data-theme', 'light');
-      } else {
-        setThemeState('dark');
-        document.documentElement.classList.remove('light');
-        document.documentElement.classList.add('dark');
-        document.documentElement.setAttribute('data-theme', 'dark');
+    const frame = requestAnimationFrame(() => {
+      try {
+        const savedTheme = localStorage.getItem('portfolio-theme') as Theme | null;
+        if (savedTheme === 'light') {
+          setThemeState('light');
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add('light');
+          document.documentElement.setAttribute('data-theme', 'light');
+        } else {
+          setThemeState('dark');
+          document.documentElement.classList.remove('light');
+          document.documentElement.classList.add('dark');
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      } catch {
+        // Fallback safe if localStorage is blocked by browser privacy settings
       }
-    } catch {
-      // Fallback safe if localStorage is blocked by browser privacy settings
-    }
+    });
+
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   const setTheme = (newTheme: Theme) => {

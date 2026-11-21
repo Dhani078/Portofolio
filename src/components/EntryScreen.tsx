@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useSyncExternalStore } from 'react';
 import Image from 'next/image';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
@@ -16,7 +16,11 @@ export default function EntryScreen({ onEnter, enabled = true }: EntryScreenProp
   const isLight = theme === 'light';
   const [isEntering, setIsEntering] = useState(false);
   const enterTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
   const [pressedKey, setPressedKey] = useState<'space' | 'enter' | null>(null);
   const [currentTime, setCurrentTime] = useState('02:00:00');
   const cardRef = useRef<HTMLDivElement>(null);
@@ -37,8 +41,6 @@ export default function EntryScreen({ onEnter, enabled = true }: EntryScreenProp
 
   // Live WITA Clock synchronized to Banjarmasin (UTC+8)
   useEffect(() => {
-    setMounted(true);
-
     const updateClock = () => {
       try {
         const now = new Date();
@@ -89,14 +91,14 @@ export default function EntryScreen({ onEnter, enabled = true }: EntryScreenProp
   }, []);
 
   // Master Trigger Launch Action
-  const handleTriggerEnter = () => {
+  const handleTriggerEnter = useCallback(() => {
     if (!enabled || isEntering) return;
     setIsEntering(true);
     enterTimeoutRef.current = setTimeout(() => {
       enterTimeoutRef.current = null;
       onEnter();
     }, 120);
-  };
+  }, [enabled, isEntering, onEnter]);
 
   // Tactile Keyboard Listeners (Space & Enter)
   useEffect(() => {
@@ -123,7 +125,7 @@ export default function EntryScreen({ onEnter, enabled = true }: EntryScreenProp
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [enabled, isEntering]);
+  }, [enabled, isEntering, handleTriggerEnter]);
 
   return (
     <motion.div

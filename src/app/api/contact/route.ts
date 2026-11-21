@@ -202,10 +202,11 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true, message: 'Pesan terkirim ✓' });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Contact handler error:', err);
+    const message = err instanceof Error ? err.message : 'Terjadi kesalahan internal server.';
     return NextResponse.json(
-      { error: err.message || 'Terjadi kesalahan internal server.' },
+      { error: message },
       { status: 500 }
     );
   }

@@ -1,19 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Code2, 
-  Database, 
-  Layers, 
-  Cpu, 
-  Globe, 
-  ShieldCheck, 
-  Sparkles, 
-  Smartphone, 
-  Server,
-  Zap
-} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Sparkles } from 'lucide-react';
 
 export interface SkillNode {
   id?: string;

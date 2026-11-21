@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Briefcase, GraduationCap, Calendar, MapPin, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Briefcase, GraduationCap, MapPin, Sparkles } from 'lucide-react';
 
 interface TimelineItem {
   year: string;

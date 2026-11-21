@@ -2,12 +2,13 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, MessageSquare, Send, CheckCircle2, Copy, Sparkles, MapPin, Phone } from 'lucide-react';
+import { Send, CheckCircle2, Copy, Sparkles, MapPin } from 'lucide-react';
 
 export default function Contact() {
   const [copied, setCopied] = useState(false);
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', message: '', website: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const email = 'dhanisepeda@gmail.com';
   const whatsapp = '+6282148564979';
@@ -23,6 +24,7 @@ export default function Contact() {
     if (!formData.name || !formData.email || !formData.message) return;
 
     setStatus('loading');
+    setErrorMessage('');
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
@@ -30,13 +32,17 @@ export default function Contact() {
         body: JSON.stringify(formData),
       });
 
+      const data = await res.json().catch(() => null);
+
       if (res.ok) {
         setStatus('success');
-        setFormData({ name: '', email: '', message: '' });
+        setFormData({ name: '', email: '', message: '', website: '' });
       } else {
+        setErrorMessage(data?.error || 'Gagal mengirim pesan. Silakan hubungi langsung via WhatsApp atau Email di samping.');
         setStatus('error');
       }
     } catch {
+      setErrorMessage('Terjadi kendala koneksi. Silakan hubungi langsung via WhatsApp atau Email di samping.');
       setStatus('error');
     }
   };
@@ -145,6 +151,18 @@ export default function Contact() {
               Kirim Pesan atau Penawaran Proyek
             </h3>
 
+            {/* Antispam honeypot field */}
+            <input
+              type="text"
+              name="website"
+              value={formData.website}
+              onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+              tabIndex={-1}
+              autoComplete="off"
+              className="hidden"
+              aria-hidden="true"
+            />
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-xs font-mono text-zinc-400 uppercase">
@@ -198,7 +216,7 @@ export default function Contact() {
 
             {status === 'error' && (
               <div className="p-4 rounded-2xl bg-red-950/80 border border-red-500/40 text-red-300 text-xs font-mono">
-                Gagal mengirim pesan. Silakan hubungi langsung via WhatsApp atau Email di samping.
+                {errorMessage || 'Gagal mengirim pesan. Silakan hubungi langsung via WhatsApp atau Email di samping.'}
               </div>
             )}
 

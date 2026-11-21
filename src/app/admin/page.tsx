@@ -1,21 +1,19 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import type { Session } from '@supabase/supabase-js';
 import { 
   ShieldCheck, 
   Mail, 
   Lock, 
   ArrowRight, 
   Trash2, 
-  CheckCircle2, 
   RefreshCw, 
   LogOut, 
   ArrowLeft,
-  Sparkles,
-  Inbox,
-  Clock
+  Inbox
 } from 'lucide-react';
 
 interface MessageItem {
@@ -28,7 +26,7 @@ interface MessageItem {
 }
 
 export default function AdminPage() {
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loadingSession, setLoadingSession] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -38,6 +36,26 @@ export default function AdminPage() {
   const [messages, setMessages] = useState<MessageItem[]>([]);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [messageError, setMessageError] = useState('');
+
+  const fetchMessages = useCallback(async () => {
+    setLoadingMessages(true);
+    setMessageError('');
+    try {
+      const { data, error } = await supabase
+        .from('contact_messages')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setMessages(data || []);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Gagal memuat daftar pesan.';
+      console.error('Error fetching messages:', err);
+      setMessageError(message);
+    } finally {
+      setLoadingMessages(false);
+    }
+  }, []);
 
   // Check current session on mount
   useEffect(() => {
@@ -56,29 +74,19 @@ export default function AdminPage() {
 
   // Fetch messages if session exists
   useEffect(() => {
+    let ignore = false;
     if (session) {
-      fetchMessages();
+      const timer = setTimeout(() => {
+        if (!ignore) {
+          fetchMessages();
+        }
+      }, 0);
+      return () => {
+        ignore = true;
+        clearTimeout(timer);
+      };
     }
-  }, [session]);
-
-  const fetchMessages = async () => {
-    setLoadingMessages(true);
-    setMessageError('');
-    try {
-      const { data, error } = await supabase
-        .from('contact_messages')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setMessages(data || []);
-    } catch (err: any) {
-      console.error('Error fetching messages:', err);
-      setMessageError(err.message || 'Gagal memuat daftar pesan.');
-    } finally {
-      setLoadingMessages(false);
-    }
-  };
+  }, [session, fetchMessages]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,8 +98,9 @@ export default function AdminPage() {
         password,
       });
       if (error) throw error;
-    } catch (err: any) {
-      setLoginError(err.message || 'Email atau kata sandi tidak valid.');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Email atau kata sandi tidak valid.';
+      setLoginError(message);
     } finally {
       setLoginLoading(false);
     }
@@ -114,9 +123,10 @@ export default function AdminPage() {
       setMessages(prev =>
         prev.map(msg => (msg.id === id ? { ...msg, read: !currentRead } : msg))
       );
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Gagal memperbarui status.';
       console.error('Error updating read status:', err);
-      alert(err.message || 'Gagal memperbarui status.');
+      alert(message);
     }
   };
 
@@ -130,9 +140,10 @@ export default function AdminPage() {
 
       if (error) throw error;
       setMessages(prev => prev.filter(msg => msg.id !== id));
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Gagal menghapus pesan.';
       console.error('Error deleting message:', err);
-      alert(err.message || 'Gagal menghapus pesan.');
+      alert(message);
     }
   };
 

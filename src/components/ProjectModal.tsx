@@ -42,36 +42,9 @@ export default function ProjectModal({ project, onClose, defaultImageUrl }: Proj
     };
   }, [project, onClose]);
 
-  const isSelLaundry = project?.title?.toLowerCase().includes('laundry') || project?.title?.toLowerCase().includes('embun') || project?.index === '01';
-  const isSelGym = project?.title?.toLowerCase().includes('gym') || project?.title?.toLowerCase().includes('vault');
-  const isSelEquip = project?.title?.toLowerCase().includes('surya') || project?.title?.toLowerCase().includes('equiprent');
-  const isSelKasDesk = project?.title?.toLowerCase().includes('kasdesk') || project?.title?.toLowerCase().includes('kas-desk') || project?.index === '04';
-
-  const liveLink = isSelLaundry
-    ? 'https://embun-laundry.dhanisepeda.workers.dev/dashboard'
-    : isSelGym
-    ? 'https://gymvault-app.vercel.app/'
-    : isSelEquip
-    ? 'https://equiprent-pt-surya-bangun-sarana.dhanisepeda.workers.dev/'
-    : isSelKasDesk
-    ? 'https://kas-desk.vercel.app/'
-    : project?.live_url || project?.case_study_url;
-
-  const ghLink = isSelLaundry
-    ? 'https://github.com/Dhani078/Embun-Laundry'
-    : isSelGym
-    ? 'https://github.com/Dhani078/GymVault'
-    : isSelEquip
-    ? 'https://github.com/Dhani078/equiprent-pt-surya-bangun-sarana'
-    : isSelKasDesk
-    ? 'https://github.com/Dhani078/KasDesk'
-    : project?.github_url;
-
-  const modalImage = isSelEquip
-    ? '/equiprent-cover.jpg'
-    : isSelKasDesk
-    ? '/kasdesk-cover.jpg'
-    : (project?.image_url || defaultImageUrl || '/equiprent-cover.jpg');
+  const liveLink = project?.live_url || project?.case_study_url;
+  const ghLink = project?.github_url;
+  const modalImage = project?.image_url || defaultImageUrl || '/equiprent-cover.jpg';
 
   return (
     <AnimatePresence>

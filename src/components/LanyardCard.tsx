@@ -16,6 +16,7 @@ import {
   CuboidCollider,
   BallCollider,
   RapierRigidBody,
+  RigidBodyProps,
 } from '@react-three/rapier';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 import * as THREE from 'three';
@@ -25,6 +26,10 @@ extend({ MeshLineGeometry, MeshLineMaterial });
 useGLTF.preload('/assets/kartu.glb');
 useTexture.preload('/assets/bandd.png');
 
+interface ExtendedRigidBody extends RapierRigidBody {
+  lerped?: THREE.Vector3;
+}
+
 interface BandProps {
   isMobile?: boolean;
   maxSpeed?: number;
@@ -32,11 +37,11 @@ interface BandProps {
 }
 
 function Band({ isMobile = false, maxSpeed = 50, minSpeed = 10 }: BandProps) {
-  const band = useRef<any>(null!);
+  const band = useRef<THREE.Mesh<MeshLineGeometry>>(null!);
   const fixed = useRef<RapierRigidBody>(null!);
-  const j1 = useRef<RapierRigidBody>(null!);
-  const j2 = useRef<RapierRigidBody>(null!);
-  const j3 = useRef<RapierRigidBody>(null!);
+  const j1 = useRef<ExtendedRigidBody>(null!);
+  const j2 = useRef<ExtendedRigidBody>(null!);
+  const j3 = useRef<ExtendedRigidBody>(null!);
   const card = useRef<RapierRigidBody>(null!);
 
   const vec = new THREE.Vector3();
@@ -44,7 +49,7 @@ function Band({ isMobile = false, maxSpeed = 50, minSpeed = 10 }: BandProps) {
   const rot = new THREE.Vector3();
   const dir = new THREE.Vector3();
 
-  const segmentProps: any = {
+  const segmentProps: Partial<RigidBodyProps> = {
     type: 'dynamic',
     canSleep: true,
     colliders: false,
@@ -52,19 +57,32 @@ function Band({ isMobile = false, maxSpeed = 50, minSpeed = 10 }: BandProps) {
     linearDamping: 4,
   };
 
-  const { nodes, materials } = useGLTF('/assets/kartu.glb') as any;
-  const texture = useTexture('/assets/bandd.png');
+  const { nodes, materials } = useGLTF('/assets/kartu.glb') as unknown as {
+    nodes: Record<string, THREE.Mesh>;
+    materials: Record<string, THREE.Material>;
+  };
+  const texture = useTexture('/assets/bandd.png', (tex) => {
+    const t = tex as THREE.Texture;
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.anisotropy = 16;
+    t.minFilter = THREE.LinearFilter;
+    t.magFilter = THREE.LinearFilter;
+    t.generateMipmaps = true;
+    t.needsUpdate = true;
+  });
+
   const { width, height } = useThree((state) => state.size);
 
-  const [curve] = useState(
-    () =>
-      new THREE.CatmullRomCurve3([
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-      ])
-  );
+  const [curve] = useState(() => {
+    const c = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+    ]);
+    c.curveType = 'chordal';
+    return c;
+  });
 
   const [dragged, setDragged] = useState<THREE.Vector3 | false>(false);
   const [hovered, setHovered] = useState(false);
@@ -113,12 +131,12 @@ function Band({ isMobile = false, maxSpeed = 50, minSpeed = 10 }: BandProps) {
       card.current
     ) {
       [j1, j2].forEach((ref) => {
-        if (!(ref.current as any).lerped) {
-          (ref.current as any).lerped = new THREE.Vector3().copy(
+        if (!ref.current.lerped) {
+          ref.current.lerped = new THREE.Vector3().copy(
             ref.current.translation()
           );
         }
-        const cloned = (ref.current as any).lerped;
+        const cloned = ref.current.lerped;
         const dist = Math.max(
           0.1,
           Math.min(1, cloned.distanceTo(ref.current.translation()))
@@ -134,10 +152,12 @@ function Band({ isMobile = false, maxSpeed = 50, minSpeed = 10 }: BandProps) {
       // (lerped not initialised yet). Feeding NaN into the ribbon produces
       // "computeBoundingSphere(): Computed radius is NaN" and makes the
       // band disappear entirely. Fall back to the raw translation.
-      const p2 = (j2.current as any).lerped || j2.current.translation();
-      const p1 = (j1.current as any).lerped || j1.current.translation();
-      const safe = (v: any, fallback: any) =>
-        v && Number.isFinite(v.x) && Number.isFinite(v.y) && Number.isFinite(v.z) ? v : fallback;
+      const p2 = j2.current.lerped || j2.current.translation();
+      const p1 = j1.current.lerped || j1.current.translation();
+      const safe = (
+        v: { x: number; y: number; z: number } | null | undefined,
+        fallback: { x: number; y: number; z: number }
+      ) => (v && Number.isFinite(v.x) && Number.isFinite(v.y) && Number.isFinite(v.z) ? v : fallback);
       curve.points[1].copy(safe(p2, j2.current.translation()));
       curve.points[2].copy(safe(p1, j1.current.translation()));
       curve.points[3].copy(fixed.current.translation());
@@ -166,16 +186,6 @@ function Band({ isMobile = false, maxSpeed = 50, minSpeed = 10 }: BandProps) {
       );
     }
   });
-
-  useEffect(() => {
-    curve.curveType = 'chordal';
-    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-    texture.anisotropy = 16;
-    texture.minFilter = THREE.LinearFilter;
-    texture.magFilter = THREE.LinearFilter;
-    texture.generateMipmaps = true;
-    texture.needsUpdate = true;
-  }, [curve, texture]);
 
   // Adaptive positioning: on mobile hang slightly center-right, on desktop hang top-right [3, 4, 0]
   const anchorPos: [number, number, number] = isMobile ? [1.2, 4.2, 0] : [3, 4, 0];
@@ -291,7 +301,7 @@ export default function LanyardCard() {
         bottom: 0,
         left: '50%',
         transform: 'translateX(-50%)',
-        width: '100vw',
+        width: '100%',
         height: '100%',
         pointerEvents: 'none',
         zIndex: 0,

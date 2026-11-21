@@ -53,11 +53,15 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       // Fallback
     }
 
-    setSpecs({
-      gpu: detectedGpu,
-      resolution: `${window.innerWidth} × ${window.innerHeight}`,
-      dpr: `${(window.devicePixelRatio || 1).toFixed(1)}x Retina`,
+    const frame = requestAnimationFrame(() => {
+      setSpecs({
+        gpu: detectedGpu,
+        resolution: `${window.innerWidth} × ${window.innerHeight}`,
+        dpr: `${(window.devicePixelRatio || 1).toFixed(1)}x Retina`,
+      });
     });
+
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   const dismiss = useCallback(() => {

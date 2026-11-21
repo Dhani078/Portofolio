@@ -20,7 +20,17 @@ export async function GET() {
     
     const [reposData, userData] = await Promise.all([reposRes.json(), userRes.json()]);
     
-    const repos = reposData.map((repo: any) => ({
+    interface RawGithubRepo {
+      name: string;
+      html_url: string;
+      description?: string | null;
+      language?: string | null;
+      stargazers_count?: number;
+      forks_count?: number;
+      updated_at: string;
+    }
+
+    const repos = reposData.map((repo: RawGithubRepo) => ({
       name: repo.name,
       html_url: repo.html_url,
       description: repo.description,
@@ -37,7 +47,7 @@ export async function GET() {
         followers: userData.followers
       }
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

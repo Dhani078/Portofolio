@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import AnimatedCounter from '@/components/ui/AnimatedCounter';
-import { GraduationCap, MapPin, Code2, Server, Check, Layers, Zap, Sparkles, Activity, ShieldCheck, Award } from 'lucide-react';
+import { GraduationCap, Code2, Server, Check, Sparkles, Activity } from 'lucide-react';
 
 export interface StatItem {
   id?: string;
@@ -17,7 +17,7 @@ interface AboutProps {
 }
 
 const defaultStats: StatItem[] = [
-  { label: 'Proyek Produksi', value: '4+' },
+  { label: 'Proyek Produksi', value: '7+' },
   { label: 'Fokus Engineering', value: 'Full-Stack' },
   { label: 'Pendidikan Formal', value: 'UNISKA' },
 ];
