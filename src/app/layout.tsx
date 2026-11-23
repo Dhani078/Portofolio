@@ -25,8 +25,10 @@ export const viewport: Viewport = {
   themeColor: "#000000",
 };
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://portofolio-rho-sand-92.vercel.app';
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://portofolio-rho-sand-92.vercel.app'),
+  metadataBase: new URL(siteUrl),
   title: "Muhammad Rizki Ramadhani — Full-Stack Software Engineer",
   description: "Portofolio resmi Muhammad Rizki Ramadhani — Mahasiswa Teknik Informatika UNISKA Banjarmasin & Full-Stack Software Engineer spesialis Next.js 16, React 19, TypeScript, dan Supabase / PostgreSQL.",
   keywords: [
@@ -43,7 +45,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Muhammad Rizki Ramadhani — Full-Stack Software Engineer",
     description: "Portofolio rekayasa web modern, sistem skala produksi, dan arsitektur database performa tinggi.",
-    url: "https://portofolio-rho-sand-92.vercel.app",
+    url: siteUrl,
     siteName: "DAN.DEV",
     images: [
       {
@@ -69,8 +71,8 @@ const jsonLd = {
   "@type": "Person",
   "name": "Muhammad Rizki Ramadhani",
   "alternateName": "DAN.DEV",
-  "url": "https://portofolio-rho-sand-92.vercel.app",
-  "image": "https://portofolio-rho-sand-92.vercel.app/mrr.jpg",
+  "url": siteUrl,
+  "image": `${siteUrl}/mrr.jpg`,
   "jobTitle": "Full-Stack Software Engineer",
   "worksFor": {
     "@type": "Organization",

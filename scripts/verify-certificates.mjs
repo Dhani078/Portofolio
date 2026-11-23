@@ -30,7 +30,12 @@ async function main() {
   // Kumpulkan error konsol (React warning, hydration, dsb.)
   const consoleErrors = [];
   page.on('console', (m) => {
-    if (m.type() === 'error') consoleErrors.push(m.text());
+    if (m.type() === 'error') {
+      const loc = m.location()?.url || '';
+      if (!loc.includes('_vercel') && !loc.includes('favicon')) {
+        consoleErrors.push(m.text());
+      }
+    }
   });
   page.on('pageerror', (e) => consoleErrors.push('pageerror: ' + e.message));
 
@@ -180,7 +185,7 @@ async function main() {
   const pdfOk = await page.evaluate(async () => {
     const urls = [
       '/sertifikat/Praktikum%20Algoritma%20Dan%20Pemrograman%201.pdf',
-      '/sertifikat/Praktikum%20Program%20Paket%20Niaga%20%28ppn%29.pdf',
+      '/sertifikat/Praktikum%20Program%20Paket%20Niaga%20(ppn).pdf',
       '/sertifikat/sertifikat%20pemrograman%20web%202.pdf',
       '/sertifikat/Praktikum%20Android.pdf',
     ];
@@ -206,6 +211,7 @@ async function main() {
     (e) =>
       !e.includes('favicon') &&
       !e.includes('Download the React DevTools') &&
+      !e.includes('_vercel/speed-insights') &&
       !known3d(e)
   );
   check('Tidak ada error konsol', realErrors.length === 0, realErrors.slice(0, 2).join(' | '));

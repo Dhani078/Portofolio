@@ -69,7 +69,7 @@ const certificates: Certificate[] = [
     id: 'ppn',
     title: 'Praktikum Program Paket Niaga (PPN)',
     fileName: 'Praktikum Program Paket Niaga (ppn).pdf',
-    pdfUrl: '/sertifikat/Praktikum%20Program%20Paket%20Niaga%20%28ppn%29.pdf',
+    pdfUrl: '/sertifikat/Praktikum%20Program%20Paket%20Niaga%20(ppn).pdf',
     imageUrl: '/certificates/praktikum-program-paket-niaga-(ppn).jpg',
   },
   {

@@ -11,7 +11,8 @@
     "lint": "eslint",
     "seed": "node scripts/seed.js",
     "verify:certificates": "node scripts/verify-certificates.mjs",
-    "check:rls": "node scripts/check-rls-ready.mjs"
+    "check:rls": "node scripts/check-rls-ready.mjs",
+    "setup:admin": "node scripts/setup-admin-user.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.8",
